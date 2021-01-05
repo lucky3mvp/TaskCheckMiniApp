@@ -5,6 +5,29 @@ module.exports = {
     ['taro', {
       framework: 'react',
       ts: true
-    }]
+    }],
+    [
+      '@babel/preset-env',
+      {
+        modules: false
+      }
+    ],
+    '@babel/preset-typescript',
+    '@babel/preset-react'
+  ],
+  plugins: [
+    [
+      'module-resolver',
+      {
+        root: ['./'],
+        alias: {
+          'src': './src'
+        }
+      }
+    ],
+    ['@babel/plugin-proposal-decorators', { legacy: true }],
+    '@babel/plugin-proposal-class-properties',
+    '@babel/plugin-proposal-object-rest-spread',
+    '@babel/plugin-transform-typescript'
   ]
 }
