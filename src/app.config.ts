@@ -26,14 +26,14 @@ export default {
       {
         pagePath: 'pages/clock/index',
         text: 'Better',
-        iconPath: 'assets/product.png',
-        selectedIconPath: 'assets/product-active.png'
+        iconPath: 'assets/clock.png',
+        selectedIconPath: 'assets/clock-active.png'
       },
       {
         pagePath: 'pages/my/index',
         text: 'Me',
-        iconPath: 'assets/user-center.png',
-        selectedIconPath: 'assets/user-center-active.png'
+        iconPath: 'assets/me.png',
+        selectedIconPath: 'assets/me-active.png'
       }
     ]
   }
