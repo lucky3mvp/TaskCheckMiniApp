@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-
+import wit from './utils/wit'
 import configStore from './store'
 
 import './app.less'
@@ -8,7 +8,9 @@ import './app.less'
 const store = configStore()
 
 class App extends Component {
-  componentDidMount () {}
+  componentDidMount () {
+    wit.login()
+  }
 
   componentDidShow () {}
 

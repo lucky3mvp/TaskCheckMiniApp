@@ -1,5 +1,41 @@
 .my-page {
+  width: 375px;
+  min-height: 100%;
+  .no-button::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    background: none;
+    border: none;
+    border-radius: 0;
+  }
+  .no-button {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    background: none;
+    border: none;
+    border-radius: 0;
+  }
   .avatar-wrapper {
-    background-color: red;
+    width: 335px;
+    height: 94px;
+    box-sizing: border-box;
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+    .avatar-btn {
+      flex-shrink: 0;
+      height: 54px;
+      width: 54px;
+      margin-right: 15px;
+      .avatar {
+        height: 54px;
+        width: 54px;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+    }
+
   }
 }
