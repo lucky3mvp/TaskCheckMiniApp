@@ -1,41 +1,76 @@
 import React, { Component } from 'react'
-import { useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import { View, Button, Text, Image } from '@tarojs/components'
+import wit from 'src/utils/wit'
+import {updateUserInfo} from 'src/store/actions/userInfo'
 
 import './index.less'
 
+type PageStateProps = {
+  userInfo: UserInfoStoreType
+}
 
-export default () => {
-  return (
-    <View className='my-page'>
-      <View
-        className={'avatar-wrapper border-bottom'}
-      >
-        <Button
-          open-type='getUserInfo'
-          onGetUserInfo={
-            ()=>{}
-          }
-          className="avatar-btn no-button"
+type PageDispatchProps = {
+  updateUserInfo: (_) => void
+}
+
+type PageOwnProps = {}
+
+type PageState = {}
+
+type IProps = PageStateProps & PageDispatchProps & PageOwnProps
+
+interface My {
+  props: IProps;
+}
+
+@connect(({ userInfo }) => ({
+  userInfo
+}), (dispatch) => ({
+  updateUserInfo (userInfo) {
+    dispatch(updateUserInfo(userInfo))
+  }
+}))
+class My extends Component {
+  getUserInfo = async () => {
+    const [res] = await wit.getUserInfo()
+    if (res) {
+      this.props.updateUserInfo(res)
+    }
+  }
+  render(){
+    return (
+      <View className='my-page'>
+        <View
+          className={'avatar-wrapper border-bottom'}
         >
-          <Image
-            src={
-              'https://sf3-ttcdn-tos.pstatp.com/obj/static-assets/e28ab4819d63c0277b996592cde9fd6a.png'
-            }
-            className='avatar'
-          />
-        </Button>
-        <View>
           <Button
             open-type='getUserInfo'
-            onGetUserInfo={
-              ()=>{}
-            }
+            onGetUserInfo={this.getUserInfo}
+            className="avatar no-button"
           >
-            啦啦啦
+            <Image
+              src={
+                this.props.userInfo.avatarUrl || 'https://sf3-ttcdn-tos.pstatp.com/obj/static-assets/e28ab4819d63c0277b996592cde9fd6a.png'
+              }
+              className='img'
+            />
           </Button>
+          <View>
+            <Button
+              open-type='getUserInfo'
+              className="name no-button"
+              onGetUserInfo={
+                ()=>{}
+              }
+            >
+              {this.props.userInfo.nickName}
+            </Button>
+          </View>
         </View>
       </View>
-    </View>
-  )
+    )
+  }
 }
+
+export default My

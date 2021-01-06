@@ -1,8 +1,8 @@
 declare const wx: any
-declare const wit: Wit
 
 interface Wit {
-  login(): Promise<[any | null, any]>
+  login(): Promise<[any, any]>
+  getUserInfo(opts?: any): Promise<[any, any]>
 }
 
 import { login } from './request'
@@ -21,7 +21,7 @@ export default {
               openID: openid
             })
             resolve([
-              { code: r.code, openID: openid },
+              { openID: openid },
               null
             ])
           },
@@ -36,4 +36,17 @@ export default {
       }
     })
   },
+  getUserInfo: async (opts = {}) => {
+    return await new Promise(res => {
+      wx.getUserInfo({
+        ...opts,
+        success: r => {
+          res([r.userInfo, null])
+        },
+        fail: e => {
+          res([null, e])
+        }
+      })
+    })
+  }
 } as Wit

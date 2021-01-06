@@ -13,6 +13,14 @@ declare module "*.styl";
 declare const process: {
   env: {
     TARO_ENV: 'weapp' | 'swan' | 'alipay' | 'h5' | 'rn' | 'tt' | 'quickapp' | 'qq' | 'jd';
+    NODE_ENV: 'production' | 'development';
     [key: string]: any;
   }
+}
+
+type UserInfoStoreType = {
+  openID: string
+  avatarUrl: string
+  gender: number
+  nickName: string
 }

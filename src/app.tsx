@@ -1,15 +1,21 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import wit from './utils/wit'
+import {updateUserInfo} from './store/actions/userInfo'
 import configStore from './store'
+
+const store = configStore()
+const {dispatch} = store
 
 import './app.less'
 
-const store = configStore()
 
 class App extends Component {
-  componentDidMount () {
-    wit.login()
+  async componentDidMount () {
+    const [res] = await wit.login()
+    if (res) {
+      dispatch(updateUserInfo(res))
+    }
   }
 
   componentDidShow () {}
