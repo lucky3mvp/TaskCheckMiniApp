@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import config from '../config'
+import config from '../../host'
 import Global from './global'
 
 function addHeader(params, headers = {}) {
