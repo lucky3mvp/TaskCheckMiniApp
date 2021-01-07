@@ -17,7 +17,7 @@
     border: none;
     border-radius: 0;
   }
-  .avatar-wrapper {
+  .header {
     width: 335px;
     height: 94px;
     box-sizing: border-box;
@@ -29,13 +29,29 @@
       height: 54px;
       width: 54px;
       margin-right: 15px;
-      .img{
+      .img {
         height: 54px;
         width: 54px;
         border-radius: 50%;
         overflow: hidden;
       }
     }
-
+    .txt {
+      flex: 1;
+      overflow: hidden;
+      .txt-main {
+        font-size: 20px;
+        font-family: 'PingFangSC-Medium';
+        line-height: 30px;
+        color: #222222;
+        text-align: left;
+      }
+      .txt-sub {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #999999;
+        line-height: 1;
+      }
+    }
   }
 }

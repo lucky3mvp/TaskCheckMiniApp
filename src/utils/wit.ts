@@ -6,33 +6,33 @@ interface Wit {
 }
 
 import { login } from './request'
-import Global, {setGlobal} from './global'
+import Global, { setGlobal } from './global'
 
 export default {
   login: async () => {
     return await new Promise(resolve => {
       if (!Global.openID) {
         wx.login({
-          success: async (r) => {
+          success: async r => {
             const { openid } = await login({
               code: r.code
             })
             setGlobal({
               openID: openid
             })
-            resolve([
-              { openID: openid },
-              null
-            ])
+            resolve([{ openID: openid }, null])
           },
           fail: e => {
             resolve([null, e])
           }
         })
       } else {
-        resolve([{
-          openID: Global.openID
-        }, null])
+        resolve([
+          {
+            openID: Global.openID
+          },
+          null
+        ])
       }
     })
   },

@@ -1,21 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Button, Text } from '@tarojs/components'
-
-import { add, minus, asyncAdd } from 'src/store/actions/counter'
+import { View, Button, Text, Image } from '@tarojs/components'
+import wit from 'src/utils/wit'
+import { updateUserInfo } from 'src/store/actions/userInfo'
 
 import './index.less'
 
 type PageStateProps = {
-  counter: {
-    num: number
-  }
+  userInfo: UserInfoStoreType
 }
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
+  updateUserInfo: (_) => void
 }
 
 type PageOwnProps = {}
@@ -24,47 +20,30 @@ type PageState = {}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface Index {
-  props: IProps;
+interface ClockHistory {
+  props: IProps
 }
 
-@connect(({ counter }) => ({
-  counter
-}), (dispatch) => ({
-  add () {
-    dispatch(add())
-  },
-  dec () {
-    dispatch(minus())
-  },
-  asyncAdd () {
-    dispatch(asyncAdd())
+@connect(
+  ({ userInfo }) => ({
+    userInfo
+  }),
+  dispatch => ({
+    updateUserInfo(userInfo) {
+      dispatch(updateUserInfo(userInfo))
+    }
+  })
+)
+class ClockHistory extends Component {
+  getUserInfo = async () => {
+    const [res] = await wit.getUserInfo()
+    if (res) {
+      this.props.updateUserInfo(res)
+    }
   }
-}))
-class Index extends Component {
-  componentWillReceiveProps (nextProps) {
-    console.log(this.props, nextProps)
-  }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
-  render () {
-    return (
-      <View className='index'>
-        <View className="iconfont icon-badminton" />
-        <Button className='add_btn' onClick={this.props.add}>+</Button>
-        <Button className='dec_btn' onClick={this.props.dec}>-</Button>
-        <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
-        <View><Text>{this.props.counter.num}</Text></View>
-        <View><Text>Hello, World</Text></View>
-      </View>
-    )
+  render() {
+    return <View className=""></View>
   }
 }
 
-export default Index
-
+export default ClockHistory

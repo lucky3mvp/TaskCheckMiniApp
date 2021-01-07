@@ -20,7 +20,7 @@ type PageState = {}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface Clock {
+interface TaskList {
   props: IProps
 }
 
@@ -34,7 +34,7 @@ interface Clock {
     }
   })
 )
-class Clock extends Component {
+class TaskList extends Component {
   getUserInfo = async () => {
     const [res] = await wit.getUserInfo()
     if (res) {
@@ -46,4 +46,4 @@ class Clock extends Component {
   }
 }
 
-export default Clock
+export default TaskList

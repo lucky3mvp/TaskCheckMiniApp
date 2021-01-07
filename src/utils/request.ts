@@ -13,21 +13,12 @@ function addHeader(params, headers = {}) {
 }
 
 export const login = async params =>
-  post(
-    `${config.server.prefix}/mpLogin`,
-    addHeader(params),
-  )
+  post(`${config.server.prefix}/mpLogin`, addHeader(params))
 
-async function post(
-  url,
-  data,
-): Promise<any> {
-  return fetchData(
-    url,
-    'post',
-    data,
-    { 'content-type': 'application/json' },
-  ).catch(e => {
+async function post(url, data): Promise<any> {
+  return fetchData(url, 'post', data, {
+    'content-type': 'application/json'
+  }).catch(e => {
     errorHandler({ url, data }, e)
   })
 }
@@ -41,19 +32,19 @@ function fetchData(url, method, data, header) {
       header
     }
 
-      Taro.request(wxRequestOptions)
-        .then(async response => {
-          console.log('request 请求成功', response)
-          if (response && response.statusCode === 200) {
-            res(response.data)
-          } else {
-            rej(response)
-          }
-        })
-        .catch(error => {
-          console.log('request 请求失败', error)
-          rej(error)
-        })
+    Taro.request(wxRequestOptions)
+      .then(async response => {
+        console.log('request 请求成功', response)
+        if (response && response.statusCode === 200) {
+          res(response.data)
+        } else {
+          rej(response)
+        }
+      })
+      .catch(error => {
+        console.log('request 请求失败', error)
+        rej(error)
+      })
   })
 }
 

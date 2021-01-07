@@ -1,20 +1,21 @@
 import { UPDATE_USER_INFO } from 'src/constants'
 
 const INITIAL_STATE: UserInfoStoreType = {
+  isLogin: false,
   openID: '',
-  avatarUrl: "",
-  gender: 1,
-  nickName: ""
+  avatarUrl: '',
+  gender: 0,
+  nickName: ''
 }
 
-export default function counter (state = INITIAL_STATE, action) {
+export default function counter(state = INITIAL_STATE, action) {
   switch (action.type) {
     case UPDATE_USER_INFO:
       return {
         ...state,
         ...action.payload
       }
-     default:
-       return state
+    default:
+      return state
   }
 }
