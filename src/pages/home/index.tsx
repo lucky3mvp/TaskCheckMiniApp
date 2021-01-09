@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { View, Button, Text, Image } from '@tarojs/components'
 import wit from 'src/utils/wit'
 import { updateUserInfo } from 'src/store/actions/userInfo'
+import Calendar from 'src/components/Calendar'
 
 import './index.less'
 
@@ -42,7 +43,11 @@ class Home extends Component {
     }
   }
   render() {
-    return <View className=""></View>
+    return (
+      <View className="home-page">
+        <Calendar />
+      </View>
+    )
   }
 }
 

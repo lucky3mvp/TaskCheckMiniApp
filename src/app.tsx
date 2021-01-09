@@ -11,10 +11,10 @@ import './app.less'
 
 class App extends Component {
   async componentDidMount() {
-    const [res] = await wit.login()
-    if (res) {
-      dispatch(updateUserInfo(res))
-    }
+    // const [res] = await wit.login()
+    // if (res) {
+    //   dispatch(updateUserInfo(res))
+    // }
   }
 
   componentDidShow() {}

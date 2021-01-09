@@ -8,7 +8,7 @@ const INITIAL_STATE: UserInfoStoreType = {
   nickName: ''
 }
 
-export default function counter(state = INITIAL_STATE, action) {
+export default function userInfo(state = INITIAL_STATE, action) {
   switch (action.type) {
     case UPDATE_USER_INFO:
       return {

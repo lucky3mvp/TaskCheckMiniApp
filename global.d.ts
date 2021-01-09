@@ -34,3 +34,8 @@ type UserInfoStoreType = {
   gender: number
   nickName: string
 }
+type DateType = {
+  year: number
+  month: number
+  date: number
+}

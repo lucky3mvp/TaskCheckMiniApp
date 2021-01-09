@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { View, Button, Text, Image } from '@tarojs/components'
 import wit from 'src/utils/wit'
 import { updateUserInfo } from 'src/store/actions/userInfo'
+import { Greetings } from 'src/constants'
 
 import './index.less'
 
@@ -49,16 +50,20 @@ class My extends Component {
   getGreetings(): GreetingType {
     const { userInfo } = this.props
     if (userInfo.nickName) {
-      if (userInfo.gender === 1) {
-      } else if (userInfo.gender === 2) {
-      } else {
+      const l = Greetings.length
+      const index = Math.floor(Math.random() * l)
+      return {
+        main: userInfo.nickName,
+        sub: `${Greetings[index]}，${
+          userInfo.gender === 1
+            ? '小哥哥，'
+            : userInfo.gender === 2
+            ? '小姐姐，'
+            : ''
+        }冲鸭~`
       }
     } else {
       return { main: '立即登录', sub: '' }
-    }
-    return {
-      main: '',
-      sub: ''
     }
   }
 
