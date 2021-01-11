@@ -20,7 +20,7 @@ type PageState = {}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface ClockHistory {
+interface CheckList {
   props: IProps
 }
 
@@ -34,7 +34,7 @@ interface ClockHistory {
     }
   })
 )
-class ClockHistory extends Component {
+class CheckList extends Component {
   getUserInfo = async () => {
     const [res] = await wit.getUserInfo()
     if (res) {
@@ -46,4 +46,4 @@ class ClockHistory extends Component {
   }
 }
 
-export default ClockHistory
+export default CheckList

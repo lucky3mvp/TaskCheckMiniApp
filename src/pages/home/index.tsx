@@ -47,7 +47,7 @@ class Home extends Component {
     return (
       <View className="home-page">
         {Themes.map(t => (
-          <View className={`test ${t}`}></View>
+          <View className={`test ${t}-background`}></View>
         ))}
       </View>
     )

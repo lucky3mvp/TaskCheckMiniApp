@@ -1,9 +1,9 @@
 export default {
   pages: [
     'pages/home/index',
-    'pages/clock/index',
+    'pages/check/index',
     'pages/my/index',
-    'pages/task-add/index'
+    'pages/plan-add/index'
   ],
   window: {
     backgroundTextStyle: 'light',
@@ -27,10 +27,10 @@ export default {
         selectedIconPath: 'assets/home-active.png'
       },
       {
-        pagePath: 'pages/clock/index',
+        pagePath: 'pages/check/index',
         text: 'Better',
-        iconPath: 'assets/clock.png',
-        selectedIconPath: 'assets/clock-active.png'
+        iconPath: 'assets/check.png',
+        selectedIconPath: 'assets/check-active.png'
       },
       {
         pagePath: 'pages/my/index',

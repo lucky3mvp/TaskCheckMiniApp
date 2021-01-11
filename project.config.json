@@ -53,8 +53,8 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/task-add/index",
-          "pathName": "pages/task-add/index",
+          "name": "pages/plan-add/index",
+          "pathName": "pages/plan-add/index",
           "scene": null
         }
       ]

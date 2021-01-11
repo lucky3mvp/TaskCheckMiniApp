@@ -20,7 +20,7 @@ type PageState = {}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface TaskDetail {
+interface PlanList {
   props: IProps
 }
 
@@ -34,7 +34,7 @@ interface TaskDetail {
     }
   })
 )
-class TaskDetail extends Component {
+class PlanList extends Component {
   getUserInfo = async () => {
     const [res] = await wit.getUserInfo()
     if (res) {
@@ -46,4 +46,4 @@ class TaskDetail extends Component {
   }
 }
 
-export default TaskDetail
+export default PlanList

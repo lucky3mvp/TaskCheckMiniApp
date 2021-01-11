@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Button, Text, Image } from '@tarojs/components'
-import wit from 'src/utils/wit'
 import { updateUserInfo } from 'src/store/actions/userInfo'
+
+import SelfInput from 'src/components/SelfInput'
 
 import './index.less'
 
@@ -20,7 +21,7 @@ type PageState = {}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface Clock {
+interface PlanAdd {
   props: IProps
 }
 
@@ -34,16 +35,15 @@ interface Clock {
     }
   })
 )
-class Clock extends Component {
-  getUserInfo = async () => {
-    const [res] = await wit.getUserInfo()
-    if (res) {
-      this.props.updateUserInfo(res)
-    }
-  }
+class PlanAdd extends Component {
   render() {
-    return <View className=""></View>
+    return (
+      <View className="plan-add-page">
+        <SelfInput type="text" defaultValue="" />
+        <View>12</View>
+      </View>
+    )
   }
 }
 
-export default Clock
+export default PlanAdd
