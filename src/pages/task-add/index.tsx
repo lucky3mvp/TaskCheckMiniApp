@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { View, Button, Text, Image } from '@tarojs/components'
 import { updateUserInfo } from 'src/store/actions/userInfo'
 
+import SelfInput from 'src/components/SelfInput'
+
 import './index.less'
 
 type PageStateProps = {
@@ -35,7 +37,12 @@ interface TaskAdd {
 )
 class TaskAdd extends Component {
   render() {
-    return <View className="task-add-page"></View>
+    return (
+      <View className="task-add-page">
+        <SelfInput type="text" defaultValue="" />
+        <View>12</View>
+      </View>
+    )
   }
 }
 

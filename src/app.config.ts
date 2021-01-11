@@ -1,6 +1,9 @@
 export default {
   pages: [
-    'pages/home/index', 'pages/clock/index', 'pages/my/index'
+    'pages/home/index',
+    'pages/clock/index',
+    'pages/my/index',
+    'pages/task-add/index'
   ],
   window: {
     backgroundTextStyle: 'light',

@@ -116,7 +116,7 @@ export default (props: IProps) => {
   )
 
   return (
-    <View className="calendar">
+    <View className="calendar-component">
       <View className="header border-bottom">
         <View className="arrow trans" onClick={onPrev}>
           <Image src={rightArrow} className="img"></Image>

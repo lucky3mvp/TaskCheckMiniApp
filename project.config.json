@@ -40,5 +40,24 @@
     "minifyWXSS": true
   },
   "compileType": "miniprogram",
-  "condition": {}
+  "condition": {
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/task-add/index",
+          "pathName": "pages/task-add/index",
+          "scene": null
+        }
+      ]
+    }
+  }
 }
