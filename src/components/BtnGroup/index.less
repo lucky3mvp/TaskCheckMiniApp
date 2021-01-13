@@ -1,0 +1,58 @@
+//weapp不支持伪元素选择器
+/*  #ifndef  weapp  */
+::-webkit-scrollbar {
+  color: transparent !important;
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
+/*  #endif  */
+
+.btn-group-component {
+  .btns {
+    flex-grow: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    .btn {
+      overflow: hidden;
+      box-sizing: border-box;
+      flex-grow: 1;
+      min-width: 76px;
+      height: 32px;
+      line-height: 30px;
+      margin-right: 10px;
+      font-size: 14px;
+      font-family: 'PingFangSC-Regular';
+      color: #222222;
+      border: 1px solid #f2f2f2;
+      background-color: #f5f6f7;
+      border-radius: 8px;
+      position: relative;
+      text-align: center;
+      &:last-child {
+        margin-right: 0;
+      }
+      &.active {
+        font-family: 'PingFangSC-Medium';
+        position: relative;
+        .btn-fake-bkg {
+          position: absolute;
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          opacity: 0.1;
+        }
+      }
+    }
+    .l {
+      width: 1px;
+      height: 1px;
+      flex-shrink: 0;
+    }
+  }
+}

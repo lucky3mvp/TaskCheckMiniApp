@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: '添加',
+  navigationBarTitleText: '制定计划',
   navigationBarBackgroundColor: '#ffffff',
   navigationBarTextStyle: 'black',
   backgroundColor: '#ffffff',

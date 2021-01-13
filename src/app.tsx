@@ -13,6 +13,7 @@ class App extends Component {
   async componentDidMount() {
     // const [res] = await wit.login()
     // if (res) {
+    // 更新 global
     //   dispatch(updateUserInfo(res))
     // }
   }

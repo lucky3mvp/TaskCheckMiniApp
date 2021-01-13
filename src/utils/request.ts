@@ -6,7 +6,8 @@ function addHeader(params, headers = {}) {
   return {
     header: {
       ...headers,
-      uid: Global.openID
+      uid: Global.openID,
+      isTest: process.env.NODE_ENV === 'production' ? 0 : 1
     },
     ...params
   }

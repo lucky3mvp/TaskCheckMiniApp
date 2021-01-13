@@ -39,3 +39,7 @@ type DateType = {
   month: number
   date: number
 }
+type CommonItemType = {
+  label: string
+  value: string | number
+}
