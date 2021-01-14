@@ -1,26 +1,18 @@
-@import '../../../styles/color.less';
-
-.value {
+.picker-component {
   height: 36px;
   flex: 1;
   font-size: 16px;
   line-height: 16px;
   font-family: 'PingFangSC-Regular';
-  color: @textColor;
+  color: #222222;
   text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: center;
   &.placeholder {
-    color: @placeholderColor;
+    color: #cacaca;
   }
-  &.renewal-value {
-    font-family: 'PingFangSC-Medium';
+  .icon-right-arrow {
+    color: #999999;
   }
-}
-.disabled {
-  color: @disabledColor;
-}
-.renewal-disabled {
-  color: @textColor;
 }

@@ -13,6 +13,7 @@ export default (props: IProps) => (
     className={`radio-component ${props.checked ? 'checked' : ''} ${
       props.theme
     }-border-color`}
+    onClick={props.onChange}
   >
     {props.checked ? (
       <View className={`radio-inner ${props.theme}-background`} />

@@ -1,14 +1,13 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Picker, View, Text } from '@tarojs/components'
 import './index.less'
 
 interface IProps {
   mode: any
   value: any
-  text: string
   placeholder: string
-  range: any
-  onChange?: (...any) => void
+  range: Array<CommonItemType>
+  onChange?: (index) => void
   onCancel?: () => void
   onColumnChange?: (...args) => void
 }
@@ -16,7 +15,7 @@ interface IProps {
 export default (props: IProps) => {
   const onChange = useCallback(
     e => {
-      props.onChange && props.onChange(e.detail.value, e)
+      props.onChange && props.onChange(+e.detail.value)
     },
     [props.onChange]
   )
@@ -30,6 +29,12 @@ export default (props: IProps) => {
     },
     [props.onColumnChange]
   )
+  const text = useMemo(() => {
+    if (props.value >= 0) {
+      return props.range[props.value] ? props.range[props.value].label : ''
+    }
+    return ''
+  }, [props.value, props.range])
   return (
     <Picker
       disabled={false}
@@ -41,9 +46,9 @@ export default (props: IProps) => {
       onCancel={onCancel}
       onColumnChange={onColumnChange}
     >
-      <View className={`value ${props.text ? '' : 'placeholder'}`}>
-        <Text>{props.text || props.placeholder}</Text>
-        <RightArrow />
+      <View className={`picker-component ${text ? '' : 'placeholder'}`}>
+        <Text>{text || props.placeholder}</Text>
+        <View className="iconfont icon-right-arrow" />
       </View>
     </Picker>
   )

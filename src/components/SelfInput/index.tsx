@@ -5,7 +5,7 @@ import './index.less'
 
 interface IProps {
   type?: any
-  defaultValue?: string
+  value: string
   placeholder?: string
   maxlength?: number
   onInput?: (_) => void
@@ -43,7 +43,7 @@ export default (props: IProps) => {
       placeholderStyle="color: rgb(202, 202, 202)"
       className="self-input-component"
       type={props.type || 'text'}
-      value={props.defaultValue}
+      value={props.value}
       maxlength={props.maxlength || 500}
       cursorSpacing={props.cursorSpacing || 10}
       placeholder={props.placeholder}

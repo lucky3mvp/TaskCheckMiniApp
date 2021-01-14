@@ -31,18 +31,20 @@
       padding: 12px 10px 12px 20px;
       position: relative;
     }
-
-    &.sec {
-      margin-top: 50px;
-    }
     .week {
       .indicator {
         left: 202px;
+      }
+      .ipt {
+        width: 45px;
       }
     }
     .month {
       .indicator {
         left: 288px;
+      }
+      .ipt {
+        width: 55px;
       }
     }
     .indicator {
@@ -75,13 +77,24 @@
       }
       .ipt {
         margin-right: 15px;
-        width: 45px;
         text-align: center;
       }
       .multi-btn-group-wrapper {
         flex: 1;
         overflow: auto;
       }
+    }
+  }
+  .goal-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    .ipt {
+      flex: 1;
+    }
+    .picker {
+      width: 60px;
     }
   }
   .icon-wrapper {
