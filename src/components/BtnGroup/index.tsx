@@ -30,6 +30,7 @@ export default (props: IProps) => {
               className={classnames('btn', {
                 [`${props.theme}-border-color`]: props.value === o.value,
                 [`${props.theme}-color`]: props.value === o.value,
+                [`btn-color-and-border-color-default`]: props.value !== o.value,
                 active: props.value === o.value
               })}
               onClick={onChange.bind(null, o)}
