@@ -4,6 +4,8 @@ export const Greetings = [
   '往前即是星辰大海'
 ]
 
+export const Weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+
 export const TypeMap = {
   2: '每日',
   3: '每周',

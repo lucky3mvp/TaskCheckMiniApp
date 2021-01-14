@@ -1,0 +1,19 @@
+.radio-component {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 50%;
+  &.checked {
+    position: relative;
+    .radio-inner {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      bottom: 2px;
+      right: 2px;
+      border-radius: 50%;
+    }
+  }
+}

@@ -21,7 +21,8 @@
       overflow: hidden;
       box-sizing: border-box;
       flex-grow: 1;
-      min-width: 76px;
+      flex-shrink: 0;
+      width: 76px;
       height: 32px;
       line-height: 30px;
       margin-right: 10px;
@@ -29,13 +30,13 @@
       font-family: 'PingFangSC-Regular';
       border-width: 1px;
       border-style: solid;
-      background-color: #f5f6f7;
       border-radius: 8px;
       position: relative;
       text-align: center;
       &.btn-color-and-border-color-default {
         color: #222222;
         border-color: #f5f6f7;
+        background-color: #f5f6f7;
       }
       &:last-child {
         margin-right: 0;
