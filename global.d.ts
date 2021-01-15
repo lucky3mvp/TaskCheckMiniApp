@@ -41,5 +41,13 @@ type DateType = {
 }
 type CommonItemType = {
   label: string
-  value: string | number
+  value: string
+}
+
+type CreateDateRangeParamsType = {
+  start?: Date
+  end?: Date
+  range?: number
+  specificStart?: Array<Array<CommonItemType>>
+  specificEnd?: Array<Array<CommonItemType>>
 }

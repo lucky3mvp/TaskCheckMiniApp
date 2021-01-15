@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import classnames from 'classnames'
 
 import { View, Text } from '@tarojs/components'
@@ -7,8 +7,8 @@ import './index.less'
 
 interface IProps {
   theme: string
-  value?: string | number
-  values?: Array<string | number>
+  value?: string
+  values?: Array<string>
   btns: Array<CommonItemType>
   multiple?: boolean
   onChange: (t: CommonItemType) => void
