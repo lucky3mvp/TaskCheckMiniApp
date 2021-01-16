@@ -6,7 +6,7 @@ interface Wit {
 }
 
 import { login } from './request'
-import Global, { setGlobal } from './global'
+import Global from './global'
 
 export default {
   login: async () => {
@@ -14,13 +14,14 @@ export default {
       if (!Global.openID) {
         wx.login({
           success: async r => {
-            const { openid } = await login({
+            const { code, openID } = await login({
               code: r.code
             })
-            setGlobal({
-              openID: openid
-            })
-            resolve([{ openID: openid }, null])
+            if (code === 200) {
+              resolve([{ openID: openID }, null])
+            } else {
+              resolve([null, { msg: 'login error' }])
+            }
           },
           fail: e => {
             resolve([null, e])

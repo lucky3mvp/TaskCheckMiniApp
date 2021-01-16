@@ -23,6 +23,17 @@ export const UnitMap = {
   8: '大卡'
 }
 
+export const UnitEngMap = {
+  1: 't',
+  2: 's',
+  3: 'm',
+  4: 'km',
+  5: 'h',
+  6: 'min',
+  7: 'ml',
+  8: 'cal'
+}
+
 export const CategoryMap = {
   1: '运动',
   2: '生活',

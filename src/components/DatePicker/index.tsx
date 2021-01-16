@@ -12,8 +12,17 @@ interface IProps {
   specificStart?: Array<Array<CommonItemType>>
   initialValue?: Array<number>
   leftArrow?: boolean
+  rightArrow?: boolean
   onChange: (any) => void
   onCancel?: () => void
+  formatter?: (any) => void
+  align?:
+    | 'left'
+    | 'center'
+    | 'right'
+    | 'flex-start'
+    | 'flex-end'
+    | 'space-between'
 }
 
 export default (props: IProps) => {
@@ -142,15 +151,17 @@ export default (props: IProps) => {
   )
   return (
     <Picker
-      value={index}
-      leftArrow={props.leftArrow}
+      index={index}
+      align={props.align}
       placeholder={props.placeholder || '请选择'}
       mode="multiSelector"
       range={range}
       onCancel={onCancel}
       onChange={onChange}
       onColumnChange={onColumnChange}
-      displayFormatter={props.displayFormatter}
+      formatter={props.formatter}
+      leftArrow={props.leftArrow}
+      rightArrow={props.rightArrow}
     />
   )
 }

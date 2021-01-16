@@ -7,15 +7,25 @@
   color: #222222;
   text-align: left;
   display: flex;
-  justify-content: space-between;
+  &.space-between {
+    justify-content: space-between;
+  }
+  &.flex-start {
+    justify-content: flex-start;
+  }
+  &.flex-end {
+    justify-content: flex-end;
+  }
   align-items: center;
   &.placeholder {
     color: #cacaca;
   }
   .icon-right-arrow {
     color: #999999;
+    margin-left: 10px;
   }
   .left-arrow {
+    margin-right: 10px;
     transform: rotate(180deg);
   }
 }

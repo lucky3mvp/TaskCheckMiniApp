@@ -6,6 +6,7 @@ export const updateUserInfo = userInfo => {
     payload: userInfo
   }
 }
+
 // 异步的action
 // export function asyncAdd() {
 //   return dispatch => {
