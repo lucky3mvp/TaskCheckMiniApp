@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Button, Block, Image } from '@tarojs/components'
+import Taro from '@tarojs/taro'
+import { View, Image } from '@tarojs/components'
 import classnames from 'classnames'
-import { updateUserInfo } from 'src/store/actions/userInfo'
 
 import FormItem from 'src/components/FormItem'
 import FormTitle from 'src/components/FormTitle'
@@ -20,24 +20,32 @@ import {
   Icons,
   TypeMap,
   Weekdays,
-  UnitMap
+  UnitMap,
+  IconCategoryMap
 } from 'src/constants'
 import { isIpx } from 'src/utils'
+import { submitPlan } from 'src/utils/request'
 
 import './index.less'
+
+/**
+ * name: 20
+ * description: 50
+ * times: 2
+ * goal: 10
+ */
 
 type PageStateProps = {
   userInfo: UserInfoStoreType
 }
 
-type PageDispatchProps = {
-  updateUserInfo: (_) => void
-}
+type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
 type IState = {
   isIpx: boolean
+  disable: boolean
   bannerImgIndex: number
   name: string
   description: string
@@ -66,15 +74,12 @@ interface PlanAdd {
   ({ userInfo }) => ({
     userInfo
   }),
-  dispatch => ({
-    updateUserInfo(userInfo) {
-      dispatch(updateUserInfo(userInfo))
-    }
-  })
+  dispatch => ({})
 )
 class PlanAdd extends Component<IProps, IState> {
   state = {
     isIpx: false,
+    disable: true,
     bannerImgIndex: 0,
     name: '',
     description: '',
@@ -85,7 +90,7 @@ class PlanAdd extends Component<IProps, IState> {
     times: '',
     days: ['0', '1', '2', '3', '4', '5', '6'],
     type: '3', // 2-每日 3-每周 4-每月
-    subType: '1', // 1-每周x天 2-每周周几
+    subType: '2', // 1-每周x天 2-每周周几
     beginTime: '',
     endTime: '',
     typeBtns: [],
@@ -111,30 +116,71 @@ class PlanAdd extends Component<IProps, IState> {
       }))
     })
   }
+  getValue(field: string, exception: Record<string, string | string[]>) {
+    const expFields = Object.keys(exception)
+    return expFields.includes(field) ? exception[field] : this.state[field]
+  }
+  checkDisable(exception: Record<string, string | string[]>) {
+    let r: boolean = !!(
+      this.getValue('name', exception) &&
+      this.getValue('description', exception) &&
+      this.getValue('icon', exception) &&
+      this.getValue('unit', exception) &&
+      this.getValue('goal', exception) &&
+      this.getValue('beginTime', exception) &&
+      this.getValue('endTime', exception)
+    )
+
+    if (!r) return false
+
+    // 到这儿的证明上面几项都填了
+    const type = this.getValue('type', exception)
+    const subType = this.getValue('subType', exception)
+    if (type === '3') {
+      if (subType === '1') {
+        r = !!this.getValue('times', exception)
+      } else {
+        r = !!this.getValue('days', exception).length
+      }
+    } else if (type === '4') {
+      r = !!this.getValue('times', exception)
+    }
+    return r
+  }
   onNameChange = (name: string) => {
     this.setState({
-      name
+      name,
+      disable: !this.checkDisable({ name: name })
     })
   }
   onDescriptionChange = (description: string) => {
     this.setState({
-      description
+      description,
+      disable: !this.checkDisable({ description: description })
     })
   }
   onTypeChange = (o: CommonItemType) => {
     this.setState({
       type: o.value,
-      subType: '1'
+      subType: '1',
+      times: '',
+      disable: !this.checkDisable({
+        type: o.value,
+        subType: '1',
+        times: ''
+      })
     })
   }
   onSubTypeChange = (subType: string) => {
     this.setState({
-      subType
+      subType,
+      disable: !this.checkDisable({ subType: subType })
     })
   }
-  onTimesChange = (t: string) => {
+  onTimesChange = (times: string) => {
     this.setState({
-      times: t
+      times,
+      disable: !this.checkDisable({ times: times })
     })
   }
   onDaysChange = (o: CommonItemType) => {
@@ -146,37 +192,119 @@ class PlanAdd extends Component<IProps, IState> {
       days.splice(index, 1)
     }
     this.setState({
-      days
+      days,
+      disable: !this.checkDisable({ days: days })
     })
   }
   onGoalChange = (goal: string) => {
     this.setState({
-      goal
+      goal,
+      disable: !this.checkDisable({ goal: goal })
     })
   }
   onUnitChange = (unit: string) => {
     this.setState({
-      unit
+      unit,
+      disable: !this.checkDisable({ unit: unit })
     })
   }
+  formatTime = (field: 'start' | 'end', p: CommonItemType[]) => {
+    const r = p.map(p => p.value).join('.')
+    if (field === 'start') return r
+    return r === '9999.99.99' ? '永远' : r
+  }
   onChooseBeginTime = p => {
-    console.log(p)
+    const beginTime = p.map(p => p.value).join('/')
+    this.setState({
+      beginTime,
+      disable: !this.checkDisable({ beginTime: beginTime })
+    })
   }
   onChooseEndTime = p => {
-    console.log(p)
+    const endTime = p.map(p => p.value).join('/')
+    this.setState({
+      endTime,
+      disable: !this.checkDisable({ endTime: endTime })
+    })
   }
   onChooseIcon = (icon: string) => {
     this.setState({
-      icon
+      icon,
+      disable: !this.checkDisable({ icon: icon })
     })
   }
   onChooseTheme = (theme: string) => {
     this.setState({
-      theme
+      theme,
+      disable: !this.checkDisable({ theme: theme })
     })
   }
-  onSubmit = () => {
+  onSubmit = async () => {
+    console.log(this.props.userInfo)
+    if (this.state.disable) return
+    if (this.state.subType === '1') {
+      if (this.state.type === '3' && +this.state.times > 7) {
+        Taro.showToast({
+          title: '每周天数不应该超过7天',
+          icon: 'none'
+        })
+        return
+      }
+      if (this.state.type === '4' && +this.state.times > 30) {
+        Taro.showToast({
+          title: '每月天数不应该超过30天',
+          icon: 'none'
+        })
+        return
+      }
+    }
+    if (
+      this.state.endTime !== '9999.99.99' &&
+      new Date(this.state.beginTime) > new Date(this.state.endTime)
+    ) {
+      Taro.showToast({
+        title: '开始时间不应该超过结束时间',
+        icon: 'none'
+      })
+      return
+    }
     console.log(this.state)
+    // 默认登录都能成功吧
+    const res = await submitPlan({
+      name: this.state.name,
+      description: this.state.description,
+      theme: this.state.theme,
+      icon: this.state.icon,
+      category: IconCategoryMap[this.state.icon],
+      unit: this.state.unit,
+      goal: this.state.goal,
+      type: +this.state.type,
+      subType: +this.state.subType,
+      times:
+        (this.state.type === '3' && this.state.subType === '1') ||
+        this.state.type === '4'
+          ? this.state.times
+          : '',
+      // 目前 days 只有每周才能选
+      days:
+        this.state.type === '3' && this.state.subType === '2'
+          ? this.state.days.join(',')
+          : '',
+      beginTime: this.state.beginTime,
+      // 没有默认为永远
+      endTime: this.state.endTime === '9999.99.99' ? '' : this.state.endTime
+    })
+    if (res.code === 200) {
+      Taro.showToast({
+        title: '创建成功，去看看',
+        icon: 'none',
+        duration: 2000
+      })
+      setTimeout(() => {
+        // todo 先跳首页，后面再看去哪儿
+        Taro.switchTab({ url: '/pages/home/index' })
+      }, 2000)
+    }
   }
 
   render() {
@@ -232,7 +360,7 @@ class PlanAdd extends Component<IProps, IState> {
                   <View className="txt">{TypeMap[this.state.type]}</View>
                   <View className="ipt">
                     <SelfInput
-                      type="text"
+                      type="number"
                       placeholder={` 1 - ${this.state.type === '3' ? 7 : 30} `}
                       maxlength={2}
                       value={this.state.times}
@@ -277,6 +405,7 @@ class PlanAdd extends Component<IProps, IState> {
           <View className="goal-wrapper">
             <View className="ipt">
               <SelfInput
+                type="number"
                 placeholder="输入奋斗目标"
                 maxlength={10}
                 value={this.state.goal}
@@ -285,9 +414,10 @@ class PlanAdd extends Component<IProps, IState> {
             </View>
             <View className="picker">
               <Picker
+                align="flex-end"
                 mode="selector"
-                placeholder="请选择"
-                value={this.state.unit}
+                placeholder="目标单位"
+                index={+this.state.unit}
                 range={this.state.unitOptions}
                 onChange={this.onUnitChange}
               />
@@ -297,19 +427,21 @@ class PlanAdd extends Component<IProps, IState> {
         <FormItem label="时间">
           <View className="time-wrapper">
             <View className="picker">
-              {/* datePicker 跟 picker 还是不一样的，datePicker 组件更自治 ㄟ( ▔, ▔ )ㄏ */}
               <DatePicker
+                align="flex-start"
                 placeholder="开始时间"
                 range={4}
-                leftArrow
+                formatter={this.formatTime.bind(null, 'start')}
                 onChange={this.onChooseBeginTime}
               />
             </View>
-            <View className="line">——</View>
+            <View className="line">—</View>
             <View className="picker">
               <DatePicker
+                align="flex-end"
                 placeholder="结束时间"
                 range={4}
+                formatter={this.formatTime.bind(null, 'end')}
                 specificStart={[
                   [{ value: '9999', label: '永远' }],
                   [{ value: '99', label: '' }],
@@ -362,7 +494,9 @@ class PlanAdd extends Component<IProps, IState> {
           <View className="fixed">
             <View className="btn-wrapper">
               <View
-                className={`btn ${this.state.theme}-background`}
+                className={`btn ${this.state.theme}-background ${
+                  this.state.disable ? 'disable' : ''
+                }`}
                 onClick={this.onSubmit}
               >
                 提交、完成、冲鸭！

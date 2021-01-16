@@ -14,7 +14,10 @@ function addHeader(params, headers = {}) {
 }
 
 export const login = async params =>
-  post(`${config.server.prefix}/mpLogin`, addHeader(params))
+  post(`${config.server.prefix}/login`, addHeader(params))
+
+export const submitPlan = async params =>
+  post(`${config.server.prefix}/submitPlan`, addHeader(params))
 
 async function post(url, data): Promise<any> {
   return fetchData(url, 'post', data, {

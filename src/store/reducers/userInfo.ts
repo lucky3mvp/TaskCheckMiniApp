@@ -13,7 +13,8 @@ export default function userInfo(state = INITIAL_STATE, action) {
     case UPDATE_USER_INFO:
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
+        isLogin: !!(action.payload.openID || state.openID)
       }
     default:
       return state

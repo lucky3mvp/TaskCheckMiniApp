@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import wit from './utils/wit'
+import { setGlobal } from './utils/global'
 import { updateUserInfo } from './store/actions/userInfo'
 import configStore from './store'
 
@@ -11,11 +12,21 @@ import './app.less'
 
 class App extends Component {
   async componentDidMount() {
-    // const [res] = await wit.login()
-    // if (res) {
-    // 更新 global
-    //   dispatch(updateUserInfo(res))
-    // }
+    const [res] = await wit.login()
+    if (res) {
+      setGlobal({
+        openID: res.openID
+      })
+      const [userInfoRes] = await wit.getUserInfo()
+      if (userInfoRes) {
+        dispatch(
+          updateUserInfo({
+            ...res,
+            ...userInfoRes
+          })
+        )
+      }
+    }
   }
 
   componentDidShow() {}
