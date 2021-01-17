@@ -13,19 +13,14 @@ import './app.less'
 class App extends Component {
   async componentDidMount() {
     const [res] = await wit.login()
-    if (res) {
-      setGlobal({
-        openID: res.openID
-      })
-      const [userInfoRes] = await wit.getUserInfo()
-      if (userInfoRes) {
-        dispatch(
-          updateUserInfo({
-            ...res,
-            ...userInfoRes
-          })
-        )
-      }
+    const [userInfoRes] = await wit.getUserInfo()
+    if (userInfoRes) {
+      dispatch(
+        updateUserInfo({
+          ...(res ? res : {}),
+          ...userInfoRes
+        })
+      )
     }
   }
 
