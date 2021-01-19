@@ -1,4 +1,55 @@
-.index {
-  flex-direction: column;
+.check-page {
   width: 100%;
+  .check-plan-item {
+    margin: 15px 20px;
+    height: 70px;
+    position: relative;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    .bkg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      &-full {
+        z-index: 0;
+        width: 335px;
+        height: 100%;
+        opacity: 0.25;
+      }
+      &-progress {
+        z-index: 1;
+        width: 100px;
+        height: 100%;
+        transition: width ease-in-out 0.5s;
+      }
+    }
+    .cnt {
+      box-sizing: border-box;
+      padding: 20px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #222222;
+      .left {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        .iconfont {
+          font-size: 20px;
+          margin-right: 10px;
+        }
+      }
+      .right {
+        font-size: 14px;
+      }
+    }
+  }
 }

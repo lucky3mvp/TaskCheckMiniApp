@@ -95,3 +95,31 @@ export function createDateRange(
   }
   return [year, month, date]
 }
+
+export function formatDate(date: Date, fmt: string): string {
+  const o = {
+    'M+': date.getMonth() + 1,
+    'd+': date.getDate(),
+    'h+': date.getHours(),
+    'm+': date.getMinutes(),
+    's+': date.getSeconds(),
+    'q+': Math.floor((date.getMonth() + 3) / 3),
+    S: date.getMilliseconds()
+  }
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(
+      RegExp.$1,
+      String(date.getFullYear()).substr(4 - RegExp.$1.length)
+    )
+  }
+  for (const k in o) {
+    if (new RegExp(`(${k})`).test(fmt)) {
+      const temp: string =
+        RegExp.$1.length === 1
+          ? o[k]
+          : ('00' + o[k]).substr(String(o[k]).length)
+      fmt = fmt.replace(RegExp.$1, temp)
+    }
+  }
+  return fmt
+}

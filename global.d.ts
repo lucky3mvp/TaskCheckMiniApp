@@ -51,3 +51,40 @@ type CreateDateRangeParamsType = {
   specificStart?: Array<Array<CommonItemType>>
   specificEnd?: Array<Array<CommonItemType>>
 }
+
+type PlanApiResType = {
+  planID: string
+  name: string
+  description: string
+  theme: string
+  icon: string
+  category: number
+  unit: string
+  goal: string
+  type: number
+  subType: number
+  times: string
+  days: string
+  beginTime: string
+  endTime: string
+}
+
+type PlanType = {
+  planID: string
+  name: string
+  description: string
+  theme: string
+  icon: string
+  category: number
+  unit: string
+  goal: string
+  type: number
+  subType: number
+  times: string
+  days: Array<string>
+  beginTime: string
+  endTime: string
+  beginTimeDate: Date
+  endTimeDate: Date
+  achieve: string
+}

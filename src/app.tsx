@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import wit from './utils/wit'
-import { setGlobal } from './utils/global'
 import { updateUserInfo } from './store/actions/userInfo'
 import configStore from './store'
 

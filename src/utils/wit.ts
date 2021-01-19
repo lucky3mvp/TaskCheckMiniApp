@@ -14,34 +14,38 @@ export default {
       // 减少请求
       const openID = Taro.getStorageSync('openID') || Global.openID
       if (!openID) {
-        // 用假数据，没公网接口
-        const t = Date.now()
-        setGlobal({
-          openID: t
-        })
-        Taro.setStorageSync('openID', t)
-        resolve([{ openID: t }, null])
-
-        // wx.login({
-        //   success: async r => {
-        //     const { code, openID } = await login({
-        //       code: r.code
-        //     })
-        //     if (code === 200) {
-        //       setGlobal({
-        //         openID: openID
-        //       })
-        //       Taro.setStorageSync('openID', openID)
-        //       resolve([{ openID: openID }, null])
-        //     } else {
-        //       resolve([null, { msg: 'login error' }])
-        //     }
-        //   },
-        //   fail: e => {
-        //     resolve([null, e])
-        //   }
+        // // 用假数据，没公网接口
+        // const t = Date.now()
+        // setGlobal({
+        //   openID: t
         // })
+        // Taro.setStorageSync('openID', t)
+        // resolve([{ openID: t }, null])
+
+        wx.login({
+          success: async r => {
+            const { code, openID } = await login({
+              code: r.code
+            })
+            if (code === 200) {
+              setGlobal({
+                openID: openID
+              })
+              Taro.setStorageSync('openID', openID)
+              resolve([{ openID: openID }, null])
+            } else {
+              resolve([null, { msg: 'login error' }])
+            }
+          },
+          fail: e => {
+            resolve([null, e])
+          }
+        })
       } else {
+        setGlobal({
+          openID: openID
+        })
+        Taro.setStorageSync('openID', openID)
         resolve([
           {
             openID: openID

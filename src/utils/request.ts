@@ -19,6 +19,9 @@ export const login = async params =>
 export const submitPlan = async params =>
   post(`${config.server.prefix}/submitPlan`, addHeader(params))
 
+export const getPlanByDate = async params =>
+  post(`${config.server.prefix}/getPlanByDate`, addHeader(params))
+
 async function post(url, data): Promise<any> {
   return fetchData(url, 'post', data, {
     'content-type': 'application/json'

@@ -83,7 +83,7 @@ class PlanAdd extends Component<IProps, IState> {
     bannerImgIndex: 0,
     name: '',
     description: '',
-    theme: 'theme28',
+    theme: 'theme1',
     icon: '',
     unit: '',
     goal: '',
@@ -240,7 +240,6 @@ class PlanAdd extends Component<IProps, IState> {
     })
   }
   onSubmit = async () => {
-    console.log(this.props.userInfo)
     if (this.state.disable) return
     if (this.state.subType === '1') {
       if (this.state.type === '3' && +this.state.times > 7) {
@@ -268,7 +267,6 @@ class PlanAdd extends Component<IProps, IState> {
       })
       return
     }
-    console.log(this.state)
     // 默认登录都能成功吧
     const res = await submitPlan({
       name: this.state.name,

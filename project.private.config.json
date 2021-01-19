@@ -1,0 +1,29 @@
+{
+  "condition": {
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/plan-add/index",
+          "pathName": "pages/plan-add/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/check/index",
+          "pathName": "pages/check/index",
+          "query": "",
+          "scene": null
+        }
+      ]
+    }
+  }
+}
