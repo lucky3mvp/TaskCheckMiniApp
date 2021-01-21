@@ -43,7 +43,7 @@ export function createDateRange(
   const endMonth = end!.getMonth()
   const endDate = end!.getDate()
 
-  const [year, month, date] = [[], [], []] as Array<Array<CommonItemType>>
+  const [year, month, day] = [[], [], []] as Array<Array<CommonItemType>>
 
   if (start < end!) {
     for (let i = startYear; i <= endYear; i++) {
@@ -64,15 +64,15 @@ export function createDateRange(
   if (specificStart) {
     year.unshift(...specificStart[0])
     month.unshift(...specificStart[1])
-    date.unshift(...specificStart[1])
-    return [year, month, date]
+    day.unshift(...specificStart[1])
+    return [year, month, day]
   }
 
   if (specificEnd) {
     year.push(...specificEnd[0])
     month.push(...specificEnd[1])
-    date.push(...specificEnd[1])
-    return [year, month, date]
+    day.push(...specificEnd[1])
+    return [year, month, day]
   }
 
   const _em = startYear === endYear ? endMonth + 1 : 12
@@ -88,12 +88,12 @@ export function createDateRange(
       ? endDate
       : new Date(startYear, startMonth + 1, 0).getDate() // 取这个月的天数
   for (let i = startDate; i <= _ed; i++) {
-    date.push({
+    day.push({
       value: `${i < 10 ? '0' : ''}${i}`,
       label: `${i}日`
     })
   }
-  return [year, month, date]
+  return [year, month, day]
 }
 
 export function formatDate(date: Date, fmt: string): string {

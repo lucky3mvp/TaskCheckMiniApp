@@ -258,7 +258,7 @@ class PlanAdd extends Component<IProps, IState> {
       }
     }
     if (
-      this.state.endTime !== '9999.99.99' &&
+      this.state.endTime !== '9999/99/99' &&
       new Date(this.state.beginTime) > new Date(this.state.endTime)
     ) {
       Taro.showToast({
@@ -275,14 +275,14 @@ class PlanAdd extends Component<IProps, IState> {
       icon: this.state.icon,
       category: IconCategoryMap[this.state.icon],
       unit: this.state.unit,
-      goal: this.state.goal,
+      goal: +this.state.goal,
       type: +this.state.type,
       subType: +this.state.subType,
       times:
         (this.state.type === '3' && this.state.subType === '1') ||
         this.state.type === '4'
-          ? this.state.times
-          : '',
+          ? +this.state.times
+          : '', // 数据库定义了要数字，这样好像写不进去，也行
       // 目前 days 只有每周才能选
       days:
         this.state.type === '3' && this.state.subType === '2'
@@ -290,7 +290,7 @@ class PlanAdd extends Component<IProps, IState> {
           : '',
       beginTime: this.state.beginTime,
       // 没有默认为永远
-      endTime: this.state.endTime === '9999.99.99' ? '' : this.state.endTime
+      endTime: this.state.endTime === '9999/99/99' ? '' : this.state.endTime
     })
     if (res.code === 200) {
       Taro.showToast({

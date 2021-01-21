@@ -60,10 +60,10 @@ type PlanApiResType = {
   icon: string
   category: number
   unit: string
-  goal: string
+  goal: number
   type: number
   subType: number
-  times: string
+  times: number
   days: string
   beginTime: string
   endTime: string
@@ -77,10 +77,10 @@ type PlanType = {
   icon: string
   category: number
   unit: string
-  goal: string
+  goal: number
   type: number
   subType: number
-  times: string
+  times: number
   days: Array<string>
   beginTime: string
   endTime: string

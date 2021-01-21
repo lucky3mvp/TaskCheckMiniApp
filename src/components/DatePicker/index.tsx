@@ -123,14 +123,14 @@ export default (props: IProps) => {
           _endDate = new Date(year, month, 0).getDate()
         }
 
-        const date: Array<CommonItemType> = []
+        const day: Array<CommonItemType> = []
         for (let i = _startDate; i <= _endDate; i++) {
-          date.push({
+          day.push({
             value: `${i < 10 ? '0' : ''}${i}`,
             label: `${i}日`
           })
         }
-        data.range[2] = date
+        data.range[2] = day
       }
 
       setRange([...data.range])
