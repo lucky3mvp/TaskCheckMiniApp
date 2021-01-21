@@ -57,38 +57,18 @@ class Check extends Component {
         })
       }
     }
-    // const { code, plans = [] } = await getPlanByDate({
-    //   date: formatDate(new Date(), 'yyyy/MM/dd')
-    // })
-    // if (code === 200) {
-    //   console.log(plans)
-    // }
-    this.setState({
-      plans: [
-        {
-          planID: '60029aa3720bc4003c52b0ca',
-          beginTime: '2021-01-16T00:00:00.000Z',
-          category: 1,
-          days: '0,1,2,3,4,5,6',
-          description: '加油',
-          endTime: '2022-01-01T00:00:00.000Z',
-          goal: 5,
-          icon: 'running',
-          name: '跑步',
-          subType: 2,
-          theme: 'theme3',
-          times: 0,
-          type: 3,
-          unit: '3',
-          achieve: 0
-        }
-      ].map((p: PlanApiResType) => ({
-        ...p,
-        beginTimeDate: new Date(p.beginTime),
-        endTimeDate: new Date(p.endTime),
-        days: (p.days || '').split(',')
-      }))
+    const { code, plans = [] } = await getPlanByDate({
+      date: formatDate(new Date(), 'yyyy/MM/dd')
     })
+    if (code === 200) {
+      console.log(plans)
+      this.setState({
+        plans: plans.map(p => ({
+          ...p,
+          days: (p.days || '').split(',')
+        }))
+      })
+    }
   }
   render() {
     return (
