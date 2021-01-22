@@ -47,8 +47,42 @@
         }
       }
       .right {
+        position: relative;
         font-size: 14px;
+        .icon-gou {
+          color: #ee8787;
+        }
+        .dot-wrapper {
+          position: absolute;
+          right: 0;
+          bottom: -10px;
+          display: flex;
+          flex-direction: row;
+          .dot {
+            margin-left: 3px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #cacaca;
+            &.active {
+              background-color: #ee8787;
+            }
+          }
+        }
       }
     }
+  }
+}
+.check-page-check-modal {
+  background: #ffffff;
+  position: fixed;
+  bottom: 0;
+  width: 375px;
+  transition: all ease-in-out 0.5s;
+  &.show {
+    height: 100px;
+  }
+  &.hide {
+    height: 0;
   }
 }

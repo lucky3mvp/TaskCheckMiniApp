@@ -81,10 +81,12 @@ type PlanType = {
   type: number
   subType: number
   times: number
+  status: number
   days: Array<string>
   beginTime: string
   endTime: string
   beginTimeDate: Date
   endTimeDate: Date
-  achieve: string
+  totalAchieve: number
+  totalTimes: number
 }

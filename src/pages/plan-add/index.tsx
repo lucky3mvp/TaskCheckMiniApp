@@ -51,7 +51,7 @@ type IState = {
   description: string
   theme: string
   icon: string
-  unit: string
+  unitIndex: string
   goal: string
   times: string
   days: string[]
@@ -85,7 +85,7 @@ class PlanAdd extends Component<IProps, IState> {
     description: '',
     theme: 'theme1',
     icon: '',
-    unit: '',
+    unitIndex: '',
     goal: '',
     times: '',
     days: ['0', '1', '2', '3', '4', '5', '6'],
@@ -125,7 +125,7 @@ class PlanAdd extends Component<IProps, IState> {
       this.getValue('name', exception) &&
       this.getValue('description', exception) &&
       this.getValue('icon', exception) &&
-      this.getValue('unit', exception) &&
+      this.getValue('unitIndex', exception) &&
       this.getValue('goal', exception) &&
       this.getValue('beginTime', exception) &&
       this.getValue('endTime', exception)
@@ -202,10 +202,10 @@ class PlanAdd extends Component<IProps, IState> {
       disable: !this.checkDisable({ goal: goal })
     })
   }
-  onUnitChange = (unit: string) => {
+  onUnitChange = (unitIndex: string) => {
     this.setState({
-      unit,
-      disable: !this.checkDisable({ unit: unit })
+      unitIndex,
+      disable: !this.checkDisable({ unitIndex: unitIndex })
     })
   }
   formatTime = (field: 'start' | 'end', p: CommonItemType[]) => {
@@ -240,7 +240,9 @@ class PlanAdd extends Component<IProps, IState> {
     })
   }
   onSubmit = async () => {
+    console.log(this.state)
     if (this.state.disable) return
+
     if (this.state.subType === '1') {
       if (this.state.type === '3' && +this.state.times > 7) {
         Taro.showToast({
@@ -274,7 +276,7 @@ class PlanAdd extends Component<IProps, IState> {
       theme: this.state.theme,
       icon: this.state.icon,
       category: IconCategoryMap[this.state.icon],
-      unit: this.state.unit,
+      unit: this.state.unitOptions[this.state.unitIndex].value, // state存的是picker的index
       goal: +this.state.goal,
       type: +this.state.type,
       subType: +this.state.subType,
@@ -415,7 +417,7 @@ class PlanAdd extends Component<IProps, IState> {
                 align="flex-end"
                 mode="selector"
                 placeholder="目标单位"
-                index={+this.state.unit}
+                index={+this.state.unitIndex}
                 range={this.state.unitOptions}
                 onChange={this.onUnitChange}
               />
