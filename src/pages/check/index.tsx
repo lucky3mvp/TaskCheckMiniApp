@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Button, Text, Image } from '@tarojs/components'
+import Taro from '@tarojs/taro'
+import { View } from '@tarojs/components'
 import { UnitMap } from 'src/constants/config'
 
 import Modal from 'src/components/Modal'
@@ -11,7 +12,7 @@ import { formatDate } from 'src/utils'
 
 import { updateUserInfo } from 'src/store/actions/userInfo'
 
-import { getPlanByDate } from 'src/utils/request'
+import { getPlanByDate, check } from 'src/utils/request'
 
 import './index.less'
 
@@ -26,9 +27,11 @@ type PageDispatchProps = {
 type PageOwnProps = {}
 
 type PageState = {
-  modalStatus: number
+  stage: number
   achieve: string
+  comment: string
   plans: Array<PlanType>
+  checkItem: PlanType
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -47,11 +50,13 @@ interface Check {
     }
   })
 )
-class Check extends Component {
+class Check extends Component<IProps, PageState> {
   state = {
-    modalStatus: 0,
+    stage: 0,
     achieve: '',
-    plans: []
+    comment: '',
+    plans: [],
+    checkItem: {} as PlanType
   }
   async componentDidMount() {
     if (!this.props.userInfo.isLogin) {
@@ -64,59 +69,63 @@ class Check extends Component {
         })
       }
     }
-    // const { code, plans = [] } = await getPlanByDate({
-    //   date: formatDate(new Date(), 'yyyy/MM/dd')
-    // })
-    // if (code === 200) {
-    //   console.log(plans)
-    //   this.setState({
-    //     plans: plans.map(p => ({
-    //       ...p,
-    //       days: (p.days || '').split(',')
-    //     }))
-    //   })
-    // }
+    // this.getPlans()
     this.setState({
       plans: [
         {
-          planID: '60029aa3720bc4003c52b0ca',
-          beginTime: '2021-01-16T00:00:00.000Z',
-          category: 1,
-          days: '0,1,2,3,4,5,6',
-          description: '加油',
-          endTime: '2022-01-01T00:00:00.000Z',
-          goal: 5,
+          planID: '60090712f9777f003c2fe9d1',
+          name: '每月跑3次计划一次6km',
+          description: '每月跑3次计划',
+          theme: 'theme11',
           icon: 'running',
-          name: '跑步',
+          category: 1,
+          unit: '4',
+          goal: 6,
+          type: 4,
           subType: 1,
-          theme: 'theme3',
-          times: 4,
-          type: 3,
-          unit: '3',
-          status: 0,
+          times: 30,
+          days: ['0'],
+          beginTime: '2021-01-21T00:00:00.000Z',
+          endTime: '2021-01-21T00:00:00.000Z',
+          totalTimes: 1,
           totalAchieve: 0,
-          totalTimes: 1
+          status: 0
         }
-      ].map((p: PlanApiResType) => ({
-        ...p,
-        days: (p.days || '').split(',')
-      }))
+      ]
     })
   }
-  onCheck = (p: PlanType) => {
-    this.onShowModal()
-    if (p.status === 1) return // 已完成返回
+
+  async getPlans() {
+    const { code, plans = [] } = await getPlanByDate({
+      date: formatDate(new Date(), 'yyyy/MM/dd')
+    })
+    if (code === 200) {
+      console.log(plans)
+      this.setState({
+        plans: plans.map(p => ({
+          ...p,
+          days: (p.days || '').split(',')
+        }))
+      })
+    }
   }
 
-  onShowModal = () => {
+  onCheck = (p: PlanType) => {
+    if (p.status === 1 || p.totalAchieve > p.goal || p.totalTimes > p.times)
+      return // 已完成返回
+    this.onShowModal(p)
+  }
+
+  onShowModal = (p: PlanType) => {
     this.setState(
       {
-        modalStatus: 1
+        checkItem: p,
+        stage: 1
       },
       () => {
         setTimeout(() => {
           this.setState({
-            modalStatus: 2
+            stage: 2
           })
         }, 100)
       }
@@ -125,19 +134,49 @@ class Check extends Component {
   onCloseModal = () => {
     this.setState(
       {
-        modalStatus: 1
+        stage: 1,
+        achieve: '',
+        comment: '',
+        checkItem: {} as PlanType
       },
       () => {
         setTimeout(() => {
           this.setState({
-            modalStatus: 0
+            stage: 0
           })
         }, 100)
       }
     )
   }
-  onAchieveChange = () => {
-    this.setState
+  onAchieveChange = (achieve: string) => {
+    this.setState({
+      achieve
+    })
+  }
+  onCommentChange = (comment: string) => {
+    this.setState({
+      comment
+    })
+  }
+  onSubmitCheck = async () => {
+    if (!this.state.achieve) return
+    const { code } = await check({
+      date: formatDate(new Date(), 'yyyy/MM/dd'),
+      achieve: +this.state.achieve,
+      comment: this.state.comment,
+      planID: this.state.checkItem.planID
+    })
+    if (code === 200) {
+      this.onCloseModal()
+      Taro.showToast({
+        title: '打卡成功啦~'
+      })
+      this.getPlans()
+    } else {
+      Taro.showToast({
+        title: '出错了，一会再试吧'
+      })
+    }
   }
   render() {
     return (
@@ -149,8 +188,19 @@ class Check extends Component {
               key={p.planID}
               onClick={this.onCheck.bind(this, p)}
             >
-              <View className={`bkg bkg-full ${p.theme}-background`}></View>
-              <View className={`bkg bkg-progress ${p.theme}-background`}></View>
+              <View className={`bkg bkg-full ${p.theme}-background`} />
+              <View
+                className={`bkg bkg-progress ${p.theme}-background`}
+                style={{
+                  width: `${
+                    p.totalAchieve === 0
+                      ? '0px'
+                      : p.totalAchieve >= p.goal
+                      ? '100%'
+                      : `${(p.totalAchieve / p.goal) * 100}%`
+                  }`
+                }}
+              />
               <View className="cnt">
                 <View className="left">
                   <View className={`iconfont icon-${p.icon}`} />
@@ -183,22 +233,41 @@ class Check extends Component {
         </View>
         <Modal
           maskCloseable
-          visible={this.state.modalStatus > 0}
+          visible={this.state.stage > 0}
           onClose={this.onCloseModal}
         >
           <View
-            className={`check-page-check-modal ${
-              this.state.modalStatus > 1 ? 'show' : 'hide'
+            className={`check-page-check-module ${
+              this.state.stage > 1 ? 'show' : 'hide'
             }`}
           >
-            1111
-            <SelfInput
-              type="text"
-              placeholder="取个名字吧~"
-              maxlength={10}
-              value={this.state.achieve}
-              onBlur={this.onAchieveChange}
-            />
+            <View className="achieve-item border-bottom">
+              <SelfInput
+                type="number"
+                placeholder={`打卡成绩，当前已完成：${this.state.checkItem.totalAchieve}/${this.state.checkItem.goal}`}
+                maxlength={10}
+                value={this.state.achieve}
+                onBlur={this.onAchieveChange}
+                onInput={this.onAchieveChange}
+              />
+              <View className="unit">{UnitMap[this.state.checkItem.unit]}</View>
+            </View>
+            <View className="border-bottom">
+              <SelfInput
+                type="text"
+                placeholder="留下此刻的心情吧~"
+                value={this.state.comment}
+                onBlur={this.onCommentChange}
+              />
+            </View>
+            <View
+              className={`check-btn ${!!this.state.achieve ? '' : 'disable'} ${
+                this.state.checkItem.theme
+              }-background`}
+              onClick={this.onSubmitCheck}
+            >
+              打卡！打！耶！Keep Going!
+            </View>
           </View>
         </Modal>
       </View>
