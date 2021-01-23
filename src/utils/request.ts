@@ -2,10 +2,9 @@ import Taro from '@tarojs/taro'
 import config from '../../host'
 import Global from './global'
 
-function addHeader(params, headers = {}) {
+function addHeader(params = {}) {
   return {
     header: {
-      ...headers,
       uid: Global.openID,
       isTest: process.env.NODE_ENV === 'production' ? 0 : 1
     },
@@ -21,6 +20,9 @@ export const submitPlan = async params =>
 
 export const getPlanByDate = async params =>
   post(`${config.server.prefix}/getPlanByDate`, addHeader(params))
+
+export const getPlanList = async (params?) =>
+  post(`${config.server.prefix}/getPlanList`, addHeader(params))
 
 export const check = async params =>
   post(`${config.server.prefix}/check`, addHeader(params))

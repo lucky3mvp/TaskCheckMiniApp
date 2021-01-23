@@ -3,7 +3,8 @@ export default {
     'pages/home/index',
     'pages/check/index',
     'pages/my/index',
-    'pages/plan-add/index'
+    'pages/plan-add/index',
+    'pages/plan-list/index'
   ],
   window: {
     backgroundTextStyle: 'light',

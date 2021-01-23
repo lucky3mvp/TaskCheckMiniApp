@@ -64,6 +64,12 @@ type PlanType = {
   type: number
   subType: number
   times: number
+  /*
+    - 1-未开始
+    - 2-进行中
+    - 3-已结束
+    - 4-暂停
+  */
   status: number
   days: Array<string>
   beginTime: string

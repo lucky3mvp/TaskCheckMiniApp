@@ -123,3 +123,11 @@ export function formatDate(date: Date, fmt: string): string {
   }
   return fmt
 }
+
+let screenWidth = Taro.getSystemInfoSync().screenWidth
+export const pxTransform = (pxNumber: number) => {
+  if (!screenWidth) {
+    screenWidth = Taro.getSystemInfoSync().screenWidth
+  }
+  return (pxNumber / 375) * screenWidth + 'px'
+}

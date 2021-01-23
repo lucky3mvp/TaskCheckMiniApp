@@ -1,3 +1,9 @@
 export default {
-  navigationBarTitleText: '全部任务'
+  navigationBarTitleText: '我的计划',
+  navigationBarBackgroundColor: '#ffffff',
+  navigationBarTextStyle: 'black',
+  backgroundColor: '#f8f8f8',
+  backgroundTextStyle: 'light',
+  disableScroll: false,
+  enableShareAppMessage: true
 }

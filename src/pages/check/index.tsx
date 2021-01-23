@@ -51,6 +51,7 @@ interface Check {
   })
 )
 class Check extends Component<IProps, PageState> {
+  inited = false
   state = {
     stage: 0,
     achieve: '',
@@ -69,7 +70,7 @@ class Check extends Component<IProps, PageState> {
         })
       }
     }
-    // this.getPlans()
+    // await this.getPlans()
     this.setState({
       plans: [
         {
@@ -93,6 +94,15 @@ class Check extends Component<IProps, PageState> {
         }
       ]
     })
+    setTimeout(() => {
+      this.inited = true
+    }, 1000)
+  }
+
+  componentDidShow() {
+    if (this.inited) {
+      this.getPlans()
+    }
   }
 
   async getPlans() {

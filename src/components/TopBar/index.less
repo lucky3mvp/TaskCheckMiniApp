@@ -1,0 +1,35 @@
+.top-bar-component {
+  box-sizing: border-box;
+  width: 375px;
+  height: 56px;
+  background-color: #ffffff;
+  position: relative;
+  .inner {
+    box-sizing: border-box;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tab-name {
+    box-sizing: border-box;
+    font-family: 'PingFangSC-Regular';
+    font-size: 16px;
+    line-height: 24px;
+    &.active {
+      font-family: 'PingFangSC-Medium';
+    }
+  }
+  .bottom-brick {
+    box-sizing: border-box;
+    width: 24px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: #ee8787;
+    position: absolute;
+    bottom: 7px;
+    left: 0;
+    transition: transform 300ms ease-in-out;
+    transform: translateZ(1);
+  }
+}
