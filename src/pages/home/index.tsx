@@ -64,9 +64,10 @@ class Home extends Component {
     }
   }
   async getPlanTabList() {
-    Taro.showLoading({
-      title: '加载中...'
-    })
+    this.inited &&
+      Taro.showLoading({
+        title: '加载中...'
+      })
     // const { code, tabs } = await getPlanTabList()
     // if (code === 200) {
     //   this.setState({

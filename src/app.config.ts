@@ -23,19 +23,19 @@ export default {
     list: [
       {
         pagePath: 'pages/home/index',
-        text: 'Now',
+        text: '首页',
         iconPath: 'assets/home.png',
         selectedIconPath: 'assets/home-active.png'
       },
       {
         pagePath: 'pages/check/index',
-        text: 'Better',
+        text: '今日',
         iconPath: 'assets/check.png',
         selectedIconPath: 'assets/check-active.png'
       },
       {
         pagePath: 'pages/my/index',
-        text: 'Me',
+        text: '我的',
         iconPath: 'assets/me.png',
         selectedIconPath: 'assets/me-active.png'
       }
