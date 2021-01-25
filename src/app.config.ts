@@ -12,7 +12,7 @@ export default {
     navigationBarTitleText: '',
     navigationBarTextStyle: 'black',
     onReachBottomDistance: 100,
-    enablePullDownRefresh: true
+    enablePullDownRefresh: false
   },
   tabBar: {
     color: '#222222',

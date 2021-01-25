@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { UnitMap } from 'src/constants/config'
 
+import Empty from 'src/components/Empty'
 import Modal from 'src/components/Modal'
 import SelfInput from 'src/components/SelfInput'
 
@@ -27,6 +28,7 @@ type PageDispatchProps = {
 type PageOwnProps = {}
 
 type PageState = {
+  loading: boolean
   stage: number
   achieve: string
   comment: string
@@ -53,6 +55,7 @@ interface Check {
 class Check extends Component<IProps, PageState> {
   inited = false
   state = {
+    loading: true,
     stage: 0,
     achieve: '',
     comment: '',
@@ -70,30 +73,30 @@ class Check extends Component<IProps, PageState> {
         })
       }
     }
-    // await this.getPlans()
-    this.setState({
-      plans: [
-        {
-          planID: '60090712f9777f003c2fe9d1',
-          name: '每月跑3次计划一次6km',
-          description: '每月跑3次计划',
-          theme: 'theme11',
-          icon: 'running',
-          category: 1,
-          unit: '4',
-          goal: 6,
-          type: 4,
-          subType: 1,
-          times: 30,
-          days: ['0'],
-          beginTime: '2021-01-21T00:00:00.000Z',
-          endTime: '2021-01-21T00:00:00.000Z',
-          totalTimes: 1,
-          totalAchieve: 0,
-          status: 0
-        }
-      ]
-    })
+    await this.getPlans()
+    // this.setState({
+    //   plans: [
+    //     {
+    //       planID: '60090712f9777f003c2fe9d1',
+    //       name: '每月跑3次计划一次6km',
+    //       description: '每月跑3次计划',
+    //       theme: 'theme11',
+    //       icon: 'running',
+    //       category: 1,
+    //       unit: '4',
+    //       goal: 6,
+    //       type: 4,
+    //       subType: 1,
+    //       times: 30,
+    //       days: ['0'],
+    //       beginTime: '2021-01-21T00:00:00.000Z',
+    //       endTime: '2021-01-21T00:00:00.000Z',
+    //       totalTimes: 1,
+    //       totalAchieve: 0,
+    //       status: 0
+    //     }
+    //   ]
+    // })
     setTimeout(() => {
       this.inited = true
     }, 1000)
@@ -106,18 +109,22 @@ class Check extends Component<IProps, PageState> {
   }
 
   async getPlans() {
+    Taro.showLoading({
+      title: '加载中...'
+    })
     const { code, plans = [] } = await getPlanByDate({
       date: formatDate(new Date(), 'yyyy/MM/dd')
     })
     if (code === 200) {
-      console.log(plans)
       this.setState({
+        loading: false,
         plans: plans.map(p => ({
           ...p,
           days: (p.days || '').split(',')
         }))
       })
     }
+    Taro.hideLoading()
   }
 
   onCheck = (p: PlanType) => {
@@ -188,58 +195,72 @@ class Check extends Component<IProps, PageState> {
       })
     }
   }
+  gotoAddPlan = () => {
+    Taro.navigateTo({
+      url: '/pages/plan-add/index'
+    })
+  }
   render() {
-    return (
+    return this.state.loading ? null : (
       <View>
         <View className="check-page">
-          {this.state.plans.map((p: PlanType) => (
-            <View
-              className="check-plan-item"
-              key={p.planID}
-              onClick={this.onCheck.bind(this, p)}
-            >
-              <View className={`bkg bkg-full ${p.theme}-background`} />
+          {!this.state.plans.length ? (
+            <Empty tip="今天还没有打卡计划哦~">
+              <View onClick={this.gotoAddPlan} className="add-plan">
+                <View>去创建计划</View>
+                <View className="iconfont icon-right-arrow" />
+              </View>
+            </Empty>
+          ) : (
+            this.state.plans.map((p: PlanType) => (
               <View
-                className={`bkg bkg-progress ${p.theme}-background`}
-                style={{
-                  width: `${
-                    p.totalAchieve === 0
-                      ? '0px'
-                      : p.totalAchieve >= p.goal
-                      ? '100%'
-                      : `${(p.totalAchieve / p.goal) * 100}%`
-                  }`
-                }}
-              />
-              <View className="cnt">
-                <View className="left">
-                  <View className={`iconfont icon-${p.icon}`} />
-                  <View>{p.name}</View>
-                </View>
-                <View className="right">
-                  {p.status === 1 ? (
-                    <View className="iconfont icon-gou" />
-                  ) : (
-                    <View>
-                      {p.totalAchieve}/{p.goal} {UnitMap[p.unit]}
+                className="check-plan-item"
+                key={p.planID}
+                onClick={this.onCheck.bind(this, p)}
+              >
+                <View className={`bkg bkg-full ${p.theme}-background`} />
+                <View
+                  className={`bkg bkg-progress ${p.theme}-background`}
+                  style={{
+                    width: `${
+                      p.totalAchieve === 0
+                        ? '0px'
+                        : p.totalAchieve >= p.goal
+                        ? '100%'
+                        : `${(p.totalAchieve / p.goal) * 100}%`
+                    }`
+                  }}
+                />
+                <View className="cnt">
+                  <View className="left">
+                    <View className={`iconfont icon-${p.icon}`} />
+                    <View>{p.name}</View>
+                  </View>
+                  <View className="right">
+                    {p.status === 1 ? (
+                      <View className="iconfont icon-gou" />
+                    ) : (
+                      <View>
+                        {p.totalAchieve}/{p.goal} {UnitMap[p.unit]}
+                      </View>
+                    )}
+                    <View className="dot-wrapper">
+                      {(p.type === 4 || (p.type === 3 && p.subType === 1)) &&
+                        Array(p.times)
+                          .fill('1')
+                          .map((i, j) => (
+                            <View
+                              className={`dot ${
+                                p.totalTimes > j ? 'active' : ''
+                              }`}
+                            />
+                          ))}
                     </View>
-                  )}
-                  <View className="dot-wrapper">
-                    {(p.type === 4 || (p.type === 3 && p.subType === 1)) &&
-                      Array(p.times)
-                        .fill('1')
-                        .map((i, j) => (
-                          <View
-                            className={`dot ${
-                              p.totalTimes > j ? 'active' : ''
-                            }`}
-                          />
-                        ))}
                   </View>
                 </View>
               </View>
-            </View>
-          ))}
+            ))
+          )}
         </View>
         <Modal
           maskCloseable

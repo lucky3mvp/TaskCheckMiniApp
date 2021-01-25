@@ -106,3 +106,15 @@ export const BannerImgs = [
   'https://cdn-tos.baohuaxia.com/obj/static-assets/104df7df33a2eb5aec6fd55a6beec689.jpg',
   'https://cdn-tos.baohuaxia.com/obj/static-assets/255b09985935a533aee88211115a14ac.jpg'
 ]
+
+export const PlanStatusMap = {
+  1: '未开始',
+  2: '进行中',
+  3: '已结束'
+}
+
+export const PlanStatusIconMap = {
+  1: 'weikaishi',
+  2: 'jinxingzhong',
+  3: 'yijieshu'
+}

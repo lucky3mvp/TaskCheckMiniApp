@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: 'Better Me',
+  navigationBarTitleText: 'Today',
   navigationBarBackgroundColor: '#ffffff',
   navigationBarTextStyle: 'black',
   backgroundColor: '#ffffff',

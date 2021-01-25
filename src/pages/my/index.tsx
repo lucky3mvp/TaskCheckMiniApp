@@ -117,7 +117,7 @@ class My extends Component {
             <View className="txt-sub">{txts.sub}</View>
           </View>
         </View>
-        {/* 批量打卡，补签，暂停计划， */}
+        {/* 批量打卡，补签，暂停计划，提前结束 */}
         <Gap height={8} bkg={'#f4f5f6'} />
         <View className="list-item border-bottom" onClick={this.gotoPlanList}>
           <Image src={require('../../assets/schedule.png')} className="icon" />

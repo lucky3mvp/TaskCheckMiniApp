@@ -75,5 +75,11 @@ type PlanType = {
   beginTime: string
   endTime: string
   totalAchieve: number
+  /**
+   * 指的是计划在当前计划周期内，完成了多少次
+   * 比如计划是每周5次xxx
+   * 那么这里的totalTimes指的是本周这个计划当前完成了多少次
+   * 使用的地方如：今日打卡页的dot指示
+   */
   totalTimes: number
 }

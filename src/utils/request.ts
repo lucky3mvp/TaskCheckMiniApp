@@ -24,6 +24,9 @@ export const getPlanByDate = async params =>
 export const getPlanList = async (params?) =>
   post(`${config.server.prefix}/getPlanList`, addHeader(params))
 
+export const getPlanTabList = async (params?) =>
+  post(`${config.server.prefix}/getPlanTabList`, addHeader(params))
+
 export const check = async params =>
   post(`${config.server.prefix}/check`, addHeader(params))
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import './index.less'
 
 interface IProps {
@@ -10,8 +10,9 @@ interface IProps {
 export default (props: IProps) => {
   return (
     <View className="empty-component">
+      <Image src={require('../../assets/empty.png')} className="img" />
+      {props.tip ? <Text className="empty-text">{props.tip}</Text> : null}
       {props.children}
-      <Text className="empty-text">{props.tip || '暂无数据'}</Text>
     </View>
   )
 }

@@ -1,35 +1,94 @@
-.top-bar-component {
+.plan-list-item {
+  margin: 10px 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
   box-sizing: border-box;
-  width: 375px;
-  height: 56px;
-  background-color: #ffffff;
-  position: relative;
-  .inner {
-    box-sizing: border-box;
-    padding: 16px 24px;
+  .top {
+    padding: 15px 20px;
+    // position: relative;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-  }
-  .tab-name {
-    box-sizing: border-box;
-    font-family: 'PingFangSC-Regular';
-    font-size: 16px;
-    line-height: 24px;
-    &.active {
-      font-family: 'PingFangSC-Medium';
+    // z-index: 1;
+    // .bkg {
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    //   right: 0;
+    //   bottom: 0;
+    //   &.opacity {
+    //     opacity: 0.7;
+    //   }
+    // }
+    .plan-icon {
+      font-size: 40px;
+      margin-right: 10px;
+    }
+    .status-icon {
+      font-size: 40px;
+    }
+    &-mid {
+      width: 190px;
+      margin-right: 5px;
+    }
+    .name {
+      font-size: 16px;
+      font-family: 'PingFangSC-Regular';
+      color: #222222;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .description {
+      font-size: 12px;
+      font-family: 'PingFangSC-Regular';
+      color: #707070;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
-  .bottom-brick {
-    box-sizing: border-box;
-    width: 24px;
-    height: 3px;
-    border-radius: 3px;
-    background-color: #ee8787;
-    position: absolute;
-    bottom: 7px;
-    left: 0;
-    transition: transform 300ms ease-in-out;
-    transform: translateZ(1);
+  .mid {
+    display: flex;
+    padding: 15px 0 10px;
+    margin: 0 20px;
+    &-item {
+      font-size: 14px;
+      color: #222222;
+      flex: 1;
+      text-align: center;
+      &-times {
+        margin-top: 5px;
+        font-size: 24px;
+        font-family: 'PingFangSC-Medium';
+      }
+      &-horizon {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #222222;
+        .num {
+          margin-left: 5px;
+          font-size: 28px;
+          font-family: 'PingFangSC-Medium';
+        }
+      }
+    }
+  }
+  .btm {
+    padding: 15px 20px 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    &-item {
+      font-size: 12px;
+      font-family: 'PingFangSC-Medium';
+      color: #707070;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .status-icon {
+      font-size: 56px;
+    }
   }
 }
