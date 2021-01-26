@@ -10,7 +10,7 @@ interface IProps {
 export default (props: IProps) => {
   return (
     <View className="empty-component">
-      <Image src={require('../../assets/empty.png')} className="img" />
+      <Image src={require('../../assets/empty2.png')} className="img" />
       {props.tip ? <Text className="empty-text">{props.tip}</Text> : null}
       {props.children}
     </View>
