@@ -86,6 +86,12 @@ class My extends Component {
       url: '/pages/plan-list/index'
     })
   }
+  gotoMenstruation = async () => {
+    await this.ensureLogin()
+    Taro.navigateTo({
+      url: '/pages/menstruation/index'
+    })
+  }
 
   render() {
     const { userInfo } = this.props
@@ -134,6 +140,18 @@ class My extends Component {
           <View className="item-title">随心记</View>
           <View className="iconfont icon-right-arrow" />
         </View>
+        {this.props.userInfo.gender === 2 ||
+        this.props.userInfo.nickName === 'ASY' ? (
+          <View
+            className="list-item border-bottom"
+            onClick={this.gotoMenstruation}
+          >
+            <Image src={require('../../assets/aixin.png')} className="icon" />
+            <View className="item-title">大姨妈</View>
+            <View className="iconfont icon-right-arrow" />
+          </View>
+        ) : null}
+
         <View className="list-item border-bottom">
           <Image src={require('../../assets/todo.png')} className="icon" />
           <View className="item-title">敬请期待</View>

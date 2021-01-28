@@ -1,13 +1,15 @@
 import React, { useMemo, useEffect, useState, useCallback } from 'react'
-import { View, Button, Text, Image } from '@tarojs/components'
+import { View, Image } from '@tarojs/components'
 import classnames from 'classnames'
 import { rightArrow } from 'src/assets/svg'
 
 import './index.less'
 
 type IProps = {
-  onDayClick: () => void
-  theme?: string
+  start: string
+  end: string
+  onDayClick: (d) => void
+  onMonthChange: (cur, prev) => void
 }
 
 export default (props: IProps) => {
@@ -100,20 +102,9 @@ export default (props: IProps) => {
     setCurMonth(nextMonthFirstDate.getMonth())
   }, [nextMonthFirstDate])
 
-  const onDayClick = useCallback(
-    ({ year, month, date }) => {
-      if (
-        year > todayYear ||
-        (year === todayYear &&
-          (month > todayMonth || (month === todayMonth && date > todayDate)))
-      ) {
-        // 今天及之前可点击
-        return
-      }
-      props.onDayClick && props.onDayClick()
-    },
-    [todayYear, todayMonth, todayDate]
-  )
+  const onDayClick = useCallback(d => {
+    props.onDayClick(d)
+  }, [])
 
   return (
     <View className="calendar-component">
@@ -144,7 +135,7 @@ export default (props: IProps) => {
               onClick={e => {
                 onDayClick(d)
               }}
-              className={classnames('day', `${props.theme || ''}`, {
+              className={classnames('day', {
                 light: d.month !== curMonth,
                 today:
                   d.year === todayYear &&
@@ -153,7 +144,7 @@ export default (props: IProps) => {
               })}
             >
               {d.date}
-              <View className="indicator" />
+              {/* <View className="indicator" /> */}
             </View>
           </View>
         ))}

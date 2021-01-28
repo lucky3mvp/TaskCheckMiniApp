@@ -34,6 +34,10 @@ type UserInfoStoreType = {
   gender: number
   nickName: string
 }
+type HelperStoreType = {
+  isIpx: boolean
+}
+
 type DateType = {
   year: number
   month: number

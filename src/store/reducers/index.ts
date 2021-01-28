@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
 import userInfo from './userInfo'
+import helper from './helper'
 
 const reducers = combineReducers({
-  userInfo
+  userInfo,
+  helper
 })
 
 export default reducers

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import wit from './utils/wit'
 import { updateUserInfo } from './store/actions/userInfo'
+import { updateHelperInfo } from './store/actions/helper'
+import { isIpx } from 'src/utils'
 import configStore from './store'
 
 const store = configStore()
@@ -21,6 +23,11 @@ class App extends Component {
         })
       )
     }
+    dispatch(
+      updateHelperInfo({
+        isIpx: isIpx()
+      })
+    )
   }
 
   componentDidShow() {}

@@ -23,7 +23,6 @@ import {
   UnitMap,
   IconCategoryMap
 } from 'src/constants'
-import { isIpx } from 'src/utils'
 import { submitPlan } from 'src/utils/request'
 
 import './index.less'
@@ -37,6 +36,7 @@ import './index.less'
 
 type PageStateProps = {
   userInfo: UserInfoStoreType
+  helper: HelperStoreType
 }
 
 type PageDispatchProps = {}
@@ -44,7 +44,6 @@ type PageDispatchProps = {}
 type PageOwnProps = {}
 
 type IState = {
-  isIpx: boolean
   disable: boolean
   bannerImgIndex: number
   name: string
@@ -78,7 +77,6 @@ interface PlanAdd {
 )
 class PlanAdd extends Component<IProps, IState> {
   state = {
-    isIpx: false,
     disable: true,
     bannerImgIndex: 0,
     name: '',
@@ -100,7 +98,6 @@ class PlanAdd extends Component<IProps, IState> {
   componentDidMount() {
     const index = Math.floor(Math.random() * BannerImgs.length)
     this.setState({
-      isIpx: isIpx(),
       bannerImgIndex: index,
       typeBtns: Object.keys(TypeMap).map(t => ({
         label: TypeMap[t],
@@ -486,7 +483,7 @@ class PlanAdd extends Component<IProps, IState> {
           </View>
         </FormItem>
         <Gap height={30} />
-        <View className={`footer ${this.state.isIpx ? 'ipx' : ''}`}>
+        <View className={`footer ${this.props.helper.isIpx ? 'ipx' : ''}`}>
           <View className="holder">
             <View className="btn-wrapper"></View>
             <View className="gap"></View>

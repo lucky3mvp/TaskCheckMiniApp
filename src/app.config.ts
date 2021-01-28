@@ -4,7 +4,8 @@ export default {
     'pages/check/index',
     'pages/my/index',
     'pages/plan-add/index',
-    'pages/plan-list/index'
+    'pages/plan-list/index',
+    'pages/menstruation/index'
   ],
   window: {
     backgroundTextStyle: 'light',

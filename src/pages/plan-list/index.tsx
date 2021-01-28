@@ -102,23 +102,23 @@ class PlanList extends Component {
         }
       ],
       ended: [
-        {
-          planID: '60029aa3720bc4003c52b0ca',
-          name: '跑步(除周3跑5千米)',
-          description: '加油',
-          theme: 'theme1',
-          icon: 'running',
-          category: 1,
-          unit: '4',
-          goal: 5,
-          type: 3,
-          subType: 2,
-          days: '0,1,2,4,5,6',
-          beginTime: '2021-01-16T00:00:00.000Z',
-          endTime: '2022-01-01T00:00:00.000Z',
-          status: 2,
-          totalTimes: 1
-        }
+        // {
+        //   planID: '60029aa3720bc4003c52b0ca',
+        //   name: '跑步(除周3跑5千米)',
+        //   description: '加油',
+        //   theme: 'theme1',
+        //   icon: 'running',
+        //   category: 1,
+        //   unit: '4',
+        //   goal: 5,
+        //   type: 3,
+        //   subType: 2,
+        //   days: '0,1,2,4,5,6',
+        //   beginTime: '2021-01-16T00:00:00.000Z',
+        //   endTime: '2022-01-01T00:00:00.000Z',
+        //   status: 2,
+        //   totalTimes: 1
+        // }
       ]
     })
     Taro.hideLoading()

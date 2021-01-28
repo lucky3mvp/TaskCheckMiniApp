@@ -1,0 +1,44 @@
+.switch-component {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  border-radius: 14.7px;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: background-color 0.1s;
+  &.bg-gray {
+    background: #f2f2f2;
+  }
+  &.checked {
+    &.bg-default {
+      background: #ee8787;
+    }
+    .node {
+      transform: translateX(22px);
+    }
+    .fake-bkg {
+      transform: scale(0);
+    }
+  }
+  .node {
+    box-sizing: border-box;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s;
+  }
+  .fake-bkg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 46px;
+    height: 24px;
+    border-radius: 14.7px;
+    transition: transform 0.3s;
+  }
+}
