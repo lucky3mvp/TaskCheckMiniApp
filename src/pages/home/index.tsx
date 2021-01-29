@@ -68,86 +68,86 @@ class Home extends Component {
       Taro.showLoading({
         title: '加载中...'
       })
-    // const { code, tabs } = await getPlanTabList()
-    // if (code === 200) {
-    //   this.setState({
-    //     tabs
-    //   })
-    // }
-    this.setState({
-      tabs: [
-        {
-          planID: '60029aa3720bc4003c52b0ca',
-          name: '跑步(除周3跑5千米)',
-          description: '加油',
-          theme: 'theme1',
-          icon: 'running',
-          category: 1,
-          beginTime: '2021-01-16T00:00:00.000Z',
-          endTime: '2022-01-01T00:00:00.000Z'
-        },
-        {
-          planID: '60090712f9777f003c2fe9d1',
-          name: '每月跑3次计划一次6km',
-          description: '每月跑3次计划',
-          theme: 'theme11',
-          icon: 'running',
-          category: 1,
-          beginTime: '2021-01-21T00:00:00.000Z',
-          endTime: null
-        },
-        {
-          planID: '600a7ca9ca7efb003b5be7ec',
-          name: '计划一每日读书30分',
-          description: '结束时间是永远主题是1',
-          theme: 'theme1',
-          icon: 'reading',
-          category: 4,
-          beginTime: '2021-01-22T00:00:00.000Z',
-          endTime: null
-        },
-        {
-          planID: '600a7d00ca7efb003b5be7ef',
-          name: '计划二每周3天游泳',
-          description: '目标是60min结束永远主题8',
-          theme: 'theme8',
-          icon: 'swimming',
-          category: 1,
-          beginTime: '2021-01-22T00:00:00.000Z',
-          endTime: null
-        },
-        {
-          planID: '600a7d4eca7efb003b5be7f2',
-          name: '计划3每周135瑜伽主题15',
-          description: '20220101结束目标1次',
-          theme: 'theme15',
-          icon: 'yoga',
-          category: 1,
-          beginTime: '2021-01-22T00:00:00.000Z',
-          endTime: '2022-01-01T00:00:00.000Z'
-        },
-        {
-          planID: '600a7d91ca7efb003b5be7f5',
-          name: '计划4每月10天跳绳',
-          description: '主题22目标1000次20200201开始到永远',
-          theme: 'theme22',
-          icon: 'skipping',
-          category: 1,
-          beginTime: '2021-02-01T00:00:00.000Z',
-          endTime: null
-        },
-        {
-          planID: '600a896b6bf2840029f3b1dc',
-          name: '每日1000步',
-          description: '111',
-          theme: 'theme25',
-          icon: 'running',
-          category: 1,
-          beginTime: '2021-01-22T00:00:00.000Z',
-          endTime: null
-        }
-      ]
-    })
+    const { code, tabs } = await getPlanTabList()
+    if (code === 200) {
+      this.setState({
+        tabs
+      })
+    }
+    // this.setState({
+    //   tabs: [
+    //     {
+    //       planID: '60029aa3720bc4003c52b0ca',
+    //       name: '跑步(除周3跑5千米)',
+    //       description: '加油',
+    //       theme: 'theme1',
+    //       icon: 'running',
+    //       category: 1,
+    //       beginTime: '2021-01-16T00:00:00.000Z',
+    //       endTime: '2022-01-01T00:00:00.000Z'
+    //     },
+    //     {
+    //       planID: '60090712f9777f003c2fe9d1',
+    //       name: '每月跑3次计划一次6km',
+    //       description: '每月跑3次计划',
+    //       theme: 'theme11',
+    //       icon: 'running',
+    //       category: 1,
+    //       beginTime: '2021-01-21T00:00:00.000Z',
+    //       endTime: null
+    //     },
+    //     {
+    //       planID: '600a7ca9ca7efb003b5be7ec',
+    //       name: '计划一每日读书30分',
+    //       description: '结束时间是永远主题是1',
+    //       theme: 'theme1',
+    //       icon: 'reading',
+    //       category: 4,
+    //       beginTime: '2021-01-22T00:00:00.000Z',
+    //       endTime: null
+    //     },
+    //     {
+    //       planID: '600a7d00ca7efb003b5be7ef',
+    //       name: '计划二每周3天游泳',
+    //       description: '目标是60min结束永远主题8',
+    //       theme: 'theme8',
+    //       icon: 'swimming',
+    //       category: 1,
+    //       beginTime: '2021-01-22T00:00:00.000Z',
+    //       endTime: null
+    //     },
+    //     {
+    //       planID: '600a7d4eca7efb003b5be7f2',
+    //       name: '计划3每周135瑜伽主题15',
+    //       description: '20220101结束目标1次',
+    //       theme: 'theme15',
+    //       icon: 'yoga',
+    //       category: 1,
+    //       beginTime: '2021-01-22T00:00:00.000Z',
+    //       endTime: '2022-01-01T00:00:00.000Z'
+    //     },
+    //     {
+    //       planID: '600a7d91ca7efb003b5be7f5',
+    //       name: '计划4每月10天跳绳',
+    //       description: '主题22目标1000次20200201开始到永远',
+    //       theme: 'theme22',
+    //       icon: 'skipping',
+    //       category: 1,
+    //       beginTime: '2021-02-01T00:00:00.000Z',
+    //       endTime: null
+    //     },
+    //     {
+    //       planID: '600a896b6bf2840029f3b1dc',
+    //       name: '每日1000步',
+    //       description: '111',
+    //       theme: 'theme25',
+    //       icon: 'running',
+    //       category: 1,
+    //       beginTime: '2021-01-22T00:00:00.000Z',
+    //       endTime: null
+    //     }
+    //   ]
+    // })
     Taro.hideLoading()
   }
   onAdd = () => {

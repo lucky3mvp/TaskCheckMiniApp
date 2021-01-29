@@ -70,8 +70,9 @@ interface PlanAdd {
 }
 
 @connect(
-  ({ userInfo }) => ({
-    userInfo
+  ({ userInfo, helper }) => ({
+    userInfo,
+    helper
   }),
   dispatch => ({})
 )

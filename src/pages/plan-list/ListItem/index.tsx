@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { View, Text } from '@tarojs/components'
 import { PlanStatusIconMap, UnitMap } from 'src/constants/config'
 import './index.less'
@@ -21,6 +21,18 @@ interface IProps {
 }
 
 export default (props: IProps) => {
+  const beginTime = useMemo(() => {
+    if (props.beginTime) {
+      return props.beginTime.split('T')[0].split('-').join('.')
+    }
+    return ''
+  }, [props.beginTime])
+  const endTime = useMemo(() => {
+    if (props.endTime) {
+      return props.endTime.split('T')[0].split('-').join('.')
+    }
+    return '永远'
+  }, [props.endTime])
   return (
     <View className="plan-list-item">
       <View className="top border-bottom">
@@ -80,7 +92,7 @@ export default (props: IProps) => {
             {UnitMap[props.unit]}
           </View>
           <View className="btm-item">
-            时间：{props.beginTime} - {props.endTime}
+            时间：{beginTime} - {endTime}
           </View>
         </View>
       </View>
