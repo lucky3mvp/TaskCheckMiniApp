@@ -118,3 +118,14 @@ export const PlanStatusIconMap = {
   2: 'jinxingzhong',
   3: 'yijieshu'
 }
+
+export const MenstruationStatusMap = {
+  /**
+   * status:
+   * 0-非经期中
+   * 1-经期开始的当天
+   * 2-经期中
+   * 3-经期开始，可以结束的日子
+   * 4-经期结束的当天
+   */
+}

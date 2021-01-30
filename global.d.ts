@@ -47,6 +47,12 @@ type CommonItemType = {
   label: string
   value: string
 }
+type MenstruationType = {
+  year: number
+  month: number
+  day: number
+  type: number
+}
 
 type CreateDateRangeParamsType = {
   start?: Date
