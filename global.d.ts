@@ -93,3 +93,15 @@ type PlanType = {
    */
   totalTimes: number
 }
+
+type CheckListItemType = {
+  planID: string
+  comment: string
+  checkDate: string
+  checkTime: string
+  achieve: number
+  name: string
+  icon: string
+  theme: string
+  unit: string
+}

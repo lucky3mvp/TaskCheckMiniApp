@@ -76,3 +76,37 @@
     }
   }
 }
+
+.my-page-expected-module {
+  overflow: hidden;
+  width: 305px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e7e7e7;
+  transition: all ease-in-out 0.3s;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #222222;
+  &.show {
+    opacity: 1;
+  }
+  &.hide {
+    opacity: 0;
+  }
+  .cnt {
+    padding: 20px;
+  }
+  .btn {
+    height: 36px;
+    border-radius: 10px;
+    padding: 5px 0 5px;
+    color: #ee8787;
+    font-size: 16px;
+    font-family: 'PingFangSC-Medium';
+    text-align: center;
+    line-height: 36px;
+  }
+}

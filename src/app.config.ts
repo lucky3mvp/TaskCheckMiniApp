@@ -5,7 +5,10 @@ export default {
     'pages/my/index',
     'pages/plan-add/index',
     'pages/plan-list/index',
-    'pages/menstruation/index'
+    'pages/check-list/index',
+    'pages/menstruation/index',
+    // 'pages/feedback/index',
+    'pages/mood/index'
   ],
   window: {
     backgroundTextStyle: 'light',

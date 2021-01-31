@@ -36,6 +36,9 @@ export const getMenstruationDetail = async params =>
 export const submitMenstruation = async params =>
   post(`${config.server.prefix}/submitMenstruation`, addHeader(params))
 
+export const getCheckList = async params =>
+  post(`${config.server.prefix}/getCheckList`, addHeader(params))
+
 async function post(url, data): Promise<any> {
   return fetchData(url, 'post', data, {
     'content-type': 'application/json'

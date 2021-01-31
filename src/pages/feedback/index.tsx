@@ -5,7 +5,6 @@ import { View, Textarea, Text, Image } from '@tarojs/components'
 import './index.less'
 
 type PageStateProps = {
-  userInfo: UserInfoStoreType
   helper: HelperStoreType
 }
 
@@ -17,25 +16,15 @@ type PageState = {
 
 type IProps = PageStateProps & PageOwnProps
 
-interface Mood {
+interface Feedback {
   props: IProps
 }
 
-@connect(({ userInfo, helper }) => ({
-  userInfo,
+@connect(({ helper }) => ({
   helper
 }))
-class Mood extends Component {
-  state = {
-    value: '',
-    list: [
-      {
-        time: '2020.01.31 13:55',
-        comment:
-          '黑科技和接口会健康金黑科技和接口会健康金黑科技和接口会健康金黑科技和接口会健康金'
-      }
-    ]
-  }
+class Feedback extends Component {
+  state = { value: '' }
   onBlur = ({ detail: { value } }) => {
     this.setState({
       value
@@ -51,24 +40,21 @@ class Mood extends Component {
   }
   render() {
     return (
-      <View className={`mood-page ${this.props.helper.isIpx ? 'ipx' : ''}`}>
-        {/* <View>{this.state.list.map(r => {})}</View>
+      <View className={`feedback-page ${this.props.helper.isIpx ? 'ipx' : ''}`}>
         <View className="text-area-wrapper">
           <Textarea
             className="text-area"
-            placeholder="人间值得"
+            placeholder="请描述你的问题，或是输入你的意见、反馈"
             holdKeyboard
             disableDefaultPadding
             cursorSpacing={20}
-            maxlength={100}
             onBlur={this.onBlur}
             onInput={this.onInput}
           />
-          <View className="counter">{this.state.value.length}/100</View>
-        </View> */}
+        </View>
         <View className="btn-wrapper">
           <View className="btn" onClick={this.onSubmit}>
-            敬请期待
+            提交
           </View>
         </View>
       </View>
@@ -76,4 +62,4 @@ class Mood extends Component {
   }
 }
 
-export default Mood
+export default Feedback

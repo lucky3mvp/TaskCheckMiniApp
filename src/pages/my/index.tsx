@@ -6,6 +6,7 @@ import wit from 'src/utils/wit'
 import { updateUserInfo } from 'src/store/actions/userInfo'
 import { Greetings } from 'src/constants'
 import Gap from 'src/components/Gap'
+import Modal from 'src/components/Modal'
 
 import './index.less'
 
@@ -19,7 +20,9 @@ type PageDispatchProps = {
 
 type PageOwnProps = {}
 
-type PageState = {}
+type PageState = {
+  stage: number
+}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
@@ -43,6 +46,10 @@ interface My {
   })
 )
 class My extends Component {
+  state = {
+    stage: 0
+  }
+  greetingIndex: number = 0
   getUserInfo = async () => {
     const [res] = await wit.getUserInfo()
     if (res) {
@@ -53,10 +60,12 @@ class My extends Component {
     const { userInfo } = this.props
     if (userInfo.nickName) {
       const l = Greetings.length
-      const index = Math.floor(Math.random() * l)
+      if (!this.greetingIndex) {
+        this.greetingIndex = Math.floor(Math.random() * l)
+      }
       return {
         main: userInfo.nickName,
-        sub: `${Greetings[index]}，${
+        sub: `${Greetings[this.greetingIndex]}，${
           userInfo.gender === 1
             ? '小哥哥，'
             : userInfo.gender === 2
@@ -86,11 +95,60 @@ class My extends Component {
       url: '/pages/plan-list/index'
     })
   }
+  gotoCheckList = async () => {
+    await this.ensureLogin()
+    Taro.navigateTo({
+      url: '/pages/check-list/index'
+    })
+  }
   gotoMenstruation = async () => {
     await this.ensureLogin()
     Taro.navigateTo({
       url: '/pages/menstruation/index'
     })
+  }
+  gotoMood = async () => {
+    await this.ensureLogin()
+    Taro.navigateTo({
+      url: '/pages/mood/index'
+    })
+  }
+  gotoFeedback = async () => {
+    await this.ensureLogin()
+    Taro.navigateTo({
+      url: '/pages/feedback/index'
+    })
+  }
+  toBeExpected = async () => {
+    this.onShowModal()
+  }
+  onShowModal = () => {
+    this.setState(
+      {
+        stage: 1
+      },
+      () => {
+        setTimeout(() => {
+          this.setState({
+            stage: 2
+          })
+        }, 100)
+      }
+    )
+  }
+  onCloseModal = () => {
+    this.setState(
+      {
+        stage: 1
+      },
+      () => {
+        setTimeout(() => {
+          this.setState({
+            stage: 0
+          })
+        }, 100)
+      }
+    )
   }
 
   render() {
@@ -123,19 +181,18 @@ class My extends Component {
             <View className="txt-sub">{txts.sub}</View>
           </View>
         </View>
-        {/* 批量打卡，补签，暂停计划，提前结束 */}
         <Gap height={8} bkg={'#f4f5f6'} />
         <View className="list-item border-bottom" onClick={this.gotoPlanList}>
           <Image src={require('../../assets/schedule.png')} className="icon" />
           <View className="item-title">我的计划</View>
           <View className="iconfont icon-right-arrow" />
         </View>
-        <View className="list-item border-bottom">
+        <View className="list-item border-bottom" onClick={this.gotoCheckList}>
           <Image src={require('../../assets/record.png')} className="icon" />
           <View className="item-title">打卡记录</View>
           <View className="iconfont icon-right-arrow" />
         </View>
-        <View className="list-item border-bottom">
+        <View className="list-item border-bottom" onClick={this.gotoMood}>
           <Image src={require('../../assets/write.png')} className="icon" />
           <View className="item-title">随心记</View>
           <View className="iconfont icon-right-arrow" />
@@ -151,12 +208,37 @@ class My extends Component {
             <View className="iconfont icon-right-arrow" />
           </View>
         ) : null}
-
-        <View className="list-item border-bottom">
+        <View className="list-item border-bottom" onClick={this.toBeExpected}>
           <Image src={require('../../assets/todo.png')} className="icon" />
           <View className="item-title">敬请期待</View>
           <View className="iconfont icon-right-arrow" />
         </View>
+        {/* <View className="list-item border-bottom" onClick={this.gotoFeedback}>
+          <Image src={require('../../assets/feedback.png')} className="icon" />
+          <View className="item-title">意见反馈</View>
+          <View className="iconfont icon-right-arrow" />
+        </View> */}
+
+        <Modal
+          maskCloseable
+          visible={this.state.stage > 0}
+          onClose={this.onCloseModal}
+        >
+          <View
+            className={`my-page-expected-module ${
+              this.state.stage > 1 ? 'show' : 'hide'
+            }`}
+          >
+            <View className="cnt">
+              <View>
+                批量打卡，补签，编辑计划，暂停计划，提前结束计划等功能正在筹划开发中，敬请期待！
+              </View>
+            </View>
+            <View className="btn border-top" onClick={this.onCloseModal}>
+              我知道了
+            </View>
+          </View>
+        </Modal>
       </View>
     )
   }
