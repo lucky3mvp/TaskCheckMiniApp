@@ -58,9 +58,10 @@ class CheckList extends Component {
     })
   }
   async fetchCheckList(pageInfo) {
-    Taro.showLoading({
-      title: '加载中...'
-    })
+    !this.state.inited &&
+      Taro.showLoading({
+        title: '加载中...'
+      })
     const {
       code,
       list,

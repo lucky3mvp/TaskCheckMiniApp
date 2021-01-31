@@ -60,11 +60,11 @@ class Home extends Component {
   }
   componentDidShow() {
     if (this.inited) {
-      this.getPlanTabList()
+      this.getPlanTabList(this.inited)
     }
   }
-  async getPlanTabList() {
-    this.inited &&
+  async getPlanTabList(inited = false) {
+    !this.inited &&
       Taro.showLoading({
         title: '加载中...'
       })

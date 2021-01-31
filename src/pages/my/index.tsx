@@ -174,7 +174,7 @@ class My extends Component {
             <Button
               open-type="getUserInfo"
               className="txt-main no-button"
-              onGetUserInfo={() => {}}
+              onGetUserInfo={this.getUserInfo}
             >
               {txts.main}
             </Button>

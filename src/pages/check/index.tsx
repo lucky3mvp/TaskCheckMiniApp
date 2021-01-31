@@ -104,14 +104,15 @@ class Check extends Component<IProps, PageState> {
 
   componentDidShow() {
     if (this.inited) {
-      this.getPlans()
+      this.getPlans(this.inited)
     }
   }
 
-  async getPlans() {
-    Taro.showLoading({
-      title: '加载中...'
-    })
+  async getPlans(inited) {
+    !inited &&
+      Taro.showLoading({
+        title: '加载中...'
+      })
     const { code, plans = [] } = await getPlanByDate({
       date: formatDate(new Date(), 'yyyy/MM/dd')
     })
