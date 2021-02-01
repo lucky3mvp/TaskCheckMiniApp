@@ -104,4 +104,5 @@ type CheckListItemType = {
   icon: string
   theme: string
   unit: string
+  isShowComment?: boolean
 }

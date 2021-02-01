@@ -20,51 +20,87 @@
   }
   .no-more {
     font-family: 'PingFangSC-Regular';
-    font-size: 14px;
-    line-height: 22px;
+    font-size: 12px;
+    line-height: 18px;
     padding: 20px 0;
     color: rgba(0, 0, 0, 0.3);
     text-align: center;
   }
   .check-item {
     background-color: #ffffff;
-    margin: 0 20px 15px;
-    border-radius: 10px;
     box-sizing: border-box;
-    padding: 15px 15px 5px;
-    .check-detail {
+    padding: 0 20px;
+    .inner {
+      display: flex;
+    }
+    .info {
+      flex: 1;
+      padding: 10px 0 0;
+    }
+    .plan-icon {
+      font-size: 36px;
+      margin-right: 10px;
+      padding-top: 10px;
+      margin-left: -5px;
+    }
+    .detail-item {
+      margin-bottom: 5px;
       display: flex;
       justify-content: space-between;
-      padding-bottom: 10px;
-      .name {
-        display: flex;
-        font-family: 'PingFangSC-Regular';
-        font-size: 16px;
-        line-height: 24px;
-        color: #222222;
-        .iconfont {
-          font-size: 20px;
-          margin-right: 5px;
-        }
-      }
-      .achieve {
-        font-family: 'PingFangSC-Regular';
-        font-size: 16px;
-        line-height: 24px;
-        color: #222222;
-      }
     }
-    .check-time {
-      color: #707070;
+    .name {
+      display: flex;
       font-family: 'PingFangSC-Regular';
       font-size: 14px;
-      line-height: 20px;
-      padding: 10px 0;
+      line-height: 22px;
+      color: #222222;
+    }
+    .achieve {
+      font-family: 'PingFangSC-Regular';
+      font-size: 14px;
+      line-height: 22px;
+      color: #222222;
+    }
+    .time,
+    .check-comment {
+      color: #999999;
+      font-family: 'PingFangSC-Regular';
+      font-size: 12px;
+      line-height: 18px;
       white-space: normal;
     }
-    .check-comment {
-      margin-top: 5px;
+    .comment-wrapper {
+      background-color: #f8f8f8;
+      border-radius: 10px;
       color: #999999;
+      height: 0;
+      overflow: hidden;
+      &.show {
+        height: auto;
+        margin-bottom: 15px;
+        margin-top: 10px;
+        overflow: visible;
+      }
+      position: relative;
+      .indicator {
+        border: 5px solid #f8f8f8;
+        border-top-color: transparent;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        position: absolute;
+        right: 15px;
+        top: -10px;
+      }
+      .comment {
+        flex: 1;
+        text-align: right;
+        padding: 8px 15px;
+        box-sizing: border-box;
+        font-family: 'PingFangSC-Regular';
+        font-size: 12px;
+        line-height: 18px;
+        white-space: normal;
+      }
     }
   }
 }

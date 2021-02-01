@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { View, Text } from '@tarojs/components'
 import { PlanStatusIconMap, UnitMap } from 'src/constants/config'
+import { formatDate } from 'src/utils'
 import './index.less'
 
 interface IProps {
@@ -23,13 +24,13 @@ interface IProps {
 export default (props: IProps) => {
   const beginTime = useMemo(() => {
     if (props.beginTime) {
-      return props.beginTime.split('T')[0].split('-').join('.')
+      return formatDate(new Date(props.beginTime), 'yyyy.MM.dd')
     }
     return ''
   }, [props.beginTime])
   const endTime = useMemo(() => {
     if (props.endTime) {
-      return props.endTime.split('T')[0].split('-').join('.')
+      return formatDate(new Date(props.endTime), 'yyyy.MM.dd')
     }
     return '永远'
   }, [props.endTime])

@@ -6,6 +6,8 @@ import Empty from 'src/components/Empty'
 import Gap from 'src/components/Gap'
 import { UnitMap } from 'src/constants/config'
 import { getCheckList } from 'src/utils/request'
+import { formatDate } from 'src/utils'
+
 import './index.less'
 
 type PageStateProps = {
@@ -44,7 +46,7 @@ class CheckList extends Component {
   block = false
   state = {
     inited: false,
-    pageSize: 10,
+    pageSize: 15,
     pageNo: 1,
     totalPage: 0,
     totalSize: 0,
@@ -71,11 +73,10 @@ class CheckList extends Component {
       pageNo
     } = await getCheckList(pageInfo)
     const _list = list.map(l => {
-      const t = l.checkTime.split('T')
       return {
         ...l,
-        checkDate: `${t[0].replace(/-/g, '.')}`,
-        checkTime: `${t[1].split('.')[0]}`
+        checkTime: formatDate(new Date(l.checkTime), 'yyyy.MM.dd hh:mm'),
+        isShowComment: false
       }
     })
     if (code === 200) {
@@ -108,6 +109,17 @@ class CheckList extends Component {
       this.block = false
     }
   }
+
+  onClickComment = (index: number) => {
+    const { list } = this.state
+    const item: CheckListItemType = list[index]
+    if (!item.comment) return
+    item.isShowComment = !item.isShowComment
+    this.setState({
+      list: [...list]
+    })
+  }
+
   render() {
     return (
       <View className="check-list-page">
@@ -126,26 +138,41 @@ class CheckList extends Component {
             className="scroll-view"
             onScrollToLower={this.onReachBottom}
           >
-            <Gap height={15} bkg="transparent" />
-            {this.state.list.map((l: CheckListItemType) => (
+            {this.state.list.map((l: CheckListItemType, index) => (
               <View className="check-item">
-                <View className="check-detail border-bottom">
-                  <View className="name">
+                <View className="inner border-bottom">
+                  <View
+                    className={`plan-icon iconfont icon-${l.icon} ${l.theme}-color`}
+                  />
+                  <View className="info">
+                    <View className="detail-item">
+                      <View className="name">{l.name}</View>
+                      <View className="achieve">
+                        {l.achieve} {UnitMap[l.unit]}
+                      </View>
+                    </View>
+                    <View className="detail-item">
+                      <View className="time">
+                        {l.checkDate} {l.checkTime}
+                      </View>
+                      {l.comment ? (
+                        <View
+                          className="check-comment"
+                          onClick={this.onClickComment.bind(null, index)}
+                        >
+                          查看打卡心情
+                        </View>
+                      ) : null}
+                    </View>
                     <View
-                      className={`iconfont icon-${l.icon} ${l.theme}-color`}
-                    />
-                    <View>{l.name}</View>
+                      className={`detail-item comment-wrapper ${
+                        l.isShowComment ? 'show' : ''
+                      }`}
+                    >
+                      <View className="indicator" />
+                      <View className="comment">{l.comment}</View>
+                    </View>
                   </View>
-                  <View className="achieve">
-                    {l.achieve}
-                    {UnitMap[l.unit]}
-                  </View>
-                </View>
-                <View className="check-time">
-                  {l.checkDate} {l.checkTime}
-                  {l.comment ? (
-                    <View className="check-comment">{l.comment}</View>
-                  ) : null}
                 </View>
               </View>
             ))}
