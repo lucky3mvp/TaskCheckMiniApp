@@ -73,30 +73,7 @@ class Check extends Component<IProps, PageState> {
         })
       }
     }
-    await this.getPlans()
-    // this.setState({
-    //   plans: [
-    //     {
-    //       planID: '60090712f9777f003c2fe9d1',
-    //       name: '每月跑3次计划一次6km',
-    //       description: '每月跑3次计划',
-    //       theme: 'theme11',
-    //       icon: 'running',
-    //       category: 1,
-    //       unit: '4',
-    //       goal: 6,
-    //       type: 4,
-    //       subType: 1,
-    //       times: 30,
-    //       days: ['0'],
-    //       beginTime: '2021-01-21T00:00:00.000Z',
-    //       endTime: '2021-01-21T00:00:00.000Z',
-    //       totalTimes: 1,
-    //       totalAchieve: 0,
-    //       status: 0
-    //     }
-    //   ]
-    // })
+    await this.getPlans(true)
     setTimeout(() => {
       this.inited = true
     }, 1000)
@@ -104,12 +81,12 @@ class Check extends Component<IProps, PageState> {
 
   componentDidShow() {
     if (this.inited) {
-      this.getPlans(this.inited)
+      this.getPlans(false)
     }
   }
 
-  async getPlans(inited) {
-    !inited &&
+  async getPlans(showLoading) {
+    showLoading &&
       Taro.showLoading({
         title: '加载中...'
       })
@@ -189,7 +166,9 @@ class Check extends Component<IProps, PageState> {
       Taro.showToast({
         title: '打卡成功啦~'
       })
-      this.getPlans()
+      setTimeout(() => {
+        this.getPlans(false)
+      }, 2000)
     } else {
       Taro.showToast({
         title: '出错了，一会再试吧'
@@ -290,6 +269,7 @@ class Check extends Component<IProps, PageState> {
                 placeholder="留下此刻的心情吧~"
                 value={this.state.comment}
                 onBlur={this.onCommentChange}
+                onInput={this.onCommentChange}
               />
             </View>
             <View

@@ -35,6 +35,7 @@ class DayDetail extends Component {
     this.date =
       getCurrentInstance().router!?.params.date ||
       formatDate(new Date(), 'yyyy/MM/dd')
+    // todo
     Taro.setNavigationBarTitle({ title: this.date.split('/').join('-') })
   }
   render() {
