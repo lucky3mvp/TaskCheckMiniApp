@@ -5,13 +5,12 @@ import { ScrollView, View, Button, Text, Image } from '@tarojs/components'
 import Empty from 'src/components/Empty'
 import Gap from 'src/components/Gap'
 import { UnitMap } from 'src/constants/config'
-import { getCheckList } from 'src/utils/request'
+import { getCheckList } from 'src/utils/request2.0'
 import { formatDate } from 'src/utils'
 
 import './index.less'
 
 type PageStateProps = {
-  userInfo: UserInfoStoreType
   helper: HelperStoreType
 }
 
@@ -36,8 +35,7 @@ interface CheckList {
 }
 
 @connect(
-  ({ userInfo, helper }) => ({
-    userInfo,
+  ({ helper }) => ({
     helper
   }),
   dispatch => ({})

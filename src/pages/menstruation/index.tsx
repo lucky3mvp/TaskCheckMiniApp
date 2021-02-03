@@ -4,7 +4,7 @@ import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import Calendar from './Calendar'
 
-import { getMenstruationDetail } from 'src/utils/request'
+import { getMenstruationDetail } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -87,57 +87,26 @@ class Menstruation extends Component {
       year,
       month
     })
-    // const records = [
-    //   {
-    //     year: 2021,
-    //     month: 1,
-    //     day: 1,
-    //     type: 2
-    //   },
-    //   {
-    //     year: 2021,
-    //     month: 1,
-    //     day: 26,
-    //     type: 1
-    //   }
-    //   // {
-    //   //   year: 2021,
-    //   //   month: 1,
-    //   //   day: 28,
-    //   //   type: 2
-    //   // }
-    // ]
-    // const prevStart = {
-    //   year: 2020,
-    //   month: 12,
-    //   day: 26,
-    //   type: 1
-    // }
-    // // const nextEnd = {
-    // //   year: 2021,
-    // //   month: 2,
-    // //   day: 1,
-    // //   type: 2
-    // // }
-    // const nextEnd = null
 
-    this.cache[`${year}/${month}`] = {
-      records,
-      prevStart,
-      nextEnd
+    if (code === 200) {
+      this.cache[`${year}/${month}`] = {
+        records,
+        prevStart,
+        nextEnd
+      }
+      const status = this.handleDayStatus(year, month).map(r => r.status)
+      this.cache[`${year}/${month}`].status = status
+      this.setState({
+        records,
+        prevStart,
+        nextEnd,
+        status
+      })
     }
-    const status = this.handleDayStatus(year, month).map(r => r.status)
-    this.cache[`${year}/${month}`].status = status
-    this.setState({
-      records,
-      prevStart,
-      nextEnd,
-      status
-    })
   }
   handleDayStatus = (year: number, month: number) => {
     const thisMonthTotalDays = new Date(year, month, 0).getDate()
-    const { records, prevStart, nextEnd } = this.cache[`${year}/${month}`]
+    const { records = [], prevStart, nextEnd } = this.cache[`${year}/${month}`]
     const r: Array<{
       day: number
       status: number
@@ -249,6 +218,7 @@ class Menstruation extends Component {
         }
       }
     }
+
     return r
   }
   onPrev = (py: number, pm: number) => {

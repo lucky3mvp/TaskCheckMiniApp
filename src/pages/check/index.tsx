@@ -8,22 +8,15 @@ import Empty from 'src/components/Empty'
 import Modal from 'src/components/Modal'
 import SelfInput from 'src/components/SelfInput'
 
-import wit from 'src/utils/wit'
 import { formatDate } from 'src/utils'
 
-import { updateUserInfo } from 'src/store/actions/userInfo'
-
-import { getPlanByDate, check } from 'src/utils/request'
+import { getPlanByDate, check } from 'src/utils/request2.0'
 
 import './index.less'
 
-type PageStateProps = {
-  userInfo: UserInfoStoreType
-}
+type PageStateProps = {}
 
-type PageDispatchProps = {
-  updateUserInfo: (_) => void
-}
+type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
@@ -42,16 +35,7 @@ interface Check {
   props: IProps
 }
 
-@connect(
-  ({ userInfo }) => ({
-    userInfo
-  }),
-  dispatch => ({
-    updateUserInfo(userInfo) {
-      dispatch(updateUserInfo(userInfo))
-    }
-  })
-)
+@connect()
 class Check extends Component<IProps, PageState> {
   inited = false
   state = {
@@ -63,16 +47,6 @@ class Check extends Component<IProps, PageState> {
     checkItem: {} as PlanType
   }
   async componentDidMount() {
-    if (!this.props.userInfo.isLogin) {
-      const [res] = await wit.login()
-      const [userInfoRes] = await wit.getUserInfo()
-      if (userInfoRes) {
-        this.props.updateUserInfo({
-          ...(res ? res : {}),
-          ...userInfoRes
-        })
-      }
-    }
     await this.getPlans(true)
     setTimeout(() => {
       this.inited = true

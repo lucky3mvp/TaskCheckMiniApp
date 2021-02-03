@@ -13,15 +13,9 @@ import './app.less'
 
 class App extends Component {
   async componentDidMount() {
-    const [res] = await wit.login()
     const [userInfoRes] = await wit.getUserInfo()
     if (userInfoRes) {
-      dispatch(
-        updateUserInfo({
-          ...(res ? res : {}),
-          ...userInfoRes
-        })
-      )
+      dispatch(updateUserInfo(userInfoRes))
     }
     dispatch(
       updateHelperInfo({

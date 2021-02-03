@@ -6,7 +6,7 @@ import Calendar from 'src/components/Calendar'
 
 import { Themes } from 'src/constants/config'
 
-import { getPlanTabList } from 'src/utils/request'
+import { getPlanTabList } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -21,9 +21,7 @@ type PlanTabType = {
   endTime: string
 }
 
-type PageStateProps = {
-  userInfo: UserInfoStoreType
-}
+type PageStateProps = {}
 
 type PageDispatchProps = {}
 
@@ -40,12 +38,7 @@ interface Home {
   props: IProps
 }
 
-@connect(
-  ({ userInfo }) => ({
-    userInfo
-  }),
-  dispatch => ({})
-)
+@connect()
 class Home extends Component {
   inited = false
   state = {

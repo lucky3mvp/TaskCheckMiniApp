@@ -5,7 +5,7 @@ import Empty from 'src/components/Empty'
 import TopBar from 'src/components/TopBar'
 import ListItem from './ListItem'
 
-import { getPlanList } from 'src/utils/request'
+import { getPlanList } from 'src/utils/request2.0'
 import { pxTransform } from 'src/utils'
 
 import './index.less'
@@ -60,68 +60,6 @@ class PlanList extends Component {
         ended
       })
     }
-
-    // this.setState({
-    //   loading: false,
-    //   unStarted: [
-    //     {
-    //       planID: '600a7d91ca7efb003b5be7f5',
-    //       name: '计划4每月10天跳绳',
-    //       description: '主题22目标1000次20200201开始到永远',
-    //       theme: 'theme22',
-    //       icon: 'skipping',
-    //       category: 1,
-    //       unit: '1',
-    //       goal: 1000,
-    //       type: 4,
-    //       subType: 1,
-    //       times: 10,
-    //       days: '',
-    //       beginTime: '2021-02-01T00:00:00.000Z',
-    //       endTime: null,
-    //       status: 1,
-    //       totalTimes: 0
-    //     }
-    //   ],
-    //   started: [
-    //     {
-    //       planID: '60029aa3720bc4003c52b0ca',
-    //       name: '跑步(除周3跑5千米)',
-    //       description: '加油',
-    //       theme: 'theme1',
-    //       icon: 'running',
-    //       category: 1,
-    //       unit: '4',
-    //       goal: 5,
-    //       type: 3,
-    //       subType: 2,
-    //       days: '0,1,2,4,5,6',
-    //       beginTime: '2021-01-16T00:00:00.000Z',
-    //       endTime: '2022-01-01T00:00:00.000Z',
-    //       status: 2,
-    //       totalTimes: 1
-    //     }
-    //   ],
-    //   ended: [
-    //     // {
-    //     //   planID: '60029aa3720bc4003c52b0ca',
-    //     //   name: '跑步(除周3跑5千米)',
-    //     //   description: '加油',
-    //     //   theme: 'theme1',
-    //     //   icon: 'running',
-    //     //   category: 1,
-    //     //   unit: '4',
-    //     //   goal: 5,
-    //     //   type: 3,
-    //     //   subType: 2,
-    //     //   days: '0,1,2,4,5,6',
-    //     //   beginTime: '2021-01-16T00:00:00.000Z',
-    //     //   endTime: '2022-01-01T00:00:00.000Z',
-    //     //   status: 2,
-    //     //   totalTimes: 1
-    //     // }
-    //   ]
-    // })
     Taro.hideLoading()
   }
   onSwiperChange = ({ detail: { current, source } }) => {

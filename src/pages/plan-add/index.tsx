@@ -23,7 +23,7 @@ import {
   UnitMap,
   IconCategoryMap
 } from 'src/constants'
-import { submitPlan } from 'src/utils/request'
+import { submitPlan } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -35,7 +35,6 @@ import './index.less'
  */
 
 type PageStateProps = {
-  userInfo: UserInfoStoreType
   helper: HelperStoreType
 }
 
@@ -70,8 +69,7 @@ interface PlanAdd {
 }
 
 @connect(
-  ({ userInfo, helper }) => ({
-    userInfo,
+  ({ helper }) => ({
     helper
   }),
   dispatch => ({})

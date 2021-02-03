@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import { rightArrow } from 'src/assets/svg'
 import Switch from 'src/components/Switch'
 
-import { submitMenstruation } from 'src/utils/request'
+import { submitMenstruation } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -215,6 +215,9 @@ export default (props: IProps) => {
             }
             const { code } = await submitMenstruation(p)
             if (code === 200) {
+              Taro.showToast({
+                title: '记录成功'
+              })
               setChecked(false)
               props.onUpdate(p)
             }
