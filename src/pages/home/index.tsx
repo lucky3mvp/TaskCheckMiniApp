@@ -101,7 +101,7 @@ class Home extends Component {
           <View className="holder" />
         </View>
         <Calendar />
-        <View>报表功能敬请期待</View>
+        {/* <View>报表功能敬请期待</View> */}
         <View className="iconfont icon-add" onClick={this.onAdd} />
       </View>
     )

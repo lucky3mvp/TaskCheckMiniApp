@@ -16,7 +16,7 @@ exports.main = async (event, context) => {
     })
     .get()
 
-  const plans = plans.map(p => {
+  const plans = data.map(p => {
     return {
       planID: p.planID,
       name: p.name,
@@ -35,38 +35,3 @@ exports.main = async (event, context) => {
   }
 }
 
-module.exports = async function (params, context) {
-  const openID = params.header.uid
-  const isTest = !!params.header.isTest
-  if (!openID) {
-    return {
-      code: 400,
-      msg: '缺失用户信息'
-    }
-  }
-
-  const planTable = inspirecloud.db.table('mpPlan')
-  let plans = await planTable
-    .where({
-      userID: openID,
-      isTest: isTest
-    })
-    .find()
-  plans = plans.map(p => {
-    return {
-      planID: p.planID,
-      name: p.name,
-      description: p.description,
-      theme: p.theme,
-      icon: p.icon,
-      category: p.category,
-      beginTime: p.beginTime,
-      endTime: p.endTime
-    }
-  })
-
-  return {
-    code: 200,
-    tabs: plans
-  }
-}

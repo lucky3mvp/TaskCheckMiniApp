@@ -1,6 +1,35 @@
 const cloud = require('wx-server-sdk')
 cloud.init()
 
+const formatDate = function (idate, fmt) {
+  const o = {
+    'M+': idate.getMonth() + 1,
+    'd+': idate.getDate(),
+    'h+': idate.getHours(),
+    'm+': idate.getMinutes(),
+    's+': idate.getSeconds(),
+    'q+': Math.floor((idate.getMonth() + 3) / 3),
+    S: idate.getMilliseconds()
+  }
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(
+      RegExp.$1,
+      String(idate.getFullYear()).substr(4 - RegExp.$1.length)
+    )
+  }
+  for (const k in o) {
+    if (new RegExp(`(${k})`).test(fmt)) {
+      const temp =
+        RegExp.$1.length === 1
+          ? o[k]
+          : ('00' + o[k]).substr(String(o[k]).length)
+      fmt = fmt.replace(RegExp.$1, temp)
+    }
+  }
+
+  return fmt
+}
+
 const getWeekStart = function (d) {
   const day = d.getDay()
   if (day === 0) {
@@ -125,6 +154,7 @@ exports.main = async (event, context) => {
           totalTimes: totalTimes
           // 同时返回date这一天的打卡记录和详情
         }
+        
         let { errMsg, data } = await statusCollection
           .where({
             userID: wxContext.OPENID,
@@ -137,7 +167,8 @@ exports.main = async (event, context) => {
             weekStart: getWeekStart(dateObj)
           })
           .get()
-        if (!data.length) {
+        let detail = data[0]
+        if (!detail) {
           detail = {
             totalAchieve: 0,
             status: 0

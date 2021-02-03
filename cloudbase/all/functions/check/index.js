@@ -1,6 +1,35 @@
 const cloud = require('wx-server-sdk')
 cloud.init()
 
+const formatDate = function (idate, fmt) {
+  const o = {
+    'M+': idate.getMonth() + 1,
+    'd+': idate.getDate(),
+    'h+': idate.getHours(),
+    'm+': idate.getMinutes(),
+    's+': idate.getSeconds(),
+    'q+': Math.floor((idate.getMonth() + 3) / 3),
+    S: idate.getMilliseconds()
+  }
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(
+      RegExp.$1,
+      String(idate.getFullYear()).substr(4 - RegExp.$1.length)
+    )
+  }
+  for (const k in o) {
+    if (new RegExp(`(${k})`).test(fmt)) {
+      const temp =
+        RegExp.$1.length === 1
+          ? o[k]
+          : ('00' + o[k]).substr(String(o[k]).length)
+      fmt = fmt.replace(RegExp.$1, temp)
+    }
+  }
+
+  return fmt
+}
+
 const getWeekStart = function (d) {
   const day = d.getDay()
   if (day === 0) {
@@ -45,7 +74,8 @@ exports.main = async (event, context) => {
   // 更新计划状态表
   // 1.先查出计划信息
   const planCollection = db.collection('plan')
-  const { errMsg: errMsg2, data2 } = await planCollection
+  const planCheckCollection = db.collection('planCheckStatus')
+  const { errMsg: errMsg2, data: data2 } = await planCollection
     .where({
       userID: wxContext.OPENID,
       planID: planID
@@ -53,9 +83,8 @@ exports.main = async (event, context) => {
     .get()
   const plan = data2[0]
   if (plan) {
-    const detailCollection = inspirecloud.db.table('planCheckStatus')
     // 2.查这个计划当前的打卡状态
-    let { errrMsg3, data: data3 } = await detailCollection
+    let { errrMsg3, data: data3 } = await planCheckCollection
       .where({
         userID: wxContext.OPENID,
         planID: planID,
@@ -67,14 +96,15 @@ exports.main = async (event, context) => {
         weekStart: getWeekStart(checkDate)
       })
       .get()
-    const detail = data3[0]
+    let detail = data3[0]
+
     if (!detail) {
       // 3.还没有就新增一条记录
-      const d = {
+      detail = {
         userID: wxContext.OPENID,
         planID: planID,
-        totalAchieve: 0,
-        status: 0,
+        totalAchieve: achieve,
+        status: achieve >= plan.goal ? 1 : 0,
         type: plan.type,
         subType: plan.subType,
         year: checkYear,
@@ -82,20 +112,20 @@ exports.main = async (event, context) => {
         day: checkDay,
         weekStart: getWeekStart(checkDate)
       }
-      const { errMsg4, _id: _id4 } = await detailCollection.add(d)
-      detail = {
-        _id: _id4,
-        ...d
-      }
+      const { errMsg4, _id: _id4 } = await planCheckCollection.add({
+        data: detail
+      })
+    } else {
+      detail.totalAchieve += achieve
+      detail.status = detail.totalAchieve >= plan.goal ? 1 : 0
+      // 4.更新计划的打卡状态
+      const res = await planCheckCollection.doc(detail._id).update({
+        data: {
+          totalAchieve: detail.achieve,
+          status: detail.status
+        }
+      })
     }
-    detail.totalAchieve += achieve
-    detail.status = detail.totalAchieve >= plan.goal ? 1 : 0
-    // 4.更新计划的打卡状态
-    const res = await collection.doc(detail._id).update({
-      data: {
-        ...detail
-      }
-    })
 
     return {
       code: 200,

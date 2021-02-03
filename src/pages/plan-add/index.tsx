@@ -75,6 +75,7 @@ interface PlanAdd {
   dispatch => ({})
 )
 class PlanAdd extends Component<IProps, IState> {
+  lock = false
   state = {
     disable: true,
     bannerImgIndex: 0,
@@ -265,6 +266,11 @@ class PlanAdd extends Component<IProps, IState> {
       })
       return
     }
+    if (this.lock) return
+    this.lock = true
+    Taro.showLoading({
+      title: '请求中'
+    })
     // 默认登录都能成功吧
     const res = await submitPlan({
       name: this.state.name,
@@ -291,6 +297,7 @@ class PlanAdd extends Component<IProps, IState> {
       endTime: this.state.endTime === '9999/99/99' ? '' : this.state.endTime
     })
     if (res.code === 200) {
+      Taro.hideLoading()
       Taro.showToast({
         title: '创建成功，去看看',
         icon: 'none',
@@ -301,6 +308,8 @@ class PlanAdd extends Component<IProps, IState> {
         Taro.switchTab({ url: '/pages/home/index' })
       }, 2000)
     }
+    Taro.hideLoading()
+    this.lock = false
   }
 
   render() {

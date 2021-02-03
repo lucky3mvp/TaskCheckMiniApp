@@ -38,6 +38,7 @@ interface Check {
 @connect()
 class Check extends Component<IProps, PageState> {
   inited = false
+  lock = false
   state = {
     loading: true,
     stage: 0,
@@ -67,6 +68,7 @@ class Check extends Component<IProps, PageState> {
     const { code, plans = [] } = await getPlanByDate({
       date: formatDate(new Date(), 'yyyy/MM/dd')
     })
+    console.log(plans)
     if (code === 200) {
       this.setState({
         loading: false,
@@ -129,6 +131,11 @@ class Check extends Component<IProps, PageState> {
   }
   onSubmitCheck = async () => {
     if (!this.state.achieve) return
+    if (this.lock) return
+    this.lock = true
+    Taro.showLoading({
+      title: '请求中'
+    })
     const { code } = await check({
       date: formatDate(new Date(), 'yyyy/MM/dd'),
       achieve: +this.state.achieve,
@@ -148,6 +155,8 @@ class Check extends Component<IProps, PageState> {
         title: '出错了，一会再试吧'
       })
     }
+    this.lock = false
+    Taro.hideLoading()
   }
   gotoAddPlan = () => {
     Taro.navigateTo({

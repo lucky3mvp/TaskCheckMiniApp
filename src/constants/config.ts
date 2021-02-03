@@ -47,7 +47,16 @@ export const Icons = [
   'running',
   'yoga',
   'skipping',
-  'reading'
+  'skiing',
+  'reading',
+  'yangsheng',
+  'kafei',
+  'cherry',
+  'phone',
+  'jinshi',
+  'yexiao',
+  'snack',
+  'paojiao'
 ]
 
 export const Themes = [
