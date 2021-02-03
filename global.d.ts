@@ -82,8 +82,8 @@ type PlanType = {
   */
   status: number
   days: Array<string>
-  beginTime: string
-  endTime: string
+  beginTime: number
+  endTime: number
   totalAchieve: number
   /**
    * 指的是计划在当前计划周期内，完成了多少次

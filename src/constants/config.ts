@@ -36,7 +36,7 @@ export const UnitEngMap = {
 
 export const CategoryMap = {
   1: '运动',
-  2: '生活',
+  2: '生活', //吃喝玩乐
   3: '健康',
   4: '学习'
 }
@@ -96,7 +96,16 @@ export const IconCategoryMap = {
   running: 1,
   yoga: 1,
   reading: 4,
-  skipping: 1
+  skipping: 1,
+  skiing: 1,
+  yangsheng: 3,
+  kafei: 2,
+  cherry: 2,
+  phone: 2,
+  jinshi: 2,
+  yexiao: 2,
+  snack: 2,
+  paojiao: 3
 }
 
 export const BannerImgs = [

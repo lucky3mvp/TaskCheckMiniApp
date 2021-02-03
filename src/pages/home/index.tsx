@@ -17,8 +17,8 @@ type PlanTabType = {
   theme: string
   icon: string
   category: string
-  beginTime: string
-  endTime: string
+  beginTime: number
+  endTime: number
 }
 
 type PageStateProps = {}

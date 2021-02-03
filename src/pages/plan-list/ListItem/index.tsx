@@ -10,8 +10,8 @@ interface IProps {
   name: string
   description: string
   status: number
-  beginTime: string
-  endTime: string
+  beginTime: number
+  endTime: number
   type: number
   subType: number
   unit: string
