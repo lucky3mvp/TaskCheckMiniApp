@@ -1,4 +1,5 @@
 {
+  "setting": {},
   "condition": {
     "plugin": {
       "list": []
@@ -20,6 +21,24 @@
         {
           "name": "pages/check/index",
           "pathName": "pages/check/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/menstruation/index",
+          "pathName": "pages/menstruation/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/check-list/index",
+          "pathName": "pages/check-list/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/plan-list/index",
+          "pathName": "pages/plan-list/index",
           "query": "",
           "scene": null
         }
