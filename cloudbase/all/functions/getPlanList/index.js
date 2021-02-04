@@ -40,7 +40,6 @@ const getWeekStart = function (d) {
   return formatDate(s, 'yyyy-MM-dd')
 }
 
-
 exports.main = async (event, context) => {
   console.log('getPlanList params: ', event)
   const wxContext = cloud.getWXContext()
@@ -61,32 +60,26 @@ exports.main = async (event, context) => {
 
   const { errMsg, data } = await collection
     .where({
-      userID: wxContext.OPENID
+      userID: wxContext.OPENID,
+      status: 1 // 1-正常 2-已删除
     })
     .get()
 
   for (let p of data) {
-    let status = 0
-    // 返回未删除的计划
     // 给前端的status
     // - 1-未开始
     // - 2-进行中
     // - 3-已结束
-    // - 4-暂停
-    // 数据库的status
-    // - 1-正常
-    // - 3-已删除
-    if (p.status === 1) {
-      if (dateTime < p.beginTime) {
-        status = 1
-      } else if (
-        dateTime >= p.beginTime &&
-        (!p.endTime || dateTime <= p.endTime)
-      ) {
-        status = 2
-      } else {
-        status = 3
-      }
+    let status = 0
+    if (dateTime < p.beginTime) {
+      status = 1
+    } else if (
+      dateTime >= p.beginTime &&
+      (!p.endTime || dateTime <= p.endTime)
+    ) {
+      status = 2
+    } else {
+      status = 3
     }
 
     const item = {
@@ -104,7 +97,7 @@ exports.main = async (event, context) => {
       days: p.days,
       beginTime: p.beginTime,
       endTime: p.endTime,
-      status: status,
+      status: status
       // totalTimes: totalTimes
     }
     if (status === 1) {
@@ -161,7 +154,7 @@ exports.main = async (event, context) => {
         .count()
       console.log('getPlanList 本周累计打卡次数', weekTimes)
       item.weekTimes = weekTimes
-      
+
       started.push(item)
     }
   }

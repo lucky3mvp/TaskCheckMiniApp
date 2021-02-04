@@ -79,11 +79,12 @@ exports.main = async (event, context) => {
   const { errMsg: errMsg2, data: data2 } = await planCollection
     .where({
       userID: wxContext.OPENID,
-      planID: planID
+      planID: planID,
+      status: 1 // 1-正常 2-已删除
     })
     .get()
   const plan = data2[0]
-  if (plan && plan.status === 1) {
+  if (plan) {
     // 2.查这个计划当前的打卡状态
     let { errrMsg3, data: data3 } = await statusCollection
       .where({
@@ -105,7 +106,7 @@ exports.main = async (event, context) => {
         userID: wxContext.OPENID,
         planID: planID,
         totalAchieve: achieve,
-        status: achieve >= plan.goal ? 1 : 0,
+        status: achieve >= plan.goal ? 1 : 0, // 1-已完成 0-未完成
         type: plan.type,
         subType: plan.subType,
         year: checkYear,
@@ -118,7 +119,7 @@ exports.main = async (event, context) => {
       })
     } else {
       detail.totalAchieve += achieve
-      detail.status = detail.totalAchieve >= plan.goal ? 1 : 0
+      detail.status = detail.totalAchieve >= plan.goal ? 1 : 0 // 1-已完成 0-未完成
       // 4.更新计划的打卡状态
       const res = await statusCollection.doc(detail._id).update({
         data: {
@@ -131,16 +132,6 @@ exports.main = async (event, context) => {
     return {
       code: 200,
       planDetail: detail
-    }
-  } else if (plan && plan.status === 3){
-    return {
-      code: 401,
-      msg: '该计划已删除'
-    }
-  } else if (plan && plan.status === 2){
-    return {
-      code: 401,
-      msg: '该计划已暂停'
     }
   }
 

@@ -75,6 +75,7 @@ type PlanType = {
   subType: number
   times: number
   /*
+    前端的status
     - 1-未开始
     - 2-进行中
     - 3-已结束
