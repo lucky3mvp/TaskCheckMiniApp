@@ -16,7 +16,7 @@ exports.main = async (event, context) => {
     })
     .get()
 
-  const plans = data.map(p => {
+  const plans = data.filter(p => p.status !== 3).map(p => {
     return {
       planID: p.planID,
       name: p.name,

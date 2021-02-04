@@ -135,7 +135,7 @@ class Check extends Component<IProps, PageState> {
     Taro.showLoading({
       title: '请求中'
     })
-    const { code } = await check({
+    const { code, msg } = await check({
       date: formatDate(new Date(), 'yyyy/MM/dd'),
       achieve: +this.state.achieve,
       comment: this.state.comment,
@@ -149,6 +149,11 @@ class Check extends Component<IProps, PageState> {
       setTimeout(() => {
         this.getCheckList(false)
       }, 1500)
+    } else if (code === 401) {
+      Taro.showToast({
+        title: msg
+      })
+      this.getCheckList(false)
     } else {
       Taro.showToast({
         title: '出错了，一会再试吧'

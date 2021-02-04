@@ -67,11 +67,16 @@ exports.main = async (event, context) => {
 
   for (let p of data) {
     let status = 0
+    // 返回未删除的计划
+    // 给前端的status
     // - 1-未开始
     // - 2-进行中
     // - 3-已结束
     // - 4-暂停
-    if (p.status !== 4) {
+    // 数据库的status
+    // - 1-正常
+    // - 3-已删除
+    if (p.status === 1) {
       if (dateTime < p.beginTime) {
         status = 1
       } else if (

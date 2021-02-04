@@ -34,6 +34,7 @@ exports.main = async (event, context) => {
       cache[`${planID}`] = data
     }
     const plan = cache[`${planID}`]
+    // 返回所有打卡计算，不管计划是不是被删了
     result.push({
       planID,
       comment: check.comment,

@@ -225,6 +225,8 @@ class PlanAdd extends Component<IProps, IState> {
             title: '删除成功'
           })
           manualEvent.change('plan-list-page', 'update plan list')
+          manualEvent.change('home-page', 'update plan tab list')
+          manualEvent.change('check-page', 'update check list')
           setTimeout(() => {
             Taro.navigateBack()
           }, 1500)
