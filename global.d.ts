@@ -93,6 +93,8 @@ type PlanType = {
    * 使用的地方如：今日打卡页的dot指示
    */
   totalTimes: number
+  weekTimes?: number
+  monthTimes?: number
 }
 
 type CheckListItemType = {

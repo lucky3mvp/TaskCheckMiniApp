@@ -85,6 +85,7 @@ class PlanList extends Component {
       index: index
     })
   }
+  onClickPlan = (plan: PlanType) => {}
   render() {
     return (
       <View className="plan-list-page">
@@ -105,7 +106,10 @@ class PlanList extends Component {
               {this.state.loading ? null : this.state.unStarted.length ? (
                 <View className="swiper-item-scroll">
                   {this.state.unStarted.map(item => (
-                    <ListItem {...item} />
+                    <ListItem
+                      {...item}
+                      onClick={this.onClickPlan.bind(this, item)}
+                    />
                   ))}
                 </View>
               ) : (
@@ -116,7 +120,10 @@ class PlanList extends Component {
               {this.state.loading ? null : this.state.started.length ? (
                 <View className="swiper-item-scroll">
                   {this.state.started.map(item => (
-                    <ListItem {...item} />
+                    <ListItem
+                      {...item}
+                      onClick={this.onClickPlan.bind(this, item)}
+                    />
                   ))}
                 </View>
               ) : (

@@ -29,29 +29,26 @@ export const getCheckList = async params => post(`getCheckList`, params)
 
 async function post(name, data): Promise<any> {
   return new Promise((resolve, reject) => {
-    resolve({
-      code: 200
+    wx.cloud.init()
+    wx.cloud.callFunction({
+      // 云函数名称
+      name: name,
+      // 传给云函数的参数
+      data: data,
+      success: function (res) {
+        resolve(res.result)
+      },
+      fail: function (err) {
+        Taro.hideLoading()
+        Taro.showModal({
+          title: '网络异常，请稍后再试',
+          // title:
+          //   err.errMsg.indexOf('request:fail') !== -1 ? '网络不给力' : '请求出错',
+          showCancel: false,
+          content: ''
+        })
+        console.error('[http error]: ', err)
+      }
     })
-    // wx.cloud.init()
-    // wx.cloud.callFunction({
-    //   // 云函数名称
-    //   name: name,
-    //   // 传给云函数的参数
-    //   data: data,
-    //   success: function (res) {
-    //     resolve(res.result)
-    //   },
-    //   fail: function (err) {
-    //     Taro.hideLoading()
-    //     Taro.showModal({
-    //       title: '网络异常，请稍后再试',
-    //       // title:
-    //       //   err.errMsg.indexOf('request:fail') !== -1 ? '网络不给力' : '请求出错',
-    //       showCancel: false,
-    //       content: ''
-    //     })
-    //     console.error('[http error]: ', err)
-    //   }
-    // })
   })
 }
