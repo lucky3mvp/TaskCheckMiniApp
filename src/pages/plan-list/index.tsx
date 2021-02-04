@@ -7,6 +7,7 @@ import ListItem from './ListItem'
 
 import { getPlanList } from 'src/utils/request2.0'
 import { pxTransform } from 'src/utils'
+import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
 
@@ -42,10 +43,21 @@ class PlanList extends Component {
     started: [],
     ended: []
   }
-  async componentDidMount() {
-    Taro.showLoading({
-      title: '加载中...'
+  componentDidMount() {
+    this.getList(true)
+    manualEvent.register('plan-list-page').on('update plan list', () => {
+      this.getList()
+      manualEvent.clear('plan-list-page')
     })
+  }
+  componentDidShow() {
+    manualEvent.run('plan-list-page')
+  }
+  async getList(showLoading = false) {
+    showLoading &&
+      Taro.showLoading({
+        title: '加载中...'
+      })
     const {
       code,
       unStarted = [],

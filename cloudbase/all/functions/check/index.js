@@ -32,10 +32,11 @@ const formatDate = function (idate, fmt) {
 
 const getWeekStart = function (d) {
   const day = d.getDay()
-  if (day === 0) {
-    return formatDate(d, 'yyyy-MM-dd')
-  }
-  const s = new Date(d.getFullYear(), d.getMonth(), d.getDate() - day)
+  const s = new Date(
+    d.getFullYear(),
+    d.getMonth(),
+    d.getDate() - ((day - 1 + 7) % 7)
+  )
   return formatDate(s, 'yyyy-MM-dd')
 }
 
@@ -72,9 +73,9 @@ exports.main = async (event, context) => {
   })
 
   // 更新计划状态表
-  // 1.先查出计划信息
+  // 先查出计划信息
   const planCollection = db.collection('plan')
-  const planCheckCollection = db.collection('planCheckStatus')
+  const statusCollection = db.collection('planCheckStatus')
   const { errMsg: errMsg2, data: data2 } = await planCollection
     .where({
       userID: wxContext.OPENID,
@@ -83,8 +84,8 @@ exports.main = async (event, context) => {
     .get()
   const plan = data2[0]
   if (plan) {
-    // 2.查这个计划当前的打卡状态
-    let { errrMsg3, data: data3 } = await planCheckCollection
+    // 查这个计划当前的打卡状态
+    let { errrMsg3, data: data3 } = await statusCollection
       .where({
         userID: wxContext.OPENID,
         planID: planID,
@@ -112,14 +113,14 @@ exports.main = async (event, context) => {
         day: checkDay,
         weekStart: getWeekStart(checkDate)
       }
-      const { errMsg4, _id: _id4 } = await planCheckCollection.add({
+      const { errMsg4, _id: _id4 } = await statusCollection.add({
         data: detail
       })
     } else {
       detail.totalAchieve += achieve
       detail.status = detail.totalAchieve >= plan.goal ? 1 : 0
       // 4.更新计划的打卡状态
-      const res = await planCheckCollection.doc(detail._id).update({
+      const res = await statusCollection.doc(detail._id).update({
         data: {
           totalAchieve: detail.achieve,
           status: detail.status

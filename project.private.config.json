@@ -41,6 +41,11 @@
           "pathName": "pages/plan-list/index",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "pages/plan-edit/index",
+          "pathName": "pages/plan-edit/index",
+          "scene": null
         }
       ]
     }

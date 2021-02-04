@@ -24,6 +24,7 @@ import {
   IconCategoryMap
 } from 'src/constants'
 import { submitPlan } from 'src/utils/request2.0'
+import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
 
@@ -271,7 +272,7 @@ class PlanAdd extends Component<IProps, IState> {
     Taro.showLoading({
       title: '请求中'
     })
-    // 默认登录都能成功吧
+
     const res = await submitPlan({
       name: this.state.name,
       description: this.state.description,
@@ -303,10 +304,11 @@ class PlanAdd extends Component<IProps, IState> {
         icon: 'none',
         duration: 2000
       })
+      manualEvent.change('home-page', 'update plan tab list')
+      manualEvent.change('check-page', 'update check list')
       setTimeout(() => {
-        // todo 先跳首页，后面再看去哪儿
         Taro.switchTab({ url: '/pages/home/index' })
-      }, 2000)
+      }, 1500)
     }
     Taro.hideLoading()
     this.lock = false

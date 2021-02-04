@@ -7,6 +7,7 @@ import Calendar from 'src/components/Calendar'
 import { Themes } from 'src/constants/config'
 
 import { getPlanTabList } from 'src/utils/request2.0'
+import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
 
@@ -40,23 +41,22 @@ interface Home {
 
 @connect()
 class Home extends Component {
-  inited = false
   state = {
     tabs: [],
     cur: 'all'
   }
-  async componentDidMount() {
-    await this.getPlanTabList(true)
-    setTimeout(() => {
-      this.inited = true
-    }, 1000)
+  componentDidMount() {
+    this.getPlanTabList(true)
+    manualEvent.register('home-page').on('update plan tab list', () => {
+      this.getPlanTabList()
+      manualEvent.clear('home-page')
+    })
   }
+
   componentDidShow() {
-    if (this.inited) {
-      this.getPlanTabList(false)
-    }
+    manualEvent.run('home-page')
   }
-  async getPlanTabList(showLoading) {
+  async getPlanTabList(showLoading = false) {
     showLoading &&
       Taro.showLoading({
         title: '加载中...'

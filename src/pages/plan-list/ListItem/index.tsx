@@ -9,6 +9,13 @@ interface IProps {
   theme: string
   name: string
   description: string
+  /**
+   * 这是前端用的 status
+   * - 1-未开始
+   * - 2-进行中
+   * - 3-已结束
+   * - 4-暂停
+   */
   status: number
   beginTime: number
   endTime: number

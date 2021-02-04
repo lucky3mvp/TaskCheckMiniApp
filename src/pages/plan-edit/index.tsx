@@ -1,31 +1,28 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Taro from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import classnames from 'classnames'
 
 import FormItem from 'src/components/FormItem'
 import FormTitle from 'src/components/FormTitle'
 import Gap from 'src/components/Gap'
-import BtnGroup from 'src/components/BtnGroup'
-import Radio from 'src/components/Radio'
-import Picker from 'src/components/Picker'
-import DatePicker from 'src/components/DatePicker'
 
 import SelfInput from 'src/components/SelfInput'
 
 import {
-  BannerImgs,
   Themes,
   Icons,
   TypeMap,
-  Weekdays,
+  SimpleWeekdays,
   UnitMap,
   IconCategoryMap
 } from 'src/constants'
-import { submitPlan } from 'src/utils/request2.0'
+import { updatePlan, deletePlan } from 'src/utils/request2.0'
+import { formatDate } from 'src/utils'
 
 import './index.less'
+import manualEvent from 'src/utils/manualEvent'
 
 /**
  * name: 20
@@ -43,25 +40,14 @@ type PageDispatchProps = {}
 type PageOwnProps = {}
 
 type IState = {
-  // 只让改name description icon theme
-  // 支持删除
   disable: boolean
-  bannerImgIndex: number
   name: string
   description: string
+  detail: string
   theme: string
   icon: string
-  unitIndex: string
-  goal: string
-  times: string
-  days: string[]
-  type: string
-  subType: string
   beginTime: string
   endTime: string
-  typeBtns: Array<CommonItemType>
-  daysBtns: Array<CommonItemType>
-  unitOptions: Array<CommonItemType>
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -78,41 +64,59 @@ interface PlanAdd {
 )
 class PlanAdd extends Component<IProps, IState> {
   lock = false
+  plan: PlanType = {} as PlanType
   state = {
-    disable: true,
-    bannerImgIndex: 0,
+    disable: false,
     name: '',
     description: '',
-    theme: 'theme1',
+    detail: '',
+    theme: '',
     icon: '',
-    unitIndex: '',
-    goal: '',
-    times: '',
-    days: ['0', '1', '2', '3', '4', '5', '6'],
-    type: '3', // 2-每日 3-每周 4-每月
-    subType: '2', // 1-每周x天 2-每周周几
     beginTime: '',
-    endTime: '',
-    typeBtns: [],
-    daysBtns: [],
-    unitOptions: []
+    endTime: ''
   }
   componentDidMount() {
-    const index = Math.floor(Math.random() * BannerImgs.length)
+    this.plan = Taro.getStorageSync('plan')
+    Taro.removeStorageSync('plan')
+    const {
+      name,
+      description,
+      theme,
+      icon,
+      type,
+      subType,
+      goal,
+      unit,
+      times,
+      days,
+      beginTime,
+      endTime
+    } = this.plan
+
+    let detail = `${TypeMap[type]}`
+    if (type === 2) {
+      detail += ` ${goal} ${UnitMap[unit]}`
+    } else if (type === 3) {
+      if (subType === 1) {
+        detail += ` ${times} 天`
+      } else if (subType === 2) {
+        detail += `${days.map(d => SimpleWeekdays[d]).join('、')}`
+      }
+      detail += ` ${goal} ${UnitMap[unit]}`
+    } else if (type === 4) {
+      if (subType === 1) {
+        detail += ` ${times} 天`
+      }
+      detail += ` ${goal} ${UnitMap[unit]}`
+    }
     this.setState({
-      bannerImgIndex: index,
-      typeBtns: Object.keys(TypeMap).map(t => ({
-        label: TypeMap[t],
-        value: `${t}`
-      })),
-      daysBtns: Weekdays.map((t, i) => ({
-        label: t,
-        value: `${i}`
-      })),
-      unitOptions: Object.keys(UnitMap).map(u => ({
-        label: UnitMap[u],
-        value: `${u}`
-      }))
+      name,
+      description,
+      theme,
+      icon,
+      detail,
+      beginTime: formatDate(new Date(beginTime), 'yyyy.MM.dd'),
+      endTime: endTime ? formatDate(new Date(endTime), 'yyyy.MM.dd') : '永远'
     })
   }
   getValue(field: string, exception: Record<string, string | string[]>) {
@@ -123,27 +127,8 @@ class PlanAdd extends Component<IProps, IState> {
     let r: boolean = !!(
       this.getValue('name', exception) &&
       this.getValue('description', exception) &&
-      this.getValue('icon', exception) &&
-      this.getValue('unitIndex', exception) &&
-      this.getValue('goal', exception) &&
-      this.getValue('beginTime', exception) &&
-      this.getValue('endTime', exception)
+      this.getValue('icon', exception)
     )
-
-    if (!r) return false
-
-    // 到这儿的证明上面几项都填了
-    const type = this.getValue('type', exception)
-    const subType = this.getValue('subType', exception)
-    if (type === '3') {
-      if (subType === '1') {
-        r = !!this.getValue('times', exception)
-      } else {
-        r = !!this.getValue('days', exception).length
-      }
-    } else if (type === '4') {
-      r = !!this.getValue('times', exception)
-    }
     return r
   }
   onNameChange = (name: string) => {
@@ -156,74 +141,6 @@ class PlanAdd extends Component<IProps, IState> {
     this.setState({
       description,
       disable: !this.checkDisable({ description: description })
-    })
-  }
-  onTypeChange = (o: CommonItemType) => {
-    this.setState({
-      type: o.value,
-      subType: '1',
-      times: '',
-      disable: !this.checkDisable({
-        type: o.value,
-        subType: '1',
-        times: ''
-      })
-    })
-  }
-  onSubTypeChange = (subType: string) => {
-    this.setState({
-      subType,
-      disable: !this.checkDisable({ subType: subType })
-    })
-  }
-  onTimesChange = (times: string) => {
-    this.setState({
-      times,
-      disable: !this.checkDisable({ times: times })
-    })
-  }
-  onDaysChange = (o: CommonItemType) => {
-    const days = [...this.state.days]
-    const index = days.indexOf(o.value)
-    if (index < 0) {
-      days.push(o.value)
-    } else {
-      days.splice(index, 1)
-    }
-    this.setState({
-      days,
-      disable: !this.checkDisable({ days: days })
-    })
-  }
-  onGoalChange = (goal: string) => {
-    this.setState({
-      goal,
-      disable: !this.checkDisable({ goal: goal })
-    })
-  }
-  onUnitChange = (unitIndex: string) => {
-    this.setState({
-      unitIndex,
-      disable: !this.checkDisable({ unitIndex: unitIndex })
-    })
-  }
-  formatTime = (field: 'start' | 'end', p: CommonItemType[]) => {
-    const r = p.map(p => p.value).join('.')
-    if (field === 'start') return r
-    return r === '9999.99.99' ? '永远' : r
-  }
-  onChooseBeginTime = p => {
-    const beginTime = p.map(p => p.value).join('/')
-    this.setState({
-      beginTime,
-      disable: !this.checkDisable({ beginTime: beginTime })
-    })
-  }
-  onChooseEndTime = p => {
-    const endTime = p.map(p => p.value).join('/')
-    this.setState({
-      endTime,
-      disable: !this.checkDisable({ endTime: endTime })
     })
   }
   onChooseIcon = (icon: string) => {
@@ -239,89 +156,89 @@ class PlanAdd extends Component<IProps, IState> {
     })
   }
   onSubmit = async () => {
-    console.log(this.state)
     if (this.state.disable) return
 
-    if (this.state.subType === '1') {
-      if (this.state.type === '3' && +this.state.times > 7) {
-        Taro.showToast({
-          title: '每周天数不应该超过7天',
-          icon: 'none'
-        })
-        return
-      }
-      if (this.state.type === '4' && +this.state.times > 30) {
-        Taro.showToast({
-          title: '每月天数不应该超过30天',
-          icon: 'none'
-        })
-        return
-      }
-    }
+    const {
+      name: _name,
+      description: _description,
+      theme: _theme,
+      icon: _icon
+    } = this.plan
+    const { name, description, theme, icon } = this.state
     if (
-      this.state.endTime !== '9999/99/99' &&
-      new Date(this.state.beginTime) > new Date(this.state.endTime)
+      _name === name &&
+      description === _description &&
+      theme === _theme &&
+      icon === _icon
     ) {
       Taro.showToast({
-        title: '开始时间不应该超过结束时间',
-        icon: 'none'
+        title: '没有修改计划'
       })
       return
     }
+
     if (this.lock) return
     this.lock = true
     Taro.showLoading({
       title: '请求中'
     })
-    // 默认登录都能成功吧
-    const res = await submitPlan({
+
+    const res = await updatePlan({
+      planID: this.plan.planID,
       name: this.state.name,
       description: this.state.description,
       theme: this.state.theme,
       icon: this.state.icon,
-      category: IconCategoryMap[this.state.icon],
-      unit: this.state.unitOptions[this.state.unitIndex].value, // state存的是picker的index
-      goal: +this.state.goal,
-      type: +this.state.type,
-      subType: +this.state.subType,
-      times:
-        (this.state.type === '3' && this.state.subType === '1') ||
-        this.state.type === '4'
-          ? +this.state.times
-          : '', // 数据库定义了要数字，这样好像写不进去，也行
-      // 目前 days 只有每周才能选
-      days:
-        this.state.type === '3' && this.state.subType === '2'
-          ? this.state.days.join(',')
-          : '',
-      beginTime: this.state.beginTime,
-      // 没有默认为永远
-      endTime: this.state.endTime === '9999/99/99' ? '' : this.state.endTime
+      category: IconCategoryMap[this.state.icon]
     })
     if (res.code === 200) {
       Taro.hideLoading()
       Taro.showToast({
-        title: '创建成功，去看看',
-        icon: 'none',
-        duration: 2000
+        title: '修改成功'
       })
+      manualEvent.change('plan-list-page', 'update plan list')
+      manualEvent.change('home-page', 'update plan tab list')
+      manualEvent.change('check-page', 'update check list')
       setTimeout(() => {
-        // todo 先跳首页，后面再看去哪儿
-        Taro.switchTab({ url: '/pages/home/index' })
-      }, 2000)
+        Taro.navigateBack()
+      }, 1500)
     }
     Taro.hideLoading()
     this.lock = false
   }
 
+  onDelete = () => {
+    Taro.showModal({
+      title: '提示',
+      content: '确认删除该计划吗？',
+      success: async res => {
+        if (res.confirm) {
+          if (this.lock) return
+          this.lock = true
+          Taro.showLoading({
+            title: '请求中'
+          })
+          await deletePlan({
+            planID: this.plan.planID
+          })
+          Taro.showToast({
+            title: '删除成功'
+          })
+          manualEvent.change('plan-list-page', 'update plan list')
+          setTimeout(() => {
+            Taro.navigateBack()
+          }, 1500)
+          Taro.hideLoading()
+          this.lock = false
+        } else if (res.cancel) {
+        }
+      }
+    })
+  }
+
   render() {
     return (
       <View className="plan-add-page">
-        <Image
-          src={BannerImgs[this.state.bannerImgIndex]}
-          mode="widthFix"
-          className="banner"
-        />
         <FormTitle title="基础信息" />
         <FormItem label="计划名">
           <SelfInput
@@ -341,122 +258,14 @@ class PlanAdd extends Component<IProps, IState> {
             onBlur={this.onDescriptionChange}
           />
         </FormItem>
-        <FormItem label="频率" hideBorderBottom={this.state.type !== '2'}>
-          <View className="type-wrapper">
-            <BtnGroup
-              btns={this.state.typeBtns}
-              value={this.state.type}
-              theme={this.state.theme}
-              onChange={this.onTypeChange}
-            />
-          </View>
-        </FormItem>
-        {this.state.type === '3' || this.state.type === '4' ? (
-          <View className="sub-type-wrapper border-bottom">
-            <View className="sub-type-inner">
-              <View className={this.state.type === '3' ? 'week' : 'month'}>
-                <View className="indicator" />
-                <View className="sub-type-item">
-                  <View className="radio">
-                    <Radio
-                      theme={this.state.theme}
-                      checked={this.state.subType === '1'}
-                      onChange={this.onSubTypeChange.bind(null, '1')}
-                    />
-                  </View>
-                  <View className="txt">{TypeMap[this.state.type]}</View>
-                  <View className="ipt">
-                    <SelfInput
-                      type="number"
-                      placeholder={` 1 - ${this.state.type === '3' ? 7 : 30} `}
-                      maxlength={2}
-                      value={this.state.times}
-                      onBlur={this.onTimesChange}
-                    />
-                  </View>
-                  <View className="txt">天</View>
-                </View>
-                {this.state.type === '3' ? (
-                  <View className="sub-type-item">
-                    <View className="radio">
-                      <Radio
-                        theme={this.state.theme}
-                        checked={this.state.subType === '2'}
-                        onChange={this.onSubTypeChange.bind(null, '2')}
-                      />
-                    </View>
-                    <View className="txt">{TypeMap[this.state.type]}</View>
-                    <View className="multi-btn-group-wrapper">
-                      <BtnGroup
-                        multiple
-                        btns={this.state.daysBtns}
-                        values={this.state.days}
-                        theme={this.state.theme}
-                        onChange={this.onDaysChange}
-                        btnStyle={{
-                          width: '45px',
-                          height: '20px',
-                          fontSize: '12px',
-                          lineHeight: '18px',
-                          borderRadius: '10px'
-                        }}
-                      />
-                    </View>
-                  </View>
-                ) : null}
-              </View>
-            </View>
-          </View>
-        ) : null}
-        <FormItem label="目标">
-          <View className="goal-wrapper">
-            <View className="ipt">
-              <SelfInput
-                type="number"
-                placeholder="输入奋斗目标"
-                maxlength={10}
-                value={this.state.goal}
-                onBlur={this.onGoalChange}
-              />
-            </View>
-            <View className="picker">
-              <Picker
-                align="flex-end"
-                mode="selector"
-                placeholder="目标单位"
-                index={+this.state.unitIndex}
-                range={this.state.unitOptions}
-                onChange={this.onUnitChange}
-              />
-            </View>
-          </View>
+        <FormItem label="详情">
+          <View className="text">{this.state.detail}</View>
         </FormItem>
         <FormItem label="时间">
-          <View className="time-wrapper">
-            <View className="picker">
-              <DatePicker
-                align="flex-start"
-                placeholder="开始时间"
-                range={4}
-                formatter={this.formatTime.bind(null, 'start')}
-                onChange={this.onChooseBeginTime}
-              />
-            </View>
+          <View className="text">
+            {this.state.beginTime}
             <View className="line">—</View>
-            <View className="picker">
-              <DatePicker
-                align="flex-end"
-                placeholder="结束时间"
-                range={4}
-                formatter={this.formatTime.bind(null, 'end')}
-                specificStart={[
-                  [{ value: '9999', label: '永远' }],
-                  [{ value: '99', label: '' }],
-                  [{ value: '99', label: '' }]
-                ]}
-                onChange={this.onChooseEndTime}
-              />
-            </View>
+            {this.state.endTime}
           </View>
         </FormItem>
         <Gap height={20} />
@@ -475,7 +284,7 @@ class PlanAdd extends Component<IProps, IState> {
             ))}
           </View>
         </FormItem>
-        <FormItem label="颜色" vertical hideBorderBottom>
+        <FormItem label="颜色" vertical>
           <View className="theme-wrapper">
             {Themes.map(t => (
               <View
@@ -492,7 +301,10 @@ class PlanAdd extends Component<IProps, IState> {
             ))}
           </View>
         </FormItem>
-        <Gap height={30} />
+        <View className="del" onClick={this.onDelete}>
+          删除计划
+        </View>
+        <Gap height={20} />
         <View className={`footer ${this.props.helper.isIpx ? 'ipx' : ''}`}>
           <View className="holder">
             <View className="btn-wrapper"></View>
@@ -506,7 +318,7 @@ class PlanAdd extends Component<IProps, IState> {
                 }`}
                 onClick={this.onSubmit}
               >
-                提交、完成、冲鸭！
+                更新计划
               </View>
             </View>
             <View className="gap"></View>

@@ -9,6 +9,7 @@ import Modal from 'src/components/Modal'
 import SelfInput from 'src/components/SelfInput'
 
 import { formatDate } from 'src/utils'
+import manualEvent from 'src/utils/manualEvent'
 
 import { getPlanByDate, check } from 'src/utils/request2.0'
 
@@ -37,7 +38,6 @@ interface Check {
 
 @connect()
 class Check extends Component<IProps, PageState> {
-  inited = false
   lock = false
   state = {
     loading: true,
@@ -48,19 +48,18 @@ class Check extends Component<IProps, PageState> {
     checkItem: {} as PlanType
   }
   async componentDidMount() {
-    await this.getPlans(true)
-    setTimeout(() => {
-      this.inited = true
-    }, 1000)
+    this.getCheckList(true)
+    manualEvent.register('check-page').on('update check list', () => {
+      this.getCheckList()
+      manualEvent.clear('check-page')
+    })
   }
 
   componentDidShow() {
-    if (this.inited) {
-      this.getPlans(false)
-    }
+    manualEvent.run('check-page')
   }
 
-  async getPlans(showLoading) {
+  async getCheckList(showLoading = false) {
     showLoading &&
       Taro.showLoading({
         title: '加载中...'
@@ -68,7 +67,7 @@ class Check extends Component<IProps, PageState> {
     const { code, plans = [] } = await getPlanByDate({
       date: formatDate(new Date(), 'yyyy/MM/dd')
     })
-    console.log(plans)
+    // console.log(plans)
     if (code === 200) {
       this.setState({
         loading: false,
@@ -148,8 +147,8 @@ class Check extends Component<IProps, PageState> {
         title: '打卡成功啦~'
       })
       setTimeout(() => {
-        this.getPlans(false)
-      }, 2000)
+        this.getCheckList(false)
+      }, 1500)
     } else {
       Taro.showToast({
         title: '出错了，一会再试吧'

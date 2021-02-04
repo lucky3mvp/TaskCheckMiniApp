@@ -35,7 +35,11 @@ const getWeekStart = function (d) {
   if (day === 0) {
     return formatDate(d, 'yyyy-MM-dd')
   }
-  const s = new Date(d.getFullYear(), d.getMonth(), d.getDate() - day)
+  const s = new Date(
+    d.getFullYear(),
+    d.getMonth(),
+    d.getDate() - ((day - 1 + 7) % 7)
+  )
   return formatDate(s, 'yyyy-MM-dd')
 }
 
@@ -154,7 +158,7 @@ exports.main = async (event, context) => {
           totalTimes: totalTimes
           // 同时返回date这一天的打卡记录和详情
         }
-        
+
         let { errMsg, data } = await statusCollection
           .where({
             userID: wxContext.OPENID,

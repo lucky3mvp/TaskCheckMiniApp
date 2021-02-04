@@ -4,6 +4,7 @@ export default {
     'pages/check/index',
     'pages/my/index',
     'pages/plan-add/index',
+    'pages/plan-edit/index',
     'pages/plan-list/index',
     'pages/check-list/index',
     'pages/menstruation/index',
