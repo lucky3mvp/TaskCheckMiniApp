@@ -8,8 +8,6 @@ export const submitPlan = async params => post(`submitPlan`, params)
 
 export const updatePlan = async params => post(`updatePlan`, params)
 
-export const deletePlan = async params => post(`deletePlan`, params)
-
 export const getPlanByDate = async params => post(`getPlanByDate`, params)
 
 export const getPlanList = async (params = {}) => post(`getPlanList`, params)

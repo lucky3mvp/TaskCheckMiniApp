@@ -23,7 +23,7 @@ export default (props: IProps) => {
   }, [props.endTime])
   const onClick = useCallback(() => {
     props.onClick && props.onClick()
-  }, [props])
+  }, [])
   return (
     <View className="plan-list-item" onClick={onClick}>
       <View className="top border-bottom">

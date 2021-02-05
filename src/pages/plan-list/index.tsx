@@ -85,7 +85,45 @@ class PlanList extends Component {
       index: index
     })
   }
-  onClickPlan = (plan: PlanType) => {}
+  onClickPlan = (plan: PlanType) => {
+    // console.log(plan)
+    Taro.setStorageSync('plan', plan)
+    // Taro.setStorageSync('plan', {
+    //   planID: '6016a48c24afd6002e266422',
+    //   name: '打球',
+    //   description: '愿球场上有我挥洒汗水的身影',
+    //   theme: 'theme14',
+    //   icon: 'badminton',
+    //   category: 1,
+    //   unit: '1',
+    //   goal: 1,
+    //   type: 3,
+    //   subType: 1,
+    //   times: 1,
+    //   days: '',
+    //   beginTime: 1609430400000,
+    //   endTime: null
+    //     beginTime: 1612396800000
+    // category: 1
+    // days: ""
+    // description: "test"
+    // endTime: null
+    // goal: 2
+    // icon: "badminton"
+    // name: "test"
+    // planID: "b00064a7601c0bad02d1dc525758910b"
+    // status: 2
+    // subType: 0
+    // theme: "theme1"
+    // times: ""
+    // totalTimes: 0
+    // type: 2
+    // unit: "1"
+    // })
+    Taro.navigateTo({
+      url: '/pages/plan-edit/index'
+    })
+  }
   render() {
     return (
       <View className="plan-list-page">

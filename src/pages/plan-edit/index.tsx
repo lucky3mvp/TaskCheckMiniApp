@@ -18,7 +18,7 @@ import {
   UnitMap,
   IconCategoryMap
 } from 'src/constants'
-import { updatePlan, deletePlan } from 'src/utils/request2.0'
+import { updatePlan } from 'src/utils/request2.0'
 import { formatDate } from 'src/utils'
 
 import './index.less'
@@ -218,7 +218,8 @@ class PlanAdd extends Component<IProps, IState> {
           Taro.showLoading({
             title: '请求中'
           })
-          await deletePlan({
+          await updatePlan({
+            optType: 'delete',
             planID: this.plan.planID
           })
           Taro.showToast({

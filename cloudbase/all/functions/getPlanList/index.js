@@ -64,7 +64,7 @@ exports.main = async (event, context) => {
       status: 1 // 1-正常 2-已删除
     })
     .get()
-
+  console.log('get plan list data: ', data)
   for (let p of data) {
     // 给前端的status
     // - 1-未开始
