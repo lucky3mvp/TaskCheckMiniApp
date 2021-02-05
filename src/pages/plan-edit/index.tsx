@@ -184,6 +184,7 @@ class PlanAdd extends Component<IProps, IState> {
     })
 
     const res = await updatePlan({
+      optType: 'update',
       planID: this.plan.planID,
       name: this.state.name,
       description: this.state.description,

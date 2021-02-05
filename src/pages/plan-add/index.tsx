@@ -23,7 +23,7 @@ import {
   UnitMap,
   IconCategoryMap
 } from 'src/constants'
-import { submitPlan } from 'src/utils/request2.0'
+import { updatePlan } from 'src/utils/request2.0'
 import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
@@ -273,7 +273,8 @@ class PlanAdd extends Component<IProps, IState> {
       title: '请求中'
     })
 
-    const res = await submitPlan({
+    const res = await updatePlan({
+      optType: 'submit',
       name: this.state.name,
       description: this.state.description,
       theme: this.state.theme,

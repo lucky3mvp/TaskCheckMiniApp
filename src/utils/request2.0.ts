@@ -4,8 +4,6 @@ import Taro from '@tarojs/taro'
 
 export const login = async params => post(`login`, params)
 
-export const submitPlan = async params => post(`submitPlan`, params)
-
 export const updatePlan = async params => post(`updatePlan`, params)
 
 export const getPlanByDate = async params => post(`getPlanByDate`, params)
