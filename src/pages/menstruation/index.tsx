@@ -17,10 +17,9 @@ type PageDispatchProps = {}
 type PageOwnProps = {}
 
 type IState = {
-  checked: boolean
   status: Array<number>
-  nextEnd: MenstruationType
-  prevStart: MenstruationType
+  nextEnd: MenstruationType | null
+  prevStart: MenstruationType | null
   records: MenstruationType[]
 }
 

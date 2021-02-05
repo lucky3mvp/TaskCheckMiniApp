@@ -288,7 +288,7 @@ export default (props: IProps) => {
                     d.date === selectedDay[2]
                 })}
               >
-                {d.date}
+                <View className="n">{d.date}</View>
                 <View className="indicator" />
               </View>
             </View>
