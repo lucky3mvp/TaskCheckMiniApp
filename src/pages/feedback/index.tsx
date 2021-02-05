@@ -10,20 +10,16 @@ type PageStateProps = {
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   value: string
 }
 
 type IProps = PageStateProps & PageOwnProps
 
-interface Feedback {
-  props: IProps
-}
-
 @connect(({ helper }) => ({
   helper
 }))
-class Feedback extends Component {
+class Feedback extends Component<IProps, IState> {
   state = { value: '' }
   onBlur = ({ detail: { value } }) => {
     this.setState({

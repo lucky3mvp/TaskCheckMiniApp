@@ -16,7 +16,7 @@ type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   checked: boolean
   status: Array<number>
   nextEnd: MenstruationType
@@ -26,17 +26,13 @@ type PageState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface Menstruation {
-  props: IProps
-}
-
 @connect(
   ({ helper }) => ({
     helper
   }),
   dispatch => ({})
 )
-class Menstruation extends Component {
+class Menstruation extends Component<IProps, IState> {
   defaultPrevDay = {
     day: 32
   }

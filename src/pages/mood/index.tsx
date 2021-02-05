@@ -11,21 +11,17 @@ type PageStateProps = {
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   value: string
 }
 
 type IProps = PageStateProps & PageOwnProps
 
-interface Mood {
-  props: IProps
-}
-
 @connect(({ userInfo, helper }) => ({
   userInfo,
   helper
 }))
-class Mood extends Component {
+class Mood extends Component<IProps, IState> {
   state = {
     value: '',
     list: [

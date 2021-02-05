@@ -15,13 +15,9 @@ type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
-type PageState = {}
+type IState = {}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
-
-interface DayDetail {
-  props: IProps
-}
 
 @connect(
   ({ userInfo }) => ({
@@ -29,7 +25,7 @@ interface DayDetail {
   }),
   dispatch => ({})
 )
-class DayDetail extends Component {
+class DayDetail extends Component<IProps, IState> {
   date = ''
   componentDidMount() {
     this.date =

@@ -28,19 +28,15 @@ type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   cur: string
   tabs: Array<PlanTabType>
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface Home {
-  props: IProps
-}
-
 @connect()
-class Home extends Component {
+class Home extends Component<IProps, IState> {
   state = {
     tabs: [],
     cur: 'all'

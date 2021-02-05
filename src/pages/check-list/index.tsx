@@ -18,7 +18,7 @@ type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   inited: boolean
   pageSize: number
   pageNo: number
@@ -30,17 +30,13 @@ type PageState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface CheckList {
-  props: IProps
-}
-
 @connect(
   ({ helper }) => ({
     helper
   }),
   dispatch => ({})
 )
-class CheckList extends Component {
+class CheckList extends Component<IProps, IState> {
   block = false
   state = {
     inited: false,

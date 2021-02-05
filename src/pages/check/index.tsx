@@ -21,7 +21,7 @@ type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   loading: boolean
   stage: number
   achieve: string
@@ -32,12 +32,8 @@ type PageState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface Check {
-  props: IProps
-}
-
 @connect()
-class Check extends Component<IProps, PageState> {
+class Check extends Component<IProps, IState> {
   lock = false
   state = {
     loading: true,

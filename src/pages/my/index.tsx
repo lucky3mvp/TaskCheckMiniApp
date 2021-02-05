@@ -20,7 +20,7 @@ type PageDispatchProps = {
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   stage: number
 }
 
@@ -29,10 +29,6 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 type GreetingType = {
   main: string
   sub: string
-}
-
-interface My {
-  props: IProps
 }
 
 @connect(
@@ -45,7 +41,7 @@ interface My {
     }
   })
 )
-class My extends Component {
+class My extends Component<IProps, IState> {
   state = {
     stage: 0
   }

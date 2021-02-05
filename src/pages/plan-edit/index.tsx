@@ -52,10 +52,6 @@ type IState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface PlanAdd {
-  props: IProps
-}
-
 @connect(
   ({ helper }) => ({
     helper
