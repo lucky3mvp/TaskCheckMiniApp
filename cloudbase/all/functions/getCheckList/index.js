@@ -15,6 +15,7 @@ exports.main = async (event, context) => {
       userID: wxContext.OPENID
     })
     .count()
+  console.log('getCheckList count: ', total)
 
   const { data: list } = await checkCollection
     .where({
