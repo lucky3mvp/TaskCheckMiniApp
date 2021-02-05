@@ -6,6 +6,8 @@ export const Greetings = [
 
 export const Weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 
+export const SimpleWeekdays = ['日', '一', '二', '三', '四', '五', '六']
+
 export const TypeMap = {
   2: '每日',
   3: '每周',
@@ -36,7 +38,7 @@ export const UnitEngMap = {
 
 export const CategoryMap = {
   1: '运动',
-  2: '生活',
+  2: '生活', //吃喝玩乐
   3: '健康',
   4: '学习'
 }
@@ -47,7 +49,16 @@ export const Icons = [
   'running',
   'yoga',
   'skipping',
-  'reading'
+  'skiing',
+  'reading',
+  'yangsheng',
+  'kafei',
+  'cherry',
+  'phone',
+  'jinshi',
+  'yexiao',
+  'snack',
+  'paojiao'
 ]
 
 export const Themes = [
@@ -87,7 +98,16 @@ export const IconCategoryMap = {
   running: 1,
   yoga: 1,
   reading: 4,
-  skipping: 1
+  skipping: 1,
+  skiing: 1,
+  yangsheng: 3,
+  kafei: 2,
+  cherry: 2,
+  phone: 2,
+  jinshi: 2,
+  yexiao: 2,
+  snack: 2,
+  paojiao: 3
 }
 
 export const BannerImgs = [

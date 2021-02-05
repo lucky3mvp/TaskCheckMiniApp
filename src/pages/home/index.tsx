@@ -6,7 +6,8 @@ import Calendar from 'src/components/Calendar'
 
 import { Themes } from 'src/constants/config'
 
-import { getPlanTabList } from 'src/utils/request'
+import { getPlanTabList } from 'src/utils/request2.0'
+import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
 
@@ -17,13 +18,11 @@ type PlanTabType = {
   theme: string
   icon: string
   category: string
-  beginTime: string
-  endTime: string
+  beginTime: number
+  endTime: number
 }
 
-type PageStateProps = {
-  userInfo: UserInfoStoreType
-}
+type PageStateProps = {}
 
 type PageDispatchProps = {}
 
@@ -40,30 +39,24 @@ interface Home {
   props: IProps
 }
 
-@connect(
-  ({ userInfo }) => ({
-    userInfo
-  }),
-  dispatch => ({})
-)
+@connect()
 class Home extends Component {
-  inited = false
   state = {
     tabs: [],
     cur: 'all'
   }
-  async componentDidMount() {
-    await this.getPlanTabList(true)
-    setTimeout(() => {
-      this.inited = true
-    }, 1000)
+  componentDidMount() {
+    this.getPlanTabList(true)
+    manualEvent.register('home-page').on('update plan tab list', () => {
+      this.getPlanTabList()
+      manualEvent.clear('home-page')
+    })
   }
+
   componentDidShow() {
-    if (this.inited) {
-      this.getPlanTabList(false)
-    }
+    manualEvent.run('home-page')
   }
-  async getPlanTabList(showLoading) {
+  async getPlanTabList(showLoading = false) {
     showLoading &&
       Taro.showLoading({
         title: '加载中...'
@@ -108,7 +101,7 @@ class Home extends Component {
           <View className="holder" />
         </View>
         <Calendar />
-        <View>报表功能敬请期待</View>
+        {/* <View>报表功能敬请期待</View> */}
         <View className="iconfont icon-add" onClick={this.onAdd} />
       </View>
     )

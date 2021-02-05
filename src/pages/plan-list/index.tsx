@@ -5,8 +5,9 @@ import Empty from 'src/components/Empty'
 import TopBar from 'src/components/TopBar'
 import ListItem from './ListItem'
 
-import { getPlanList } from 'src/utils/request'
+import { getPlanList } from 'src/utils/request2.0'
 import { pxTransform } from 'src/utils'
+import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
 
@@ -42,10 +43,21 @@ class PlanList extends Component {
     started: [],
     ended: []
   }
-  async componentDidMount() {
-    Taro.showLoading({
-      title: '加载中...'
+  componentDidMount() {
+    this.getList(true)
+    manualEvent.register('plan-list-page').on('update plan list', () => {
+      this.getList()
+      manualEvent.clear('plan-list-page')
     })
+  }
+  componentDidShow() {
+    manualEvent.run('plan-list-page')
+  }
+  async getList(showLoading = false) {
+    showLoading &&
+      Taro.showLoading({
+        title: '加载中...'
+      })
     const {
       code,
       unStarted = [],
@@ -60,68 +72,6 @@ class PlanList extends Component {
         ended
       })
     }
-
-    // this.setState({
-    //   loading: false,
-    //   unStarted: [
-    //     {
-    //       planID: '600a7d91ca7efb003b5be7f5',
-    //       name: '计划4每月10天跳绳',
-    //       description: '主题22目标1000次20200201开始到永远',
-    //       theme: 'theme22',
-    //       icon: 'skipping',
-    //       category: 1,
-    //       unit: '1',
-    //       goal: 1000,
-    //       type: 4,
-    //       subType: 1,
-    //       times: 10,
-    //       days: '',
-    //       beginTime: '2021-02-01T00:00:00.000Z',
-    //       endTime: null,
-    //       status: 1,
-    //       totalTimes: 0
-    //     }
-    //   ],
-    //   started: [
-    //     {
-    //       planID: '60029aa3720bc4003c52b0ca',
-    //       name: '跑步(除周3跑5千米)',
-    //       description: '加油',
-    //       theme: 'theme1',
-    //       icon: 'running',
-    //       category: 1,
-    //       unit: '4',
-    //       goal: 5,
-    //       type: 3,
-    //       subType: 2,
-    //       days: '0,1,2,4,5,6',
-    //       beginTime: '2021-01-16T00:00:00.000Z',
-    //       endTime: '2022-01-01T00:00:00.000Z',
-    //       status: 2,
-    //       totalTimes: 1
-    //     }
-    //   ],
-    //   ended: [
-    //     // {
-    //     //   planID: '60029aa3720bc4003c52b0ca',
-    //     //   name: '跑步(除周3跑5千米)',
-    //     //   description: '加油',
-    //     //   theme: 'theme1',
-    //     //   icon: 'running',
-    //     //   category: 1,
-    //     //   unit: '4',
-    //     //   goal: 5,
-    //     //   type: 3,
-    //     //   subType: 2,
-    //     //   days: '0,1,2,4,5,6',
-    //     //   beginTime: '2021-01-16T00:00:00.000Z',
-    //     //   endTime: '2022-01-01T00:00:00.000Z',
-    //     //   status: 2,
-    //     //   totalTimes: 1
-    //     // }
-    //   ]
-    // })
     Taro.hideLoading()
   }
   onSwiperChange = ({ detail: { current, source } }) => {
@@ -133,6 +83,45 @@ class PlanList extends Component {
   onTabTap = (index: number) => {
     this.setState({
       index: index
+    })
+  }
+  onClickPlan = (plan: PlanType) => {
+    // console.log(plan)
+    Taro.setStorageSync('plan', plan)
+    // Taro.setStorageSync('plan', {
+    //   planID: '6016a48c24afd6002e266422',
+    //   name: '打球',
+    //   description: '愿球场上有我挥洒汗水的身影',
+    //   theme: 'theme14',
+    //   icon: 'badminton',
+    //   category: 1,
+    //   unit: '1',
+    //   goal: 1,
+    //   type: 3,
+    //   subType: 1,
+    //   times: 1,
+    //   days: '',
+    //   beginTime: 1609430400000,
+    //   endTime: null
+    //     beginTime: 1612396800000
+    // category: 1
+    // days: ""
+    // description: "test"
+    // endTime: null
+    // goal: 2
+    // icon: "badminton"
+    // name: "test"
+    // planID: "b00064a7601c0bad02d1dc525758910b"
+    // status: 2
+    // subType: 0
+    // theme: "theme1"
+    // times: ""
+    // totalTimes: 0
+    // type: 2
+    // unit: "1"
+    // })
+    Taro.navigateTo({
+      url: '/pages/plan-edit/index'
     })
   }
   render() {
@@ -155,7 +144,10 @@ class PlanList extends Component {
               {this.state.loading ? null : this.state.unStarted.length ? (
                 <View className="swiper-item-scroll">
                   {this.state.unStarted.map(item => (
-                    <ListItem {...item} />
+                    <ListItem
+                      {...item}
+                      onClick={this.onClickPlan.bind(this, item)}
+                    />
                   ))}
                 </View>
               ) : (
@@ -166,7 +158,10 @@ class PlanList extends Component {
               {this.state.loading ? null : this.state.started.length ? (
                 <View className="swiper-item-scroll">
                   {this.state.started.map(item => (
-                    <ListItem {...item} />
+                    <ListItem
+                      {...item}
+                      onClick={this.onClickPlan.bind(this, item)}
+                    />
                   ))}
                 </View>
               ) : (

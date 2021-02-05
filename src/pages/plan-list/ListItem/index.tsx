@@ -1,24 +1,11 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { View, Text } from '@tarojs/components'
 import { PlanStatusIconMap, UnitMap } from 'src/constants/config'
 import { formatDate } from 'src/utils'
 import './index.less'
 
-interface IProps {
-  icon: string
-  theme: string
-  name: string
-  description: string
-  status: number
-  beginTime: string
-  endTime: string
-  type: number
-  subType: number
-  unit: string
-  goal: string
-  weekTimes?: number
-  monthTimes?: number
-  totalTimes?: number
+interface IProps extends PlanType {
+  onClick?: () => {}
 }
 
 export default (props: IProps) => {
@@ -34,8 +21,11 @@ export default (props: IProps) => {
     }
     return '永远'
   }, [props.endTime])
+  const onClick = useCallback(() => {
+    props.onClick && props.onClick()
+  }, [])
   return (
-    <View className="plan-list-item">
+    <View className="plan-list-item" onClick={onClick}>
       <View className="top border-bottom">
         <View
           className={`plan-icon iconfont icon-${props.icon} ${props.theme}-color`}

@@ -77,44 +77,28 @@ class My extends Component {
       return { main: '立即登录', sub: '' }
     }
   }
-  async ensureLogin() {
-    if (!this.props.userInfo.isLogin) {
-      const [res] = await wit.login()
-      const [userInfoRes] = await wit.getUserInfo()
-      if (userInfoRes) {
-        this.props.updateUserInfo({
-          ...(res ? res : {}),
-          ...userInfoRes
-        })
-      }
-    }
-  }
+
   gotoPlanList = async () => {
-    await this.ensureLogin()
     Taro.navigateTo({
       url: '/pages/plan-list/index'
     })
   }
   gotoCheckList = async () => {
-    await this.ensureLogin()
     Taro.navigateTo({
       url: '/pages/check-list/index'
     })
   }
   gotoMenstruation = async () => {
-    await this.ensureLogin()
     Taro.navigateTo({
       url: '/pages/menstruation/index'
     })
   }
   gotoMood = async () => {
-    await this.ensureLogin()
     Taro.navigateTo({
       url: '/pages/mood/index'
     })
   }
   gotoFeedback = async () => {
-    await this.ensureLogin()
     Taro.navigateTo({
       url: '/pages/feedback/index'
     })

@@ -75,6 +75,7 @@ type PlanType = {
   subType: number
   times: number
   /*
+    前端的status
     - 1-未开始
     - 2-进行中
     - 3-已结束
@@ -82,8 +83,8 @@ type PlanType = {
   */
   status: number
   days: Array<string>
-  beginTime: string
-  endTime: string
+  beginTime: number
+  endTime: number
   totalAchieve: number
   /**
    * 指的是计划在当前计划周期内，完成了多少次
@@ -92,6 +93,8 @@ type PlanType = {
    * 使用的地方如：今日打卡页的dot指示
    */
   totalTimes: number
+  weekTimes?: number
+  monthTimes?: number
 }
 
 type CheckListItemType = {

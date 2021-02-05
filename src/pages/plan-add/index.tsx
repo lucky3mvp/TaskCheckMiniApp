@@ -23,7 +23,8 @@ import {
   UnitMap,
   IconCategoryMap
 } from 'src/constants'
-import { submitPlan } from 'src/utils/request'
+import { updatePlan } from 'src/utils/request2.0'
+import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
 
@@ -35,7 +36,6 @@ import './index.less'
  */
 
 type PageStateProps = {
-  userInfo: UserInfoStoreType
   helper: HelperStoreType
 }
 
@@ -70,13 +70,13 @@ interface PlanAdd {
 }
 
 @connect(
-  ({ userInfo, helper }) => ({
-    userInfo,
+  ({ helper }) => ({
     helper
   }),
   dispatch => ({})
 )
 class PlanAdd extends Component<IProps, IState> {
+  lock = false
   state = {
     disable: true,
     bannerImgIndex: 0,
@@ -267,8 +267,14 @@ class PlanAdd extends Component<IProps, IState> {
       })
       return
     }
-    // 默认登录都能成功吧
-    const res = await submitPlan({
+    if (this.lock) return
+    this.lock = true
+    Taro.showLoading({
+      title: '请求中'
+    })
+
+    const res = await updatePlan({
+      optType: 'submit',
       name: this.state.name,
       description: this.state.description,
       theme: this.state.theme,
@@ -293,16 +299,20 @@ class PlanAdd extends Component<IProps, IState> {
       endTime: this.state.endTime === '9999/99/99' ? '' : this.state.endTime
     })
     if (res.code === 200) {
+      Taro.hideLoading()
       Taro.showToast({
         title: '创建成功，去看看',
         icon: 'none',
         duration: 2000
       })
+      manualEvent.change('home-page', 'update plan tab list')
+      manualEvent.change('check-page', 'update check list')
       setTimeout(() => {
-        // todo 先跳首页，后面再看去哪儿
         Taro.switchTab({ url: '/pages/home/index' })
-      }, 2000)
+      }, 1500)
     }
+    Taro.hideLoading()
+    this.lock = false
   }
 
   render() {
