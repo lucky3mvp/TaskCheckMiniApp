@@ -8,7 +8,6 @@ export default {
     'pages/plan-list/index',
     'pages/check-list/index',
     'pages/menstruation/index',
-    // 'pages/feedback/index',
     'pages/mood/index'
   ],
   window: {
