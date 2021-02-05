@@ -86,7 +86,7 @@ exports.main = async (event, context) => {
   const plan = data2[0]
   if (plan) {
     // 2.查这个计划当前的打卡状态
-    let { errrMsg3, data: data3 } = await statusCollection
+    let { errMsg: errMsg3, data: data3 } = await statusCollection
       .where({
         userID: wxContext.OPENID,
         planID: planID,
@@ -114,7 +114,7 @@ exports.main = async (event, context) => {
         day: checkDay,
         weekStart: getWeekStart(checkDate)
       }
-      const { errMsg4, _id: _id4 } = await statusCollection.add({
+      const { errMsg: errMsg4, _id: _id4 } = await statusCollection.add({
         data: detail
       })
     } else {
@@ -123,7 +123,7 @@ exports.main = async (event, context) => {
       // 4.更新计划的打卡状态
       const res = await statusCollection.doc(detail._id).update({
         data: {
-          totalAchieve: detail.achieve,
+          totalAchieve: detail.totalAchieve,
           status: detail.status
         }
       })
