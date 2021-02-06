@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Taro from '@tarojs/taro'
 import { View, Button, Text, Image } from '@tarojs/components'
-import Calendar from 'src/components/Calendar'
+import Calendar from './Calendar'
 
 import { Themes } from 'src/constants/config'
 
@@ -70,6 +70,12 @@ class Home extends Component<IProps, IState> {
       cur
     })
   }
+
+  gotoDayDetail = (d: DateType) => {
+    Taro.navigateTo({
+      url: `/pages/day-detail/index?year=${d.year}&month=${d.month}&day=${d.date}`
+    })
+  }
   render() {
     return (
       <View className="home-page">
@@ -91,7 +97,7 @@ class Home extends Component<IProps, IState> {
           ))}
           <View className="holder" />
         </View>
-        <Calendar />
+        <Calendar onDayClick={this.gotoDayDetail} />
         {/* <View>报表功能敬请期待</View> */}
         <View className="iconfont icon-add" onClick={this.onAdd} />
       </View>

@@ -1,6 +1,7 @@
 export default {
   pages: [
     'pages/home/index',
+    'pages/day-detail/index',
     'pages/check/index',
     'pages/my/index',
     'pages/plan-add/index',

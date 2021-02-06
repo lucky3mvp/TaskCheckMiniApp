@@ -15,7 +15,10 @@ type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
-type IState = {}
+type IState = {
+  planList: Array<PlanType>
+  checkList: Array<CheckListItemType>
+}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
@@ -26,13 +29,34 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
   dispatch => ({})
 )
 class DayDetail extends Component<IProps, IState> {
-  date = ''
+  dateObj = new Date()
+  dateStr = ''
+  topBar = {
+    list: ['打卡记录', '打卡计划'],
+    pos: [pxTransform(52), pxTransform(176), pxTransform(300)]
+  }
+  state = {
+    planList: [],
+    checkList: []
+  }
   componentDidMount() {
-    this.date =
-      getCurrentInstance().router!?.params.date ||
-      formatDate(new Date(), 'yyyy/MM/dd')
-    // todo
-    Taro.setNavigationBarTitle({ title: this.date.split('/').join('-') })
+    // @ts-ignore
+    const { params } = getCurrentInstance().router
+    let _params = params
+    if (!params) {
+      const now = new Date()
+      _params = {
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate()
+      }
+    }
+    const { year, month, day } = _params
+    this.dateObj = new Date(+year, +(month - 1), +day)
+    this.dateStr = formatDate(this.dateObj, 'yyyy/MM/dd')
+    Taro.setNavigationBarTitle({
+      title: this.dateStr.split('/').join('-')
+    })
   }
   onShareAppMessage() {
     return {
@@ -41,7 +65,7 @@ class DayDetail extends Component<IProps, IState> {
     }
   }
   render() {
-    return <View className="day-detail-page"></View>
+    return <View className="day-detail-page">{this.state.date}</View>
   }
 }
 
