@@ -32,6 +32,12 @@ class Mood extends Component<IProps, IState> {
       }
     ]
   }
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
+  }
   onBlur = ({ detail: { value } }) => {
     this.setState({
       value

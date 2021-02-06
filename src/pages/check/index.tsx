@@ -55,6 +55,13 @@ class Check extends Component<IProps, IState> {
     manualEvent.run('check-page')
   }
 
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
+  }
+
   async getCheckList(showLoading = false) {
     showLoading &&
       Taro.showLoading({

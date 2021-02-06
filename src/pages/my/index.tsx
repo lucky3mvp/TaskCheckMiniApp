@@ -46,6 +46,12 @@ class My extends Component<IProps, IState> {
     stage: 0
   }
   greetingIndex: number = 0
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
+  }
   getUserInfo = async () => {
     const [res] = await wit.getUserInfo()
     if (res) {

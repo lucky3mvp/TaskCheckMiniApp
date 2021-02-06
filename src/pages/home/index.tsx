@@ -11,17 +11,6 @@ import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
 
-type PlanTabType = {
-  planID: string
-  name: string
-  description: string
-  theme: string
-  icon: string
-  category: string
-  beginTime: number
-  endTime: number
-}
-
 type PageStateProps = {}
 
 type PageDispatchProps = {}
@@ -40,6 +29,12 @@ class Home extends Component<IProps, IState> {
   state = {
     tabs: [],
     cur: 'all'
+  }
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
   }
   componentDidMount() {
     this.getPlanTabList(true)

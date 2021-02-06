@@ -53,6 +53,12 @@ class CheckList extends Component<IProps, IState> {
       pageNo: this.state.pageNo
     })
   }
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
+  }
   async fetchCheckList(pageInfo) {
     !this.state.inited &&
       Taro.showLoading({

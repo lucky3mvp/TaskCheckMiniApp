@@ -39,6 +39,12 @@ class PlanList extends Component<IProps, IState> {
     started: [],
     ended: []
   }
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
+  }
   componentDidMount() {
     this.getList(true)
     manualEvent.register('plan-list-page').on('update plan list', () => {

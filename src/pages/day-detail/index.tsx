@@ -34,6 +34,12 @@ class DayDetail extends Component<IProps, IState> {
     // todo
     Taro.setNavigationBarTitle({ title: this.date.split('/').join('-') })
   }
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
+  }
   render() {
     return <View className="day-detail-page"></View>
   }
