@@ -68,7 +68,7 @@ exports.main = async (event, context) => {
       planID: planID,
       achieve: achieve,
       comment: comment,
-      checkTime: new Date().getTime()
+      checkTime: new Date().getTime() // 记录实际打卡的时间
     }
   })
 
