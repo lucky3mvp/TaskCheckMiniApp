@@ -110,7 +110,7 @@ export default (props: IProps) => {
         // 今天及之前可点击
         return
       }
-      props.onDayClick && props.onDayClick({ year, month, date })
+      props.onDayClick && props.onDayClick({ year, month: month + 1, date })
     },
     [todayYear, todayMonth, todayDate]
   )

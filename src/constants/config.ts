@@ -111,22 +111,21 @@ export const IconCategoryMap = {
 }
 
 export const BannerImgs = [
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/43a1e901b1e7481056acaf241d9c2e08.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/e3b2bf7022ec3a6d0218495df2cbaf49.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/8e6ec92bf8dc57daf4f6064c3af7fdb5.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/7f72fa5321979e8fcb16d3520426d0ff.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/7d185b8aea13f9a5aeaa80e4600f9912.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/ece38bd5e704c0758126897d9b13e3ea.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/b310a086fc4c15fccf74679f41b08e84.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/2010d5b13ee279cee523c0ad75fe79d5.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/8fd2a01fd237cfbe85914a2baecc8506.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/8a96d693e03a0b0c72e909c2e7eb8243.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/9e95ab941e86fd871595131fd32d0d36.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/de9f7cc0b14045f6b0ed329d17dbcc03.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/104df7df33a2eb5aec6fd55a6beec689.jpg',
-  'https://cdn-tos.baohuaxia.com/obj/static-assets/255b09985935a533aee88211115a14ac.jpg'
+  'https://upload-images.jianshu.io/upload_images/2195874-df88095c0db394d7.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-45f2d62ec632763e.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-249d7cbe79463b1c.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-50e105ee634ae8fb.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-c2586459d686a07d.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-5d01806229bd0332.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-b0e40abe485886f9.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-0ee91e8bf0d882e3.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-2cacba02498eb2eb.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-9f2d50869b8cc884.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-2e3be0a9d20cf1f6.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-1ee3886ae981b386.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-7e7c594a2028f860.jpg',
+  'https://upload-images.jianshu.io/upload_images/2195874-aac1204a99114eff.jpg'
 ]
-
 export const PlanStatusMap = {
   1: '未开始',
   2: '进行中',

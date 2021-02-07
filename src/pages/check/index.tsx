@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { UnitMap } from 'src/constants/config'
 
+import Add from 'src/components/Add'
 import Empty from 'src/components/Empty'
 import Modal from 'src/components/Modal'
 import SelfInput from 'src/components/SelfInput'
@@ -174,6 +175,8 @@ class Check extends Component<IProps, IState> {
     return this.state.loading ? null : (
       <View>
         <View className="check-page">
+          {/* 没有计划的时候，会有一个“去创建计划，就不加add了” */}
+          {this.state.plans.length ? <Add /> : null}
           {!this.state.plans.length ? (
             <Empty tip="今天还没有打卡计划哦~">
               <View onClick={this.gotoAddPlan} className="add-plan">

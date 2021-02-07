@@ -7,8 +7,16 @@ exports.main = async (event, context) => {
   const _ = db.command
   const wxContext = cloud.getWXContext()
 
-  const { pageSize = 20, pageNo = 1 } = event
+  /**
+   * 应该有三种吧？
+   * 一是现有的分页的
+   * 二是某人某个计划某天的记录
+   * 三是某人所有计划某天的记录
+   */
+  const { pageSize = 20, pageNo = 1, planID, date } = event
 
+  // if (!planID && !date) {
+  // 我的->打卡列表页的case
   const checkCollection = db.collection('check')
   const { total } = await checkCollection
     .where({
@@ -35,7 +43,7 @@ exports.main = async (event, context) => {
       cache[`${planID}`] = data
     }
     const plan = cache[`${planID}`]
-    // 返回所有打卡计算，不管计划是不是被删了
+    // 返回所有打卡记录，不管计划是不是被删了
     result.push({
       planID,
       comment: check.comment,
@@ -56,4 +64,11 @@ exports.main = async (event, context) => {
     pageSize: pageSize,
     pageNo: pageNo
   }
+  // } else if (date) {
+  //   if (planID) {
+
+  //   } else {
+
+  //   }
+  // }
 }
