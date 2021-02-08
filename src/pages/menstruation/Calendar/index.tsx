@@ -24,8 +24,8 @@ export default (props: IProps) => {
   const todayMonth = useMemo(() => now.getMonth(), [now])
   const todayDate = useMemo(() => now.getDate(), [now])
 
-  const [curYear, setCurYear] = useState(now.getFullYear())
-  const [curMonth, setCurMonth] = useState(now.getMonth())
+  const [curYear, setCurYear] = useState(todayYear)
+  const [curMonth, setCurMonth] = useState(todayMonth)
   const displayMonth = useMemo(() => {
     return curMonth + 1 <= 9 ? `0${curMonth + 1}` : curMonth + 1
   }, [curMonth])

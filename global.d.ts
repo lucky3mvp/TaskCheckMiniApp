@@ -111,7 +111,6 @@ type PlanTabType = {
 type CheckListItemType = {
   planID: string
   comment: string
-  checkDate: string
   checkTime: string
   achieve: number
   name: string

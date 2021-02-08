@@ -1,4 +1,4 @@
-type PageNameType = 'plan-list-page' | 'check-page' | 'home-page'
+type PageNameType = 'plan-list-page' | 'check-page'
 
 type EventNameType =
   | ''

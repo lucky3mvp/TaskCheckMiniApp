@@ -58,7 +58,9 @@ export const Icons = [
   'jinshi',
   'yexiao',
   'snack',
-  'paojiao'
+  'paojiao',
+  'heshui',
+  'dabian'
 ]
 
 export const Themes = [
@@ -107,7 +109,9 @@ export const IconCategoryMap = {
   jinshi: 2,
   yexiao: 2,
   snack: 2,
-  paojiao: 3
+  paojiao: 3,
+  heshui: 3,
+  dabian: 3
 }
 
 export const BannerImgs = [

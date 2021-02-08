@@ -1,7 +1,5 @@
 export default {
   pages: [
-    'pages/home/index',
-    'pages/day-detail/index',
     'pages/check/index',
     'pages/my/index',
     'pages/plan-add/index',
@@ -26,12 +24,12 @@ export default {
     borderStyle: 'white',
     position: 'bottom',
     list: [
-      {
-        pagePath: 'pages/home/index',
-        text: '首页',
-        iconPath: 'assets/home.png',
-        selectedIconPath: 'assets/home-active.png'
-      },
+      // {
+      //   pagePath: 'pages/home/index',
+      //   text: '首页',
+      //   iconPath: 'assets/home.png',
+      //   selectedIconPath: 'assets/home-active.png'
+      // },
       {
         pagePath: 'pages/check/index',
         text: '今日',

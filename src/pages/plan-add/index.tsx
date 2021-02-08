@@ -307,7 +307,6 @@ class PlanAdd extends Component<IProps, IState> {
         icon: 'none',
         duration: 2000
       })
-      manualEvent.change('home-page', 'update plan tab list')
       manualEvent.change('check-page', 'update check list')
       setTimeout(() => {
         Taro.switchTab({ url: '/pages/home/index' })
