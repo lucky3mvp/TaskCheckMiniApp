@@ -120,9 +120,10 @@ export default (props: IProps) => {
 
   const onNext = useCallback(() => {
     if (fold) return
+    if (curYear === todayYear && curMonth === todayMonth) return
     setCurYear(nextMonthFirstDate.getFullYear())
     setCurMonth(nextMonthFirstDate.getMonth())
-  }, [nextMonthFirstDate, fold])
+  }, [nextMonthFirstDate, fold, curYear, curMonth, todayYear, todayMonth])
 
   const onDayClick = useCallback(
     ({ year, month, date }) => {
@@ -162,7 +163,12 @@ export default (props: IProps) => {
               <Image src={rightArrow} className="img"></Image>
             </View>
             <View className="txt">{displayHeader}</View>
-            <View className="arrow" onClick={onNext}>
+            <View
+              className={`arrow ${
+                curYear === todayYear && curMonth === todayMonth ? 'hide' : ''
+              }`}
+              onClick={onNext}
+            >
               <Image src={rightArrow} className="img"></Image>
             </View>
           </View>

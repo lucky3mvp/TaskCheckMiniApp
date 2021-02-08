@@ -7,16 +7,35 @@ exports.main = async (event, context) => {
   const _ = db.command
   const wxContext = cloud.getWXContext()
 
-  /**
-   * 应该有三种吧？
-   * 一是现有的分页的
-   * 二是某人某个计划某天的记录
-   * 三是某人所有计划某天的记录
-   */
-  const { pageSize = 20, pageNo = 1, planID, date } = event
+  const { pageSize = 20, pageNo = 1, date, version, returnPlanTabs } = event
 
-  // if (!planID && !date) {
-  // 我的->打卡列表页的case
+  if (version === 'v2') {
+    let planTabs = []
+    let list = []
+    if (returnPlanTabs) {
+      const collection = db.collection('plan')
+      const { errMsg, data } = await collection
+        .where({
+          status: 1, // 1-正常 2-已删除
+          userID: wxContext.OPENID
+        })
+        .get()
+
+      planTabs = data.map(p => ({
+        planID: p.planID,
+        name: p.name,
+        description: p.description,
+        theme: p.theme,
+        icon: p.icon,
+        category: p.category,
+        beginTime: p.beginTime,
+        endTime: p.endTime
+      }))
+    }
+    // if ()
+  }
+
+  // 以下是老版本，之后可以删的
   const checkCollection = db.collection('check')
   const { total } = await checkCollection
     .where({
@@ -64,11 +83,4 @@ exports.main = async (event, context) => {
     pageSize: pageSize,
     pageNo: pageNo
   }
-  // } else if (date) {
-  //   if (planID) {
-
-  //   } else {
-
-  //   }
-  // }
 }

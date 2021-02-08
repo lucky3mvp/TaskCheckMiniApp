@@ -27,15 +27,12 @@ type PageDispatchProps = {}
 type PageOwnProps = {}
 
 type IState = {
-  cur: string
-  tabs: Array<PlanTabType>
   inited: boolean
-  pageSize: number
-  pageNo: number
-  totalPage: number
-  totalSize: number
-  last: boolean
+  cur: string
+  selectedDate: string
+  tabs: Array<PlanTabType>
   list: Array<CheckListItemType>
+  listOrigin: Array<CheckListItemType>
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -47,23 +44,18 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
   dispatch => ({})
 )
 class CheckList extends Component<IProps, IState> {
+  cache: Record<string, any> = {}
   block = false
   state = {
-    tabs: [],
-    cur: 'all',
     inited: false,
-    pageSize: 15,
-    pageNo: 1,
-    totalPage: 0,
-    totalSize: 0,
-    last: false,
-    list: []
+    cur: 'all',
+    selectedDate: formatDate(new Date(), 'yyyy/MM/dd'),
+    tabs: [],
+    list: [],
+    listOrigin: []
   }
   componentDidMount() {
-    this.fetchCheckList({
-      pageSize: this.state.pageSize,
-      pageNo: this.state.pageNo
-    })
+    this.fetchCheckList()
   }
   onShareAppMessage() {
     return {
@@ -71,23 +63,30 @@ class CheckList extends Component<IProps, IState> {
       path: '/pages/home/index'
     }
   }
-  onReachBottom = async () => {
-    if (this.block) return
-    if (this.state.pageNo < this.state.totalPage) {
-      this.block = true
-      await this.fetchCheckList({
-        pageSize: this.state.pageSize,
-        pageNo: this.state.pageNo + 1
-      })
-      this.block = false
-    }
-  }
-  async fetchCheckList(pageInfo) {
+  async fetchCheckList(paramDate = '') {
     !this.state.inited &&
       Taro.showLoading({
         title: '加载中...'
       })
-    const { code, list, totalSize, totalPage, pageSize, pageNo, tabs } = {
+    const { cur, selectedDate } = this.state
+    const date = paramDate || selectedDate
+    if (this.cache[`${date}`]) {
+      console.log('命中cache，不会请求')
+      const listOrigin = this.cache[`${date}`]
+      this.setState({
+        listOrigin: listOrigin,
+        list:
+          cur === 'all'
+            ? listOrigin
+            : listOrigin.filter((l: CheckListItemType) => {
+                return l.planID === cur
+              })
+      })
+      return
+    }
+
+    console.log('未命中cache，发起请求')
+    const { code, list, tabs } = {
       code: 200,
       list: [
         {
@@ -161,7 +160,7 @@ class CheckList extends Component<IProps, IState> {
           unit: '1'
         },
         {
-          planID: '28ee4e3e601cd6010304e6af6cf78473',
+          planID: '79550af26020fa8c035be97b08f5ecee',
           comment: '',
           checkTime: 1612502542498,
           achieve: 1,
@@ -193,83 +192,72 @@ class CheckList extends Component<IProps, IState> {
       ],
       tabs: [
         {
-          planID: '28ee4e3e601a43f402aa8a9a294acb51',
-          name: '读书',
-          description: '如果能重来，希望做一个知识人',
-          theme: 'theme12',
-          icon: 'reading',
-          category: 4,
-          beginTime: 1609430400000,
+          planID: 'b00064a7601be60102cbd3901430caa9',
+          name: '每天喝水4杯',
+          description: '多喝热水！',
+          theme: 'theme28',
+          icon: 'yangsheng',
+          category: 3,
+          beginTime: 1612396800000,
           endTime: null
         },
         {
-          planID: '79550af2601a7409026a6137022e9ca8',
-          name: '打球',
-          description: '又A又飒',
-          theme: 'theme14',
-          icon: 'badminton',
-          category: 1,
-          beginTime: 1609430400000,
-          endTime: null
-        },
-        {
-          planID: '79550af2601a7525026aa98d1a450897',
-          name: '瑜伽',
-          description: '要优雅~~',
-          theme: 'theme11',
-          icon: 'yoga',
-          category: 1,
-          beginTime: 1609430400000,
-          endTime: null
-        },
-        {
-          planID: '28ee4e3e601a799802b49d9200bd73a8',
-          name: '跳绳',
-          description: '从来、坚持、都不是、轻而易举',
-          theme: 'theme20',
+          planID: '28ee4e3e6020fa6903bb53880cca4aaa',
+          name: '每周跳绳3次',
+          description: '夏天要到了',
+          theme: 'theme19',
           icon: 'skipping',
           category: 1,
-          beginTime: 1617206400000,
-          endTime: 1635609600000
+          beginTime: 1612742400000,
+          endTime: null
         },
         {
-          planID: '1526e12a601a79f5020250253d35c871',
-          name: '游泳',
-          description: '想做一条鱼，在水里游来游去',
-          theme: 'theme4',
-          icon: 'swimming',
+          planID: '79550af26020fa8c035be97b08f5ecee',
+          name: '每周瑜伽2次',
+          description: '夏天要到了',
+          theme: 'theme8',
+          icon: 'yoga',
           category: 1,
-          beginTime: 1609430400000,
+          beginTime: 1612742400000,
+          endTime: null
+        },
+        {
+          planID: '79550af26020fb23035c0d6b7caeb3d5',
+          name: '每周读书/文章',
+          description: '读书人是人上人！',
+          theme: 'theme10',
+          icon: 'reading',
+          category: 4,
+          beginTime: 1612742400000,
           endTime: null
         }
-      ],
-      totalSize: 10,
-      totalPage: 1,
-      pageSize: 15,
-      pageNo: 1
+      ]
     }
     // await getCheckList({
-    //   ...pageInfo,
+    //   date: date,
+    //   returnPlanTabs: !this.state.inited, // 后面的请求就不用再请求tabs了
     //   version: 'v2'
     // })
-    const _list = list.map(l => {
-      return {
-        ...l,
-        checkTime: formatDate(new Date(l.checkTime), 'yyyy.MM.dd hh:mm'),
-        isShowComment: false
-      }
-    })
     if (code === 200) {
+      const lo = list.map(l => {
+        return {
+          ...l,
+          checkTime: formatDate(new Date(l.checkTime), 'yyyy.MM.dd hh:mm'),
+          isShowComment: false
+        }
+      })
       this.setState({
         inited: true,
-        list: [...this.state.list, ..._list],
-        tabs: tabs,
-        totalSize,
-        totalPage,
-        pageSize,
-        pageNo,
-        last: totalPage === pageNo
+        listOrigin: lo,
+        list:
+          cur === 'all'
+            ? lo
+            : lo.filter((l: CheckListItemType) => {
+                return l.planID === cur
+              }),
+        tabs: tabs
       })
+      this.cache[`${date}`] = lo
     }
     Taro.hideLoading()
   }
@@ -278,7 +266,6 @@ class CheckList extends Component<IProps, IState> {
       url: '/pages/check/index'
     })
   }
-
   onClickComment = (index: number) => {
     const { list } = this.state
     const item: CheckListItemType = list[index]
@@ -288,19 +275,35 @@ class CheckList extends Component<IProps, IState> {
       list: [...list]
     })
   }
-
-  onPlanChange = cur => {
+  onPlanChange = planTab => {
+    const { listOrigin } = this.state
     this.setState({
-      cur
+      cur: planTab,
+      list:
+        planTab === 'all'
+          ? listOrigin
+          : listOrigin.filter((l: CheckListItemType) => {
+              return l.planID === planTab
+            })
     })
   }
-  onDayClick = cur => {
-    this.setState({
-      cur
-    })
+  onDayClick = ({ year, month, date }) => {
+    const d = `${year}/${month < 10 ? '0' : ''}${month}/${
+      date < 10 ? '0' : ''
+    }${date}`
+    this.setState(
+      {
+        cur: 'all', // 切换的时候默认换到全部？
+        selectedDate: d
+      },
+      () => {
+        this.fetchCheckList(d)
+      }
+    )
   }
 
   render() {
+    console.log(this.state.list)
     return (
       <View className={'check-list-page'}>
         <Calendar
@@ -331,7 +334,7 @@ class CheckList extends Component<IProps, IState> {
         ) : (
           <Block>
             {this.state.list.map((l: CheckListItemType, index) => (
-              <View className="check-item">
+              <View className="check-item" key={`${l.planID}${index}`}>
                 <View className="inner border-bottom">
                   <View
                     className={`plan-icon iconfont icon-${l.icon} ${l.theme}-color`}
@@ -366,7 +369,7 @@ class CheckList extends Component<IProps, IState> {
                 </View>
               </View>
             ))}
-            {this.state.last ? (
+            {this.state.list.length ? (
               <View className="no-more">没有更多了嗷</View>
             ) : null}
             {this.props.helper.isIpx ? (
