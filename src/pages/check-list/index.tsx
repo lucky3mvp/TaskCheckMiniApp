@@ -1,14 +1,7 @@
 import React, { Component } from 'react'
 import Taro from '@tarojs/taro'
 import { connect } from 'react-redux'
-import {
-  ScrollView,
-  View,
-  Button,
-  Text,
-  Image,
-  Block
-} from '@tarojs/components'
+import { View, Block } from '@tarojs/components'
 import Empty from 'src/components/Empty'
 import Gap from 'src/components/Gap'
 import { UnitMap } from 'src/constants/config'
@@ -28,7 +21,7 @@ type PageOwnProps = {}
 
 type IState = {
   inited: boolean
-  cur: string
+  curPlan: string
   selectedDate: string
   tabs: Array<PlanTabType>
   list: Array<CheckListItemType>
@@ -48,7 +41,7 @@ class CheckList extends Component<IProps, IState> {
   block = false
   state = {
     inited: false,
-    cur: 'all',
+    curPlan: 'all',
     selectedDate: formatDate(new Date(), 'yyyy/MM/dd'),
     tabs: [],
     list: [],
@@ -68,7 +61,7 @@ class CheckList extends Component<IProps, IState> {
       Taro.showLoading({
         title: '加载中...'
       })
-    const { cur, selectedDate } = this.state
+    const { curPlan, selectedDate } = this.state
     const date = paramDate || selectedDate
     if (this.cache[`${date}`]) {
       console.log('命中cache，不会请求')
@@ -76,10 +69,10 @@ class CheckList extends Component<IProps, IState> {
       this.setState({
         listOrigin: listOrigin,
         list:
-          cur === 'all'
+          curPlan === 'all'
             ? listOrigin
             : listOrigin.filter((l: CheckListItemType) => {
-                return l.planID === cur
+                return l.planID === curPlan
               })
       })
       return
@@ -250,10 +243,10 @@ class CheckList extends Component<IProps, IState> {
         inited: true,
         listOrigin: lo,
         list:
-          cur === 'all'
+          curPlan === 'all'
             ? lo
             : lo.filter((l: CheckListItemType) => {
-                return l.planID === cur
+                return l.planID === curPlan
               }),
         tabs: tabs
       })
@@ -278,7 +271,7 @@ class CheckList extends Component<IProps, IState> {
   onPlanChange = planTab => {
     const { listOrigin } = this.state
     this.setState({
-      cur: planTab,
+      curPlan: planTab,
       list:
         planTab === 'all'
           ? listOrigin
@@ -291,9 +284,20 @@ class CheckList extends Component<IProps, IState> {
     const d = `${year}/${month < 10 ? '0' : ''}${month}/${
       date < 10 ? '0' : ''
     }${date}`
+
+    if (year < 2021) {
+      this.setState({
+        curPlan: 'all', // 切换的时候默认换到全部？
+        selectedDate: d,
+        listOrigin: [],
+        list: []
+      })
+      return
+    }
+
     this.setState(
       {
-        cur: 'all', // 切换的时候默认换到全部？
+        curPlan: 'all', // 切换的时候默认换到全部？
         selectedDate: d
       },
       () => {
@@ -303,13 +307,12 @@ class CheckList extends Component<IProps, IState> {
   }
 
   render() {
-    console.log(this.state.list)
     return (
       <View className={'check-list-page'}>
         <Calendar
           onDayClick={this.onDayClick}
           plans={this.state.tabs}
-          curPlan={this.state.cur}
+          curPlan={this.state.curPlan}
           onPlanChange={this.onPlanChange}
         />
 
@@ -322,7 +325,7 @@ class CheckList extends Component<IProps, IState> {
               </View>
             </Empty>
           </View>
-        ) : !this.state.list.length ? (
+        ) : !this.state.listOrigin.length ? (
           <View className="has-plan-but-no-check">
             <Empty tip="还没有打卡记录，要加油了鸭！">
               <View className="go-check" onClick={this.gotoCheckPage}>
@@ -331,6 +334,8 @@ class CheckList extends Component<IProps, IState> {
               </View>
             </Empty>
           </View>
+        ) : !this.state.list.length ? (
+          <View className="no-more">暂无数据~</View>
         ) : (
           <Block>
             {this.state.list.map((l: CheckListItemType, index) => (
@@ -370,7 +375,7 @@ class CheckList extends Component<IProps, IState> {
               </View>
             ))}
             {this.state.list.length ? (
-              <View className="no-more">没有更多了嗷</View>
+              <View className="no-more">没有更多了嗷~</View>
             ) : null}
             {this.props.helper.isIpx ? (
               <Gap height={34} bkg="transparent" />
