@@ -97,10 +97,20 @@ type PlanType = {
   monthTimes?: number
 }
 
+type PlanTabType = {
+  planID: string
+  name: string
+  description: string
+  theme: string
+  icon: string
+  category: number
+  beginTime: number
+  endTime: number | null
+}
+
 type CheckListItemType = {
   planID: string
   comment: string
-  checkDate: string
   checkTime: string
   achieve: number
   name: string

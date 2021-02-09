@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Taro from '@tarojs/taro'
 import { connect } from 'react-redux'
-import { ScrollView, View, Button, Text, Image } from '@tarojs/components'
+import { View, Block } from '@tarojs/components'
 import Empty from 'src/components/Empty'
 import Gap from 'src/components/Gap'
 import { UnitMap } from 'src/constants/config'
@@ -9,6 +9,7 @@ import { getCheckList } from 'src/utils/request2.0'
 import { formatDate } from 'src/utils'
 
 import './index.less'
+import Calendar from './Calendar'
 
 type PageStateProps = {
   helper: HelperStoreType
@@ -18,21 +19,16 @@ type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   inited: boolean
-  pageSize: number
-  pageNo: number
-  totalPage: number
-  totalSize: number
-  last: boolean
+  curPlan: string
+  selectedDate: string
+  tabs: Array<PlanTabType>
   list: Array<CheckListItemType>
+  listOrigin: Array<CheckListItemType>
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
-
-interface CheckList {
-  props: IProps
-}
 
 @connect(
   ({ helper }) => ({
@@ -40,74 +36,82 @@ interface CheckList {
   }),
   dispatch => ({})
 )
-class CheckList extends Component {
+class CheckList extends Component<IProps, IState> {
+  cache: Record<string, any> = {}
   block = false
   state = {
     inited: false,
-    pageSize: 15,
-    pageNo: 1,
-    totalPage: 0,
-    totalSize: 0,
-    last: false,
-    list: []
+    curPlan: 'all',
+    selectedDate: formatDate(new Date(), 'yyyy/MM/dd'),
+    tabs: [],
+    list: [],
+    listOrigin: []
   }
   componentDidMount() {
-    this.fetchCheckList({
-      pageSize: this.state.pageSize,
-      pageNo: this.state.pageNo
-    })
+    this.fetchCheckList()
   }
-  async fetchCheckList(pageInfo) {
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
+  }
+  async fetchCheckList(paramDate = '') {
     !this.state.inited &&
       Taro.showLoading({
         title: '加载中...'
       })
-    const {
-      code,
-      list,
-      totalSize,
-      totalPage,
-      pageSize,
-      pageNo
-    } = await getCheckList(pageInfo)
-    const _list = list.map(l => {
-      return {
-        ...l,
-        checkTime: formatDate(new Date(l.checkTime), 'yyyy.MM.dd hh:mm'),
-        isShowComment: false
-      }
+    const { curPlan, selectedDate } = this.state
+    const date = paramDate || selectedDate
+    if (this.cache[`${date}`]) {
+      console.log('命中cache，不会请求')
+      const listOrigin = this.cache[`${date}`]
+      this.setState({
+        listOrigin: listOrigin,
+        list:
+          curPlan === 'all'
+            ? listOrigin
+            : listOrigin.filter((l: CheckListItemType) => {
+                return l.planID === curPlan
+              })
+      })
+      return
+    }
+
+    console.log('未命中cache，发起请求')
+    const { code, list = [], tabs = [] } = await getCheckList({
+      date: date,
+      returnPlanTabs: !this.state.inited, // 后面的请求就不用再请求tabs了
+      version: 'v2'
     })
     if (code === 200) {
+      const lo = list.map(l => {
+        return {
+          ...l,
+          checkTime: formatDate(new Date(l.checkTime), 'yyyy.MM.dd hh:mm'),
+          isShowComment: false
+        }
+      })
       this.setState({
         inited: true,
-        list: [...this.state.list, ..._list],
-        totalSize,
-        totalPage,
-        pageSize,
-        pageNo,
-        last: totalPage === pageNo
+        listOrigin: lo,
+        list:
+          curPlan === 'all'
+            ? lo
+            : lo.filter((l: CheckListItemType) => {
+                return l.planID === curPlan
+              }),
+        tabs: tabs
       })
+      this.cache[`${date}`] = lo
     }
     Taro.hideLoading()
   }
-  gotoCheck = () => {
+  gotoCheckPage = () => {
     Taro.switchTab({
       url: '/pages/check/index'
     })
   }
-
-  onReachBottom = async () => {
-    if (this.block) return
-    if (this.state.pageNo < this.state.totalPage) {
-      this.block = true
-      await this.fetchCheckList({
-        pageSize: this.state.pageSize,
-        pageNo: this.state.pageNo + 1
-      })
-      this.block = false
-    }
-  }
-
   onClickComment = (index: number) => {
     const { list } = this.state
     const item: CheckListItemType = list[index]
@@ -117,27 +121,78 @@ class CheckList extends Component {
       list: [...list]
     })
   }
+  onPlanChange = planTab => {
+    const { listOrigin } = this.state
+    this.setState({
+      curPlan: planTab,
+      list:
+        planTab === 'all'
+          ? listOrigin
+          : listOrigin.filter((l: CheckListItemType) => {
+              return l.planID === planTab
+            })
+    })
+  }
+  onDayClick = ({ year, month, date }) => {
+    const d = `${year}/${month < 10 ? '0' : ''}${month}/${
+      date < 10 ? '0' : ''
+    }${date}`
+
+    if (year < 2021) {
+      this.setState({
+        curPlan: 'all', // 切换的时候默认换到全部？
+        selectedDate: d,
+        listOrigin: [],
+        list: []
+      })
+      return
+    }
+
+    this.setState(
+      {
+        curPlan: 'all', // 切换的时候默认换到全部？
+        selectedDate: d
+      },
+      () => {
+        this.fetchCheckList(d)
+      }
+    )
+  }
 
   render() {
     return (
-      <View className="check-list-page">
-        {!this.state.inited ? null : !this.state.list.length ? (
-          <Empty tip="还没有打卡记录，要加油了鸭！">
-            <View className="go-check" onClick={this.gotoCheck}>
-              <View>去打卡</View>
-              <View className="iconfont icon-right-arrow" />
-            </View>
-          </Empty>
+      <View className={'check-list-page'}>
+        <Calendar
+          onDayClick={this.onDayClick}
+          plans={this.state.tabs}
+          curPlan={this.state.curPlan}
+          onPlanChange={this.onPlanChange}
+        />
+
+        {!this.state.inited ? null : !this.state.tabs.length ? (
+          <View className="no-plan-and-no-check">
+            <Empty tip="没有打卡任务，enjoy your day~">
+              <View className="go-check" onClick={this.gotoCheckPage}>
+                <View>去创建计划</View>
+                <View className="iconfont icon-right-arrow" />
+              </View>
+            </Empty>
+          </View>
+        ) : !this.state.listOrigin.length ? (
+          <View className="has-plan-but-no-check">
+            <Empty tip="还没有打卡记录，要加油了鸭！">
+              <View className="go-check" onClick={this.gotoCheckPage}>
+                <View>去打卡</View>
+                <View className="iconfont icon-right-arrow" />
+              </View>
+            </Empty>
+          </View>
+        ) : !this.state.list.length ? (
+          <View className="no-more">暂无数据~</View>
         ) : (
-          <ScrollView
-            scrollY
-            enableBackToTop
-            lowerThreshold={100}
-            className="scroll-view"
-            onScrollToLower={this.onReachBottom}
-          >
+          <Block>
             {this.state.list.map((l: CheckListItemType, index) => (
-              <View className="check-item">
+              <View className="check-item" key={`${l.planID}${index}`}>
                 <View className="inner border-bottom">
                   <View
                     className={`plan-icon iconfont icon-${l.icon} ${l.theme}-color`}
@@ -150,9 +205,7 @@ class CheckList extends Component {
                       </View>
                     </View>
                     <View className="detail-item">
-                      <View className="time">
-                        {l.checkDate} {l.checkTime}
-                      </View>
+                      <View className="time">{l.checkTime}</View>
                       {l.comment ? (
                         <View
                           className="check-comment"
@@ -174,13 +227,13 @@ class CheckList extends Component {
                 </View>
               </View>
             ))}
-            {this.state.last ? (
-              <View className="no-more">没有更多了嗷</View>
+            {this.state.list.length ? (
+              <View className="no-more">没有更多了嗷~</View>
             ) : null}
             {this.props.helper.isIpx ? (
               <Gap height={34} bkg="transparent" />
             ) : null}
-          </ScrollView>
+          </Block>
         )}
       </View>
     )

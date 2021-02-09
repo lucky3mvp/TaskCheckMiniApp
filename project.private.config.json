@@ -45,6 +45,18 @@
         {
           "name": "pages/plan-edit/index",
           "pathName": "pages/plan-edit/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/my/index",
+          "pathName": "pages/my/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/day-detail/index",
+          "pathName": "pages/day-detail/index",
           "scene": null
         }
       ]

@@ -2,8 +2,9 @@ export default {
   navigationBarTitleText: '打卡记录',
   navigationBarBackgroundColor: '#ffffff',
   navigationBarTextStyle: 'black',
-  backgroundColor: '#f8f8f8',
+  backgroundColor: '#ffffff',
   backgroundTextStyle: 'light',
-  disableScroll: true,
+  disableScroll: false,
+  onReachBottomDistance: 100,
   enableShareAppMessage: true
 }

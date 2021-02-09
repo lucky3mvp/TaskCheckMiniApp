@@ -32,9 +32,6 @@ const formatDate = function (idate, fmt) {
 
 const getWeekStart = function (d) {
   const day = d.getDay()
-  if (day === 0) {
-    return formatDate(d, 'yyyy-MM-dd')
-  }
   const s = new Date(
     d.getFullYear(),
     d.getMonth(),
@@ -77,6 +74,7 @@ exports.main = async (event, context) => {
   const { errMsg, data } = await collection
     .where({
       userID: wxContext.OPENID,
+      // 查非删除的计划
       status: 1 // 1-正常 2-已删除
     })
     .get()
@@ -172,6 +170,17 @@ exports.main = async (event, context) => {
             weekStart: getWeekStart(dateObj)
           })
           .get()
+        console.log('should return query params: ', {
+          userID: wxContext.OPENID,
+          planID: p.planID,
+          type: p.type,
+          subType: p.subType,
+          year: dateObj.getFullYear(),
+          month: dateObj.getMonth() + 1,
+          day: dateObj.getDate(),
+          weekStart: getWeekStart(dateObj)
+        })
+        console.log('should return query result: ', data)
         let detail = data[0]
         if (!detail) {
           detail = {

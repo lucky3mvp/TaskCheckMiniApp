@@ -20,7 +20,7 @@ type PageDispatchProps = {
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   stage: number
 }
 
@@ -29,10 +29,6 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 type GreetingType = {
   main: string
   sub: string
-}
-
-interface My {
-  props: IProps
 }
 
 @connect(
@@ -45,11 +41,17 @@ interface My {
     }
   })
 )
-class My extends Component {
+class My extends Component<IProps, IState> {
   state = {
     stage: 0
   }
   greetingIndex: number = 0
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
+  }
   getUserInfo = async () => {
     const [res] = await wit.getUserInfo()
     if (res) {
@@ -93,16 +95,11 @@ class My extends Component {
       url: '/pages/menstruation/index'
     })
   }
-  gotoMood = async () => {
-    Taro.navigateTo({
-      url: '/pages/mood/index'
-    })
-  }
-  gotoFeedback = async () => {
-    Taro.navigateTo({
-      url: '/pages/feedback/index'
-    })
-  }
+  // gotoMood = async () => {
+  //   Taro.navigateTo({
+  //     url: '/pages/mood/index'
+  //   })
+  // }
   toBeExpected = async () => {
     this.onShowModal()
   }
@@ -176,11 +173,11 @@ class My extends Component {
           <View className="item-title">打卡记录</View>
           <View className="iconfont icon-right-arrow" />
         </View>
-        <View className="list-item border-bottom" onClick={this.gotoMood}>
+        {/* <View className="list-item border-bottom" onClick={this.gotoMood}>
           <Image src={require('../../assets/write.png')} className="icon" />
           <View className="item-title">随心记</View>
           <View className="iconfont icon-right-arrow" />
-        </View>
+        </View> */}
         {this.props.userInfo.gender === 2 ||
         this.props.userInfo.nickName === 'ASY' ? (
           <View
@@ -197,11 +194,6 @@ class My extends Component {
           <View className="item-title">敬请期待</View>
           <View className="iconfont icon-right-arrow" />
         </View>
-        {/* <View className="list-item border-bottom" onClick={this.gotoFeedback}>
-          <Image src={require('../../assets/feedback.png')} className="icon" />
-          <View className="item-title">意见反馈</View>
-          <View className="iconfont icon-right-arrow" />
-        </View> */}
 
         <Modal
           maskCloseable
@@ -215,7 +207,7 @@ class My extends Component {
           >
             <View className="cnt">
               <View>
-                批量打卡，补签，编辑计划，暂停计划，提前结束计划等功能正在筹划开发中，敬请期待！
+                批量打卡，补签，个人积分，倒计时，统计报表等功能正在开发中，敬请期待！
               </View>
             </View>
             <View className="btn border-top" onClick={this.onCloseModal}>

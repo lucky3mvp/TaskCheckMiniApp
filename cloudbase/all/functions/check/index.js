@@ -68,7 +68,7 @@ exports.main = async (event, context) => {
       planID: planID,
       achieve: achieve,
       comment: comment,
-      checkTime: new Date().getTime()
+      checkTime: new Date().getTime() // 记录实际打卡的时间
     }
   })
 
@@ -84,9 +84,10 @@ exports.main = async (event, context) => {
     })
     .get()
   const plan = data2[0]
+  console.log('check 查 plan : ', data2)
   if (plan) {
     // 2.查这个计划当前的打卡状态
-    let { errrMsg3, data: data3 } = await statusCollection
+    let { errMsg: errMsg3, data: data3 } = await statusCollection
       .where({
         userID: wxContext.OPENID,
         planID: planID,
@@ -99,6 +100,7 @@ exports.main = async (event, context) => {
       })
       .get()
     let detail = data3[0]
+    console.log('check 查 plan check status : ', data3)
 
     if (!detail) {
       // 3.还没有就新增一条记录
@@ -114,18 +116,23 @@ exports.main = async (event, context) => {
         day: checkDay,
         weekStart: getWeekStart(checkDate)
       }
-      const { errMsg4, _id: _id4 } = await statusCollection.add({
+      const { errMsg: errMsg4, _id: _id4 } = await statusCollection.add({
         data: detail
       })
+      console.log('check 新增 planCheckStatus', detail)
     } else {
       detail.totalAchieve += achieve
       detail.status = detail.totalAchieve >= plan.goal ? 1 : 0 // 1-已完成 0-未完成
       // 4.更新计划的打卡状态
       const res = await statusCollection.doc(detail._id).update({
         data: {
-          totalAchieve: detail.achieve,
+          totalAchieve: detail.totalAchieve,
           status: detail.status
         }
+      })
+      console.log('check 更新 planCheckStatus', {
+        totalAchieve: detail.totalAchieve,
+        status: detail.status
       })
     }
 

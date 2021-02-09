@@ -1,0 +1,179 @@
+.check-list-calendar {
+  .check-list-calendar-holder {
+    height: 67px;
+    &.hide {
+      display: none;
+    }
+  }
+  .check-list-calendar-main {
+    background-color: #ffffff;
+    &.fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1;
+      .inner {
+        height: 48px;
+        min-height: 48px;
+        padding-bottom: 0;
+        .border-bottom {
+          &:after {
+            display: none;
+          }
+        }
+        .arrow {
+          opacity: 0;
+        }
+      }
+    }
+
+    .inner {
+      margin: 0 20px;
+      min-height: 200px;
+      width: 335px;
+      border-radius: 10px;
+      padding-bottom: 10px;
+      transition: all ease-in-out 0.3s;
+      overflow: hidden;
+    }
+    .header {
+      height: 48px;
+      display: flex;
+      margin: 0 0 6px;
+      .txt {
+        flex: 1;
+        font-size: 16px;
+        line-height: 48px;
+        font-family: 'PingFangSC-Medium';
+        color: #222222;
+        text-align: center;
+      }
+      .arrow {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity ease-in 0.3s;
+        &.hide {
+          opacity: 0;
+        }
+        &.trans {
+          transform: rotate(180deg);
+        }
+        .img {
+          width: 8px;
+          height: 16px;
+        }
+      }
+    }
+    .labels {
+      padding: 0 3px;
+      display: flex;
+      align-items: center;
+      .label {
+        width: 47px;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        font-size: 14px;
+        font-family: 'PingFangSC-Medium';
+        color: #222222;
+      }
+    }
+    .days {
+      padding: 0 3px;
+      display: flex;
+      flex-wrap: wrap;
+      .day-wrapper {
+        flex-shrink: 0;
+        width: 47px;
+        height: 42px;
+        font-family: 'PingFangSC-Regular';
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .day {
+          width: 28px;
+          height: 28px;
+          color: #222222;
+          font-size: 12px;
+          text-align: center;
+          line-height: 28px;
+          border-radius: 21px;
+          &.now-and-past {
+            border: 1px solid #d8d8d8;
+          }
+          &.light {
+            color: #999999;
+            border-color: #f4f5f6;
+          }
+          &.today {
+            position: relative;
+            .indicator {
+              position: absolute;
+              bottom: -8px;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 4px;
+              height: 4px;
+              border-radius: 2px;
+              background-color: #ee8787;
+            }
+          }
+          &.active {
+            border-color: #ee8787;
+            color: #ee8787;
+          }
+        }
+      }
+    }
+    .fold-icon {
+      width: 100%;
+      height: 15px;
+      background-color: #f8f8f8;
+      padding-bottom: 4px;
+      text-align: center;
+      .img {
+        height: 15px;
+        width: 15px;
+        transition: transform ease-in-out 0.3s;
+        &.arrow-up {
+          transform: rotate(-90deg);
+        }
+        &.arrow-down {
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
+  .tabs {
+    background: #ffffff;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: scroll;
+    height: 52px;
+    align-items: center;
+    .holder {
+      width: 12px;
+      height: 100%;
+      flex-shrink: 0;
+    }
+    .tab {
+      text-align: center;
+      width: 45px;
+      flex-shrink: 0;
+      opacity: 0.35;
+      &.active {
+        opacity: 1;
+      }
+      &.tab-all {
+        color: #ee8787;
+      }
+    }
+    .iconfont {
+      font-size: 28px;
+    }
+  }
+}

@@ -1,6 +1,7 @@
-type PageNameType = 'plan-list-page' | 'check-page' | 'home-page'
+type PageNameType = 'plan-list-page' | 'check-page'
 
 type EventNameType =
+  | ''
   | 'update plan list'
   | 'update check list'
   | 'update plan tab list'

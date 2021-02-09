@@ -16,19 +16,14 @@ type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
-type PageState = {
-  checked: boolean
+type IState = {
   status: Array<number>
-  nextEnd: MenstruationType
-  prevStart: MenstruationType
+  nextEnd: MenstruationType | null
+  prevStart: MenstruationType | null
   records: MenstruationType[]
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
-
-interface Menstruation {
-  props: IProps
-}
 
 @connect(
   ({ helper }) => ({
@@ -36,7 +31,7 @@ interface Menstruation {
   }),
   dispatch => ({})
 )
-class Menstruation extends Component {
+class Menstruation extends Component<IProps, IState> {
   defaultPrevDay = {
     day: 32
   }
@@ -59,6 +54,12 @@ class Menstruation extends Component {
   }
   cache: Record<string, any> = {}
   cur: DateType = {} as DateType
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
+  }
   componentDidMount() {
     const d = new Date()
     this.cur.year = d.getFullYear()

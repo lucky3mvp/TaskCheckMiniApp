@@ -17,7 +17,7 @@ type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   loading: boolean
   index: number
   unStarted: Array<PlanType>
@@ -27,11 +27,7 @@ type PageState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface PlanList {
-  props: IProps
-}
-
-class PlanList extends Component {
+class PlanList extends Component<IProps, IState> {
   topBar = {
     list: ['未开始计划', '进行中计划', '已结束计划'],
     pos: [pxTransform(52), pxTransform(176), pxTransform(300)]
@@ -42,6 +38,12 @@ class PlanList extends Component {
     unStarted: [],
     started: [],
     ended: []
+  }
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
   }
   componentDidMount() {
     this.getList(true)

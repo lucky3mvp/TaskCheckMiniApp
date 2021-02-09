@@ -11,21 +11,17 @@ type PageStateProps = {
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   value: string
 }
 
 type IProps = PageStateProps & PageOwnProps
 
-interface Mood {
-  props: IProps
-}
-
 @connect(({ userInfo, helper }) => ({
   userInfo,
   helper
 }))
-class Mood extends Component {
+class Mood extends Component<IProps, IState> {
   state = {
     value: '',
     list: [
@@ -35,6 +31,12 @@ class Mood extends Component {
           '黑科技和接口会健康金黑科技和接口会健康金黑科技和接口会健康金黑科技和接口会健康金'
       }
     ]
+  }
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
   }
   onBlur = ({ detail: { value } }) => {
     this.setState({

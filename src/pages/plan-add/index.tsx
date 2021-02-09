@@ -65,10 +65,6 @@ type IState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface PlanAdd {
-  props: IProps
-}
-
 @connect(
   ({ helper }) => ({
     helper
@@ -95,6 +91,12 @@ class PlanAdd extends Component<IProps, IState> {
     typeBtns: [],
     daysBtns: [],
     unitOptions: []
+  }
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
   }
   componentDidMount() {
     const index = Math.floor(Math.random() * BannerImgs.length)
@@ -305,7 +307,6 @@ class PlanAdd extends Component<IProps, IState> {
         icon: 'none',
         duration: 2000
       })
-      manualEvent.change('home-page', 'update plan tab list')
       manualEvent.change('check-page', 'update check list')
       setTimeout(() => {
         Taro.switchTab({ url: '/pages/home/index' })

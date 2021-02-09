@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { UnitMap } from 'src/constants/config'
 
+import Add from 'src/components/Add'
 import Empty from 'src/components/Empty'
 import Modal from 'src/components/Modal'
 import SelfInput from 'src/components/SelfInput'
@@ -21,7 +22,7 @@ type PageDispatchProps = {}
 
 type PageOwnProps = {}
 
-type PageState = {
+type IState = {
   loading: boolean
   stage: number
   achieve: string
@@ -32,12 +33,8 @@ type PageState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface Check {
-  props: IProps
-}
-
 @connect()
-class Check extends Component<IProps, PageState> {
+class Check extends Component<IProps, IState> {
   lock = false
   state = {
     loading: true,
@@ -57,6 +54,13 @@ class Check extends Component<IProps, PageState> {
 
   componentDidShow() {
     manualEvent.run('check-page')
+  }
+
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
   }
 
   async getCheckList(showLoading = false) {
@@ -171,6 +175,8 @@ class Check extends Component<IProps, PageState> {
     return this.state.loading ? null : (
       <View>
         <View className="check-page">
+          {/* 没有计划的时候，会有一个“去创建计划，就不加add了” */}
+          {this.state.plans.length ? <Add /> : null}
           {!this.state.plans.length ? (
             <Empty tip="今天还没有打卡计划哦~">
               <View onClick={this.gotoAddPlan} className="add-plan">

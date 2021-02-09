@@ -52,10 +52,6 @@ type IState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface PlanAdd {
-  props: IProps
-}
-
 @connect(
   ({ helper }) => ({
     helper
@@ -74,6 +70,12 @@ class PlanAdd extends Component<IProps, IState> {
     icon: '',
     beginTime: '',
     endTime: ''
+  }
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/home/index'
+    }
   }
   componentDidMount() {
     this.plan = Taro.getStorageSync('plan')
@@ -198,7 +200,6 @@ class PlanAdd extends Component<IProps, IState> {
         title: '修改成功'
       })
       manualEvent.change('plan-list-page', 'update plan list')
-      manualEvent.change('home-page', 'update plan tab list')
       manualEvent.change('check-page', 'update check list')
       setTimeout(() => {
         Taro.navigateBack()
@@ -227,7 +228,6 @@ class PlanAdd extends Component<IProps, IState> {
             title: '删除成功'
           })
           manualEvent.change('plan-list-page', 'update plan list')
-          manualEvent.change('home-page', 'update plan tab list')
           manualEvent.change('check-page', 'update check list')
           setTimeout(() => {
             Taro.navigateBack()

@@ -10,9 +10,6 @@ export const getPlanByDate = async params => post(`getPlanByDate`, params)
 
 export const getPlanList = async (params = {}) => post(`getPlanList`, params)
 
-export const getPlanTabList = async (params = {}) =>
-  post(`getPlanTabList`, params)
-
 export const check = async params => post(`check`, params)
 
 export const getMenstruationDetail = async params =>

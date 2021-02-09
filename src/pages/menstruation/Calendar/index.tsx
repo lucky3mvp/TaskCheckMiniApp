@@ -24,8 +24,8 @@ export default (props: IProps) => {
   const todayMonth = useMemo(() => now.getMonth(), [now])
   const todayDate = useMemo(() => now.getDate(), [now])
 
-  const [curYear, setCurYear] = useState(now.getFullYear())
-  const [curMonth, setCurMonth] = useState(now.getMonth())
+  const [curYear, setCurYear] = useState(todayYear)
+  const [curMonth, setCurMonth] = useState(todayMonth)
   const displayMonth = useMemo(() => {
     return curMonth + 1 <= 9 ? `0${curMonth + 1}` : curMonth + 1
   }, [curMonth])
@@ -264,6 +264,12 @@ export default (props: IProps) => {
                 }}
                 className={classnames('day', {
                   light: d.month !== curMonth,
+                  'now-and-past':
+                    d.year < todayYear ||
+                    (d.year === todayYear && d.month < todayMonth) ||
+                    (d.year === todayYear &&
+                      d.month === todayMonth &&
+                      d.date <= todayDate),
                   today:
                     d.year === todayYear &&
                     d.month === todayMonth &&
@@ -288,7 +294,7 @@ export default (props: IProps) => {
                     d.date === selectedDay[2]
                 })}
               >
-                {d.date}
+                <View className="n">{d.date}</View>
                 <View className="indicator" />
               </View>
             </View>
