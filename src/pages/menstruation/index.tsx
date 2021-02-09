@@ -4,7 +4,7 @@ import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import Calendar from './Calendar'
 
-import { getMenstruationDetail } from 'src/utils/request2.0'
+import { menstruation } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -84,7 +84,8 @@ class Menstruation extends Component<IProps, IState> {
     const {
       code,
       data: { records, prevStart, nextEnd }
-    } = await getMenstruationDetail({
+    } = await menstruation({
+      optType: 'fetchDetail',
       year,
       month
     })

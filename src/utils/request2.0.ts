@@ -2,8 +2,6 @@ declare const wx: any
 
 import Taro from '@tarojs/taro'
 
-export const login = async params => post(`login`, params)
-
 export const updatePlan = async params => post(`updatePlan`, params)
 
 export const getPlanByDate = async params => post(`getPlanByDate`, params)
@@ -12,13 +10,9 @@ export const getPlanList = async (params = {}) => post(`getPlanList`, params)
 
 export const check = async params => post(`check`, params)
 
-export const getMenstruationDetail = async params =>
-  post(`getMenstruationDetail`, params)
-
-export const submitMenstruation = async params =>
-  post(`submitMenstruation`, params)
-
 export const getCheckList = async params => post(`getCheckList`, params)
+
+export const menstruation = async params => post(`menstruation`, params)
 
 async function post(name, data): Promise<any> {
   return new Promise((resolve, reject) => {
