@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import { rightArrow } from 'src/assets/svg'
 import Switch from 'src/components/Switch'
 
-import { submitMenstruation } from 'src/utils/request2.0'
+import { menstruation } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -213,7 +213,10 @@ export default (props: IProps) => {
               day: selectedDay[2],
               type: status.showStart ? 1 : 2
             }
-            const { code } = await submitMenstruation(p)
+            const { code } = await menstruation({
+              optType: 'submit',
+              ...p
+            })
             if (code === 200) {
               Taro.showToast({
                 title: '记录成功'
