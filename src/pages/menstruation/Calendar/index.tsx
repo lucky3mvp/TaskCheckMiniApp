@@ -264,6 +264,12 @@ export default (props: IProps) => {
                 }}
                 className={classnames('day', {
                   light: d.month !== curMonth,
+                  'now-and-past':
+                    d.year < todayYear ||
+                    (d.year === todayYear && d.month < todayMonth) ||
+                    (d.year === todayYear &&
+                      d.month === todayMonth &&
+                      d.date <= todayDate),
                   today:
                     d.year === todayYear &&
                     d.month === todayMonth &&

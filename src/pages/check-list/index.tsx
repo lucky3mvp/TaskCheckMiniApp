@@ -79,158 +79,11 @@ class CheckList extends Component<IProps, IState> {
     }
 
     console.log('未命中cache，发起请求')
-    const { code, list, tabs } = {
-      code: 200,
-      list: [
-        {
-          planID: 'b00064a7601be60102cbd3901430caa9',
-          comment: '',
-          checkTime: 1612754550998,
-          achieve: 2,
-          name: '每天喝水4杯',
-          icon: 'yangsheng',
-          theme: 'theme28',
-          unit: '1'
-        },
-        {
-          planID: 'b00064a7601be60102cbd3901430caa9',
-          comment: '',
-          checkTime: 1612698378056,
-          achieve: 1,
-          name: '每天喝水4杯',
-          icon: 'yangsheng',
-          theme: 'theme28',
-          unit: '1'
-        },
-        {
-          planID: 'b00064a7601be60102cbd3901430caa9',
-          comment: '',
-          checkTime: 1612690543077,
-          achieve: 1,
-          name: '每天喝水4杯',
-          icon: 'yangsheng',
-          theme: 'theme28',
-          unit: '1'
-        },
-        {
-          planID: '3b020ca3601be719028300f1295d0412',
-          comment: '',
-          checkTime: 1612679416076,
-          achieve: 1,
-          name: '每周游泳3次',
-          icon: 'swimming',
-          theme: 'theme12',
-          unit: '1'
-        },
-        {
-          planID: 'b00064a7601be60102cbd3901430caa9',
-          comment: '',
-          checkTime: 1612668030587,
-          achieve: 2,
-          name: '每天喝水4杯',
-          icon: 'yangsheng',
-          theme: 'theme28',
-          unit: '1'
-        },
-        {
-          planID: 'b00064a7601be60102cbd3901430caa9',
-          comment: '',
-          checkTime: 1612507062758,
-          achieve: 1,
-          name: '每天喝水4杯',
-          icon: 'yangsheng',
-          theme: 'theme28',
-          unit: '1'
-        },
-        {
-          planID: 'b00064a7601be60102cbd3901430caa9',
-          comment: '',
-          checkTime: 1612507030840,
-          achieve: 1,
-          name: '每天喝水4杯',
-          icon: 'yangsheng',
-          theme: 'theme28',
-          unit: '1'
-        },
-        {
-          planID: '79550af26020fa8c035be97b08f5ecee',
-          comment: '',
-          checkTime: 1612502542498,
-          achieve: 1,
-          name: '每周瑜伽两次',
-          icon: 'yoga',
-          theme: 'theme8',
-          unit: '1'
-        },
-        {
-          planID: '79550af2601be79a029a8fc95ce6ff04',
-          comment: '',
-          checkTime: 1612493418589,
-          achieve: 1,
-          name: '每周跳绳3次',
-          icon: 'skipping',
-          theme: 'theme20',
-          unit: '1'
-        },
-        {
-          planID: 'b00064a7601be60102cbd3901430caa9',
-          comment: '',
-          checkTime: 1612493388788,
-          achieve: 1,
-          name: '每天喝水4杯',
-          icon: 'yangsheng',
-          theme: 'theme28',
-          unit: '1'
-        }
-      ],
-      tabs: [
-        {
-          planID: 'b00064a7601be60102cbd3901430caa9',
-          name: '每天喝水4杯',
-          description: '多喝热水！',
-          theme: 'theme28',
-          icon: 'yangsheng',
-          category: 3,
-          beginTime: 1612396800000,
-          endTime: null
-        },
-        {
-          planID: '28ee4e3e6020fa6903bb53880cca4aaa',
-          name: '每周跳绳3次',
-          description: '夏天要到了',
-          theme: 'theme19',
-          icon: 'skipping',
-          category: 1,
-          beginTime: 1612742400000,
-          endTime: null
-        },
-        {
-          planID: '79550af26020fa8c035be97b08f5ecee',
-          name: '每周瑜伽2次',
-          description: '夏天要到了',
-          theme: 'theme8',
-          icon: 'yoga',
-          category: 1,
-          beginTime: 1612742400000,
-          endTime: null
-        },
-        {
-          planID: '79550af26020fb23035c0d6b7caeb3d5',
-          name: '每周读书/文章',
-          description: '读书人是人上人！',
-          theme: 'theme10',
-          icon: 'reading',
-          category: 4,
-          beginTime: 1612742400000,
-          endTime: null
-        }
-      ]
-    }
-    // await getCheckList({
-    //   date: date,
-    //   returnPlanTabs: !this.state.inited, // 后面的请求就不用再请求tabs了
-    //   version: 'v2'
-    // })
+    const { code, list = [], tabs = [] } = await getCheckList({
+      date: date,
+      returnPlanTabs: !this.state.inited, // 后面的请求就不用再请求tabs了
+      version: 'v2'
+    })
     if (code === 200) {
       const lo = list.map(l => {
         return {
@@ -317,10 +170,10 @@ class CheckList extends Component<IProps, IState> {
         />
 
         {!this.state.inited ? null : !this.state.tabs.length ? (
-          <View className="no-plan-no-no-check">
-            <Empty tip="今天没有打卡任务，enjoy your day~">
+          <View className="no-plan-and-no-check">
+            <Empty tip="没有打卡任务，enjoy your day~">
               <View className="go-check" onClick={this.gotoCheckPage}>
-                <View>去建计划</View>
+                <View>去创建计划</View>
                 <View className="iconfont icon-right-arrow" />
               </View>
             </Empty>

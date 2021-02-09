@@ -34,7 +34,7 @@ export default (props: IProps) => {
     todayDate
   ])
   const displayDate = useMemo(() => {
-    return selectedDay[2] + 1 <= 9 ? `0${selectedDay[2]}` : selectedDay[2]
+    return selectedDay[2] <= 9 ? `0${selectedDay[2]}` : selectedDay[2]
   }, [selectedDay])
   const displayHeader = useMemo(() => {
     if (fold) {
@@ -193,6 +193,12 @@ export default (props: IProps) => {
                   }}
                   className={classnames('day', `${props.theme || ''}`, {
                     light: d.month !== curMonth,
+                    'now-and-past':
+                      d.year < todayYear ||
+                      (d.year === todayYear && d.month < todayMonth) ||
+                      (d.year === todayYear &&
+                        d.month === todayMonth &&
+                        d.date <= todayDate),
                     today:
                       d.year === todayYear &&
                       d.month === todayMonth &&
