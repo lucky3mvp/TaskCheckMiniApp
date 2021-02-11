@@ -176,7 +176,7 @@ class Check extends Component<IProps, IState> {
       <View>
         <View className="check-page">
           {/* 没有计划的时候，会有一个“去创建计划，就不加add了” */}
-          {this.state.plans.length ? <Add /> : null}
+          {this.state.plans.length ? <Add onClick={this.gotoAddPlan} /> : null}
           {!this.state.plans.length ? (
             <Empty tip="今天还没有打卡计划哦~">
               <View onClick={this.gotoAddPlan} className="add-plan">

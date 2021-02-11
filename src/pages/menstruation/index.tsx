@@ -80,12 +80,26 @@ class Menstruation extends Component<IProps, IState> {
       })
       return
     }
+
+    if (this.cache[`${year}/${month}`]) {
+      console.log('命中缓存，也不会请求')
+      const { records, prevStart, nextEnd } = this.cache[`${year}/${month}`]
+      const status = this.handleDayStatus(year, month).map(r => r.status)
+      this.setState({
+        records,
+        prevStart,
+        nextEnd,
+        status
+      })
+      return
+    }
+
     console.log('将会获取数据')
     const {
       code,
       data: { records, prevStart, nextEnd }
     } = await menstruation({
-      optType: 'fetchDetail',
+      _type: 'fetchDetail',
       year,
       month
     })

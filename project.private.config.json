@@ -55,8 +55,15 @@
           "scene": null
         },
         {
-          "name": "pages/day-detail/index",
-          "pathName": "pages/day-detail/index",
+          "name": "pages/reading-list/index",
+          "pathName": "pages/reading-list/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/reading-add/index",
+          "pathName": "pages/reading-add/index",
+          "query": "",
           "scene": null
         }
       ]

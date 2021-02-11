@@ -186,7 +186,7 @@ class PlanAdd extends Component<IProps, IState> {
     })
 
     const res = await updatePlan({
-      optType: 'update',
+      _type: 'update',
       planID: this.plan.planID,
       name: this.state.name,
       description: this.state.description,
@@ -221,7 +221,7 @@ class PlanAdd extends Component<IProps, IState> {
             title: '请求中'
           })
           await updatePlan({
-            optType: 'delete',
+            _type: 'delete',
             planID: this.plan.planID
           })
           Taro.showToast({

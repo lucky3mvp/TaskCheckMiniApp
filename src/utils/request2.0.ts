@@ -14,6 +14,8 @@ export const getCheckList = async params => post(`getCheckList`, params)
 
 export const menstruation = async params => post(`menstruation`, params)
 
+export const commonApi = async params => post(`common`, params)
+
 async function post(name, data): Promise<any> {
   return new Promise((resolve, reject) => {
     wx.cloud.init()

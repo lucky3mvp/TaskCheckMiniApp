@@ -276,7 +276,7 @@ class PlanAdd extends Component<IProps, IState> {
     })
 
     const res = await updatePlan({
-      optType: 'submit',
+      _type: 'submit',
       name: this.state.name,
       description: this.state.description,
       theme: this.state.theme,

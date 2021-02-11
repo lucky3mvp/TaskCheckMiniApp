@@ -1,10 +1,11 @@
-type PageNameType = 'plan-list-page' | 'check-page'
+type PageNameType = 'plan-list-page' | 'check-page' | 'reading-list-page'
 
 type EventNameType =
   | ''
   | 'update plan list'
   | 'update check list'
   | 'update plan tab list'
+  | 'update reading list'
 
 class Events {
   constructor() {

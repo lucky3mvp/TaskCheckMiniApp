@@ -101,7 +101,7 @@ class CheckList extends Component<IProps, IState> {
             : lo.filter((l: CheckListItemType) => {
                 return l.planID === curPlan
               }),
-        tabs: tabs
+        tabs: tabs.length ? tabs : this.state.tabs
       })
       this.cache[`${date}`] = lo
     }

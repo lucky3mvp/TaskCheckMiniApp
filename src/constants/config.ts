@@ -142,6 +142,20 @@ export const PlanStatusIconMap = {
   3: 'yijieshu'
 }
 
+export const ReadingStatusMap = {
+  1: '未读',
+  2: '在读',
+  3: '读完'
+  // 4: '已删除'
+}
+
+export const ReadingStatusIconMap = {
+  1: 'weidu',
+  2: 'zhengzaijinxing',
+  3: 'yidu'
+  // 4: '已删除'
+}
+
 export const MenstruationStatusMap = {
   /**
    * status:

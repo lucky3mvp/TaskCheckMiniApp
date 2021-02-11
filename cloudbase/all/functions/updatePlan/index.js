@@ -6,20 +6,30 @@ cloud.init()
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
-  const { optType, planID, name, description, theme, icon, category } = event
+  const {
+    _type,
+    optType,
+    planID,
+    name,
+    description,
+    theme,
+    icon,
+    category
+  } = event
 
   console.log('updatePlan params: ', event)
 
   const db = cloud.database()
   const collection = db.collection('plan')
 
-  if (optType === 'delete') {
+  // todo optType 后期删掉
+  if (_type === 'delete' && optType === 'delete') {
     await collection.doc(planID).update({
       data: {
         status: 2
       }
     })
-  } else if (optType === 'update') {
+  } else if (_type === 'update' && optType === 'update') {
     await collection.doc(planID).update({
       data: {
         name,
@@ -29,7 +39,7 @@ exports.main = async (event, context) => {
         category
       }
     })
-  } else if (optType === 'submit') {
+  } else if (_type === 'submit' && optType === 'submit') {
     const { year, month, day, type } = event
     const bt = new Date(event.beginTime).getTime()
     const et = event.endTime ? new Date(event.endTime).getTime() : null

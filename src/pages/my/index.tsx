@@ -95,11 +95,11 @@ class My extends Component<IProps, IState> {
       url: '/pages/menstruation/index'
     })
   }
-  // gotoMood = async () => {
-  //   Taro.navigateTo({
-  //     url: '/pages/mood/index'
-  //   })
-  // }
+  gotoReading = async () => {
+    Taro.navigateTo({
+      url: '/pages/reading/index'
+    })
+  }
   toBeExpected = async () => {
     this.onShowModal()
   }
@@ -173,11 +173,11 @@ class My extends Component<IProps, IState> {
           <View className="item-title">打卡记录</View>
           <View className="iconfont icon-right-arrow" />
         </View>
-        {/* <View className="list-item border-bottom" onClick={this.gotoMood}>
-          <Image src={require('../../assets/write.png')} className="icon" />
-          <View className="item-title">随心记</View>
+        <View className="list-item border-bottom" onClick={this.gotoReading}>
+          <Image src={require('../../assets/reading.png')} className="icon" />
+          <View className="item-title">读书清单</View>
           <View className="iconfont icon-right-arrow" />
-        </View> */}
+        </View>
         {this.props.userInfo.gender === 2 ||
         this.props.userInfo.nickName === 'ASY' ? (
           <View

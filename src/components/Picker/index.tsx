@@ -20,6 +20,7 @@ interface ModeSelector {
     | 'flex-start'
     | 'flex-end'
     | 'space-between'
+  defaultSelected?: boolean
 }
 
 interface ModeMultiSelector {
@@ -40,6 +41,7 @@ interface ModeMultiSelector {
     | 'flex-start'
     | 'flex-end'
     | 'space-between'
+  defaultSelected?: boolean
 }
 
 export default (props: ModeSelector | ModeMultiSelector) => {
@@ -81,7 +83,7 @@ export default (props: ModeSelector | ModeMultiSelector) => {
     [props.range, props.index, props.mode]
   )
   const text = useMemo(() => {
-    if (init) return ''
+    if (init && !props.defaultSelected) return ''
 
     if (props.formatter) {
       return props.mode === 'selector'
@@ -94,7 +96,7 @@ export default (props: ModeSelector | ModeMultiSelector) => {
           : ''
         : getMultiPickerSelected('label').join('')
     }
-  }, [init, props.index, props.range])
+  }, [init, props.index, props.range, props.defaultSelected])
 
   // 这样 return 纯粹是为了解决 ts 报错
   return props.mode === 'multiSelector' ? (

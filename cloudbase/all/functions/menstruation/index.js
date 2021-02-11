@@ -6,15 +6,16 @@ cloud.init()
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
-  const { year, month, day, type, optType } = event
+  const { year, month, day, type, optType, _type } = event
 
-  console.log('submitMenstruation params: ', event)
+  console.log('menstruation params: ', event)
 
   const db = cloud.database()
   const _ = db.command
   const collection = db.collection('menstruation')
 
-  if (optType === 'submit') {
+  // todo optType 后期删掉
+  if (_type === 'submit' && optType === 'submit') {
     const { errMsg } = await collection.add({
       data: {
         userID: wxContext.OPENID,
@@ -28,7 +29,8 @@ exports.main = async (event, context) => {
     return {
       code: errMsg.indexOf('add:ok') >= 0 ? 200 : 400
     }
-  } else if (optType === 'fetchDetail') {
+  } else if (_type === 'fetchDetail' && optType === 'fetchDetail') {
+    console.log('menstruation fetchDetail')
     const { errMsg, data } = await collection
       .where({
         userID: wxContext.OPENID,
@@ -39,6 +41,8 @@ exports.main = async (event, context) => {
       .orderBy('month', 'asc')
       .orderBy('day', 'asc')
       .get()
+
+    console.log('menstruation query result', errMsg, data)
 
     if (errMsg.indexOf('get:ok') < 0) {
       return {

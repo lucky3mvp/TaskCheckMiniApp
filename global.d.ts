@@ -119,3 +119,16 @@ type CheckListItemType = {
   unit: string
   isShowComment?: boolean
 }
+
+type ReadingListItemType = {
+  name: string
+  status: number
+  cover: string
+  comment: string
+  createTime: number
+  beginTime?: number
+  finishTime?: number
+  formatCreateTime?: string
+  formatBeginTime?: string
+  formatFinishTime?: string
+}

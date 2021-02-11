@@ -5,6 +5,7 @@ import './index.less'
 
 interface IProps {
   label: string
+  labelWidth?: number
   children: React.ReactElement
   renderRightBlock?: any
   vertical?: boolean
@@ -21,7 +22,19 @@ export default (props: IProps) => {
           !!props.hideBorderBottom ? '' : 'border-bottom'
         } `}
       >
-        <View className="left">{props.label}</View>
+        {props.labelWidth ? (
+          <View
+            className="left"
+            style={{
+              width: `${props.labelWidth}px`
+            }}
+          >
+            {props.label}
+          </View>
+        ) : (
+          <View className="left">{props.label}</View>
+        )}
+
         <View className="center">{props.children}</View>
         {props.renderRightBlock ? (
           <View className="right">{props.renderRightBlock}</View>
