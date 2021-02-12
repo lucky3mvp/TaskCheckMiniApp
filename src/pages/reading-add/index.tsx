@@ -179,7 +179,7 @@ class Check extends Component<IProps, IState> {
               <SelfInput
                 type="number"
                 placeholder="输入书名"
-                maxlength={10}
+                maxlength={50}
                 value={this.state.name}
                 onBlur={this.onNameChange}
               />

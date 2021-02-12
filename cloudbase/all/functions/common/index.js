@@ -34,6 +34,7 @@ exports.main = async (event, context) => {
         // d.createTime = t // 添加时间
         d.finishTime = t // 读完的时间
       }
+
       const { errMsg } = await collection.add({
         data: d
       })
@@ -81,6 +82,42 @@ exports.main = async (event, context) => {
       return {
         code: 200,
         list
+      }
+    } else if (_type === 'update') {
+      const { id, status, oldStatus } = event
+      const d = {
+        status: status
+      }
+      if (status === 2) {
+        // ->在读, 只有未读能->在读
+        d.beginTime = new Date().getTime()
+      } else if (status === 3) {
+        // 1. 未读 -> 已读
+        // 2. 在读 -> 已读
+        // if (oldStatus === 1) {
+        //   d.finishTime = new Date().getTime()
+        // } else if (oldStatus === 2) {
+        //   d.finishTime = new Date().getTime()
+        // }
+        d.finishTime = new Date().getTime()
+      }
+      await collection.doc(id).update({
+        data: d
+      })
+
+      return {
+        code: 200
+      }
+    } else if (_type === 'delete') {
+      const { id } = event
+      await collection.doc(id).update({
+        data: {
+          status: 4
+        }
+      })
+
+      return {
+        code: 200
       }
     }
   }

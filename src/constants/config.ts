@@ -149,13 +149,6 @@ export const ReadingStatusMap = {
   // 4: '已删除'
 }
 
-export const ReadingStatusIconMap = {
-  1: 'weidu',
-  2: 'zhengzaijinxing',
-  3: 'yidu'
-  // 4: '已删除'
-}
-
 export const MenstruationStatusMap = {
   /**
    * status:

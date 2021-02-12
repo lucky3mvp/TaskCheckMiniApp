@@ -121,6 +121,7 @@ type CheckListItemType = {
 }
 
 type ReadingListItemType = {
+  _id: string
   name: string
   status: number
   cover: string
