@@ -1,7 +1,7 @@
 export default {
   pages: [
     'pages/check/index',
-    'pages/tool/index',
+    'pages/days-matter/index',
     'pages/my/index',
     'pages/plan-add/index',
     'pages/plan-edit/index',
@@ -39,7 +39,7 @@ export default {
       //   selectedIconPath: 'assets/check-active.png'
       // },
       {
-        pagePath: 'pages/tool/index',
+        pagePath: 'pages/days-matter/index',
         text: '工具',
         iconPath: 'assets/clock.png',
         selectedIconPath: 'assets/clock-active.png'

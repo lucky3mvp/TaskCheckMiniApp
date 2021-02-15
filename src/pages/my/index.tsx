@@ -49,7 +49,7 @@ class My extends Component<IProps, IState> {
   onShareAppMessage() {
     return {
       title: '排骨打卡',
-      path: '/pages/home/index'
+      path: '/pages/check/index'
     }
   }
   getUserInfo = async () => {
@@ -97,7 +97,7 @@ class My extends Component<IProps, IState> {
   }
   gotoReading = async () => {
     Taro.navigateTo({
-      url: '/pages/reading/index'
+      url: '/pages/reading-list/index'
     })
   }
   toBeExpected = async () => {

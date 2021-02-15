@@ -95,7 +95,7 @@ class PlanAdd extends Component<IProps, IState> {
   onShareAppMessage() {
     return {
       title: '排骨打卡',
-      path: '/pages/home/index'
+      path: '/pages/check/index'
     }
   }
   componentDidMount() {
@@ -309,7 +309,7 @@ class PlanAdd extends Component<IProps, IState> {
       })
       manualEvent.change('check-page', 'update check list')
       setTimeout(() => {
-        Taro.switchTab({ url: '/pages/home/index' })
+        Taro.switchTab({ url: '/pages/check/index' })
       }, 1500)
     }
     Taro.hideLoading()

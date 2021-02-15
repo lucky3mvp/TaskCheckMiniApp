@@ -47,6 +47,7 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 class Check extends Component<IProps, IState> {
   lock = false
   cache: Record<string, any> = {}
+  thisYear: number = 2021
   state = {
     list: [],
     loading: true,
@@ -59,17 +60,12 @@ class Check extends Component<IProps, IState> {
   }
 
   async componentDidMount() {
-    manualEvent.register('reading-list-page').on('update reading list', () => {
-      const yi: CommonItemType = this.state.yearOptions[this.state.yearIndex]
-      const si: CommonItemType = this.state.statusOptions[
-        this.state.statusIndex
-      ]
-      this.getReadingList({
-        year: +yi.value,
-        status: +si.value
+    manualEvent
+      .register('reading-list-page')
+      .on('update reading list', (params: { status: number; year: number }) => {
+        this.eventHandler(params)
+        manualEvent.clear('reading-list-page')
       })
-      manualEvent.clear('reading-list-page')
-    })
 
     const s = this.initData()
     this.setState(s)
@@ -86,13 +82,32 @@ class Check extends Component<IProps, IState> {
   onShareAppMessage() {
     return {
       title: '排骨打卡',
-      path: '/pages/home/index'
+      path: '/pages/check/index'
+    }
+  }
+
+  eventHandler(params: { status: number; year: number }) {
+    const yi: CommonItemType = this.state.yearOptions[this.state.yearIndex]
+    const si: CommonItemType = this.state.statusOptions[this.state.statusIndex]
+    const year = +yi.value
+    const status = +si.value
+    // 清空之前缓存的数据
+    this.cache[`${params.year || this.thisYear}-${status}`] = null
+    if (params.status === status) {
+      // eg: 当前在未读tab,又去添加了一个未读回来，那应该更新当前未读tab
+      this.getReadingList({
+        year: year,
+        status: status
+      })
+    } else {
+      // 可以先不请求了，后面 statusChange 的时候会去请求
     }
   }
 
   initData() {
     const yearOptions: Array<CommonItemType> = []
     const year = new Date().getFullYear()
+    this.thisYear = year // 存一下
     let yearIndex = 0
     for (let i = 2021, j = 0; i <= year; i++, j++) {
       if (year === i) {

@@ -52,7 +52,7 @@ class Check extends Component<IProps, IState> {
   onShareAppMessage() {
     return {
       title: '排骨打卡',
-      path: '/pages/home/index'
+      path: '/pages/check/index'
     }
   }
 
@@ -126,14 +126,15 @@ class Check extends Component<IProps, IState> {
       })
     }
 
+    const { name, status, time, comment } = this.state
     const { code } = await commonApi({
       _scope: 'reading',
       _type: 'submit',
-      name: this.state.name,
-      status: this.state.status,
+      name: name,
+      status: status,
       cover: cloudFileID,
-      time: this.state.time,
-      comment: this.state.comment
+      time: time,
+      comment: comment
     })
 
     if (code === 200) {
@@ -143,9 +144,12 @@ class Check extends Component<IProps, IState> {
         icon: 'none',
         duration: 2000
       })
-      manualEvent.change('reading-list-page', 'update reading list')
+      manualEvent.change('reading-list-page', 'update reading list', {
+        status,
+        year: time ? +time.split('/')[0] : 0
+      })
       setTimeout(() => {
-        Taro.switchTab({ url: '/pages/home/index' })
+        Taro.navigateBack()
       }, 1500)
     }
     Taro.hideLoading()

@@ -12,24 +12,22 @@ class Events {
     this.queue = new Map()
   }
 
-  on(event, fn: () => void) {
+  on(event: string, fn: (params?: Params) => void) {
     if (!this.queue.has(event)) {
       this.queue.set(event, [])
     }
-    //@ts-ignore
-    this.queue.get(event).push(fn)
+    this.queue.get(event)!.push(fn)
   }
 
-  off(event) {
+  off(event: string) {
     if (this.queue.has(event)) {
       this.queue.delete(event)
     }
   }
 
-  trigger(event) {
+  trigger(event: string, params?: Params) {
     if (this.queue.has(event)) {
-      //@ts-ignore
-      this.queue.get(event).forEach(fn => fn())
+      this.queue.get(event)!.forEach(fn => fn(params))
     }
   }
 }
@@ -41,14 +39,14 @@ class IndividualEvent {
     this.eventList = new Set()
   }
 
-  on(event: EventNameType, fn: () => void) {
+  on(event: EventNameType, fn: (params?: Params) => void) {
     this.isOnce.set(event, false)
     this.events.on(event, fn)
     this.eventList.add(event)
     return this
   }
 
-  once(event: string, fn: () => void) {
+  once(event: string, fn: (params?: Params) => void) {
     this.isOnce.set(event, true)
     this.events.on(event, fn)
     this.eventList.add(event)
@@ -63,8 +61,8 @@ class IndividualEvent {
     this.eventList.clear()
   }
 
-  run(event: string) {
-    this.events.trigger(event)
+  run(event: string, params?: Params) {
+    this.events.trigger(event, params)
     if (this.isOnce.get(event)) {
       this.events.off(event)
       this.eventList.delete(event)
@@ -80,19 +78,18 @@ class ManualEvent {
 
   register(id: PageNameType) {
     const ie = new IndividualEvent()
-    this.flag.set(id, '')
+    this.flag.set(id, { event: '', params: undefined })
     this.individuals.set(id, ie)
     return ie
   }
 
   clear(id: PageNameType) {
-    this.change(id, '')
+    this.change(id, '', undefined)
   }
 
   reset(id: PageNameType) {
-    this.flag.set(id, '')
-    //@ts-ignore
-    this.individuals.has(id) && this.individuals.get(id).off()
+    this.flag.set(id, { event: '', params: undefined })
+    this.individuals.has(id) && this.individuals.get(id)!.off()
   }
 
   destroy() {
@@ -100,27 +97,28 @@ class ManualEvent {
     this.individuals.clear()
   }
 
-  change(id: PageNameType, event: EventNameType) {
-    if (!this.flag.get(id)) {
-      console.warn(`未注册 ${id}`)
-    }
-    this.flag.set(id, event)
+  change(id: PageNameType, event: EventNameType, params?: Params) {
+    this.flag.set(id, {
+      event,
+      params
+    })
   }
 
   run(id: PageNameType) {
-    if (!this.flag.get(id)) {
-      console.warn(`未注册 ${id}`)
-      return
-    }
     this.individuals.has(id) &&
-      this.flag.get(id) &&
-      //@ts-ignore
-      this.individuals.get(id).run(this.flag.get(id))
+      this.individuals
+        .get(id)!
+        .run(this.flag.get(id)!?.event, this.flag.get(id)!?.params)
   }
 }
 
 export default new ManualEvent()
 
+type Params = undefined | number | string | boolean | null | Record<string, any>
+
+interface Events {
+  queue: Map<string, Array<(params?) => void>>
+}
 interface IndividualEvent {
   isOnce: Map<string, boolean>
   events: Events
@@ -128,10 +126,12 @@ interface IndividualEvent {
 }
 
 interface ManualEvent {
-  flag: Map<string, string>
+  flag: Map<
+    string,
+    {
+      event: string
+      params: Params
+    }
+  >
   individuals: Map<string, IndividualEvent>
-}
-
-interface Events {
-  queue: Map<string, Array<() => void>>
 }
