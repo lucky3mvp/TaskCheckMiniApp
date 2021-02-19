@@ -28,6 +28,36 @@
     box-sizing: border-box;
   }
 }
+.border-right {
+  position: relative;
+  &::after {
+    border-right: 1px solid #e6e6e6;
+    width: 0px;
+    height: 100%;
+    transform: scaleX(0.5);
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform-origin: left bottom;
+    box-sizing: border-box;
+  }
+}
+.border-left {
+  position: relative;
+  &::after {
+    border-right: 1px solid #e6e6e6;
+    width: 0px;
+    height: 100%;
+    transform: scaleX(0.5);
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: left bottom;
+    box-sizing: border-box;
+  }
+}
 
 .border(@direction, @color:#e6e6e6, @radius: 0px) {
   position: relative;

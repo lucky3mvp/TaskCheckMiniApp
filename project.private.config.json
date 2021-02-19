@@ -67,8 +67,20 @@
           "scene": null
         },
         {
-          "name": "pages/days-matter/index",
-          "pathName": "pages/days-matter/index",
+          "name": "pages/days/index",
+          "pathName": "pages/days/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/days-add/index",
+          "pathName": "pages/days-add/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/days-category/index",
+          "pathName": "pages/days-category/index",
           "query": "",
           "scene": null
         }

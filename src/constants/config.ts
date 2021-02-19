@@ -159,3 +159,13 @@ export const MenstruationStatusMap = {
    * 4-经期结束的当天
    */
 }
+
+export const DaysCategoryIcons = [
+  'study',
+  'life',
+  'work',
+  'holiday',
+  'birthday',
+  'festival',
+  'memorial'
+]

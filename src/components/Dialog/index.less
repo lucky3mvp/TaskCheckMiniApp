@@ -1,0 +1,52 @@
+.dialog-component {
+  box-sizing: border-box;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  z-index: 9999;
+  width: 270px;
+  transform: translate(-50%, -50%);
+  transition: all ease-in-out 0.2s;
+  border-radius: 10px;
+  background-color: #ffffff;
+  overflow: hidden;
+  &.show {
+    opacity: 1;
+  }
+  &.hide {
+    opacity: 0;
+  }
+  .title {
+    font-family: 'PingFangSC-Medium';
+    font-size: 18px;
+    line-height: 24px;
+    color: #222222;
+    padding: 27px 20px 0;
+    text-align: center;
+  }
+  .content {
+    font-family: 'PingFangSC-Regular';
+    font-size: 16px;
+    line-height: 24px;
+    color: #222222;
+    padding: 25px 20px;
+    text-align: center;
+  }
+  .btns {
+    display: flex;
+    .btn {
+      font-size: 16px;
+      line-height: 44px;
+      text-align: center;
+      flex: 1;
+      &.confirm {
+        font-family: 'PingFangSC-Medium';
+        color: #ee8787;
+      }
+      &.cancel {
+        font-family: 'PingFangSC-Regular';
+        color: #707070;
+      }
+    }
+  }
+}

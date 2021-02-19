@@ -1,7 +1,9 @@
 export default {
   pages: [
     'pages/check/index',
-    'pages/days-matter/index',
+    'pages/days/index',
+    'pages/days-add/index',
+    'pages/days-category/index',
     'pages/my/index',
     'pages/plan-add/index',
     'pages/plan-edit/index',
@@ -28,7 +30,7 @@ export default {
     list: [
       {
         pagePath: 'pages/check/index',
-        text: '今日',
+        text: 'Today',
         iconPath: 'assets/home.png',
         selectedIconPath: 'assets/home-active.png'
       },
@@ -39,14 +41,14 @@ export default {
       //   selectedIconPath: 'assets/check-active.png'
       // },
       {
-        pagePath: 'pages/days-matter/index',
-        text: '工具',
+        pagePath: 'pages/days/index',
+        text: 'Days',
         iconPath: 'assets/clock.png',
         selectedIconPath: 'assets/clock-active.png'
       },
       {
         pagePath: 'pages/my/index',
-        text: '我的',
+        text: 'My',
         iconPath: 'assets/me.png',
         selectedIconPath: 'assets/me-active.png'
       }

@@ -6,7 +6,7 @@ import wit from 'src/utils/wit'
 import { updateUserInfo } from 'src/store/actions/userInfo'
 import { Greetings } from 'src/constants'
 import Gap from 'src/components/Gap'
-import Modal from 'src/components/Modal'
+import Dialog from 'src/components/Dialog'
 
 import './index.less'
 
@@ -21,7 +21,7 @@ type PageDispatchProps = {
 type PageOwnProps = {}
 
 type IState = {
-  stage: number
+  visible: boolean
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -43,7 +43,7 @@ type GreetingType = {
 )
 class My extends Component<IProps, IState> {
   state = {
-    stage: 0
+    visible: false
   }
   greetingIndex: number = 0
   onShareAppMessage() {
@@ -104,32 +104,14 @@ class My extends Component<IProps, IState> {
     this.onShowModal()
   }
   onShowModal = () => {
-    this.setState(
-      {
-        stage: 1
-      },
-      () => {
-        setTimeout(() => {
-          this.setState({
-            stage: 2
-          })
-        }, 100)
-      }
-    )
+    this.setState({
+      visible: true
+    })
   }
-  onCloseModal = () => {
-    this.setState(
-      {
-        stage: 1
-      },
-      () => {
-        setTimeout(() => {
-          this.setState({
-            stage: 0
-          })
-        }, 100)
-      }
-    )
+  onCloseDialog = () => {
+    this.setState({
+      visible: false
+    })
   }
 
   render() {
@@ -195,26 +177,12 @@ class My extends Component<IProps, IState> {
           <View className="iconfont icon-right-arrow" />
         </View>
 
-        <Modal
-          maskCloseable
-          visible={this.state.stage > 0}
-          onClose={this.onCloseModal}
-        >
-          <View
-            className={`my-page-expected-module ${
-              this.state.stage > 1 ? 'show' : 'hide'
-            }`}
-          >
-            <View className="cnt">
-              <View>
-                批量打卡，补签，个人积分，倒计时，统计报表等功能正在开发中，敬请期待！
-              </View>
-            </View>
-            <View className="btn border-top" onClick={this.onCloseModal}>
-              我知道了
-            </View>
-          </View>
-        </Modal>
+        <Dialog
+          visible={this.state.visible}
+          content="批量打卡，补签，个人积分，倒计时，统计报表等功能正在开发中，敬请期待！"
+          confirmText="我知道了"
+          onConfirm={this.onCloseDialog}
+        />
       </View>
     )
   }

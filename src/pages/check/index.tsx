@@ -160,7 +160,8 @@ class Check extends Component<IProps, IState> {
       this.getCheckList(false)
     } else {
       Taro.showToast({
-        title: '出错了，一会再试吧'
+        title: '出错了，一会再试吧',
+        icon: 'none'
       })
     }
     this.lock = false

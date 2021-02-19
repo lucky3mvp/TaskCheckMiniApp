@@ -133,3 +133,22 @@ type ReadingListItemType = {
   formatBeginTime?: string
   formatFinishTime?: string
 }
+
+type DaysItemType = {
+  _id: string
+  name: string
+  category: string
+  date: string
+  dayCount: number
+  notifyTime?: number
+  isTop?: boolean
+  cover?: string
+  status: number
+}
+
+type DaysCategoryType = {
+  _id: string
+  name: string
+  icon: string
+  status: number
+}

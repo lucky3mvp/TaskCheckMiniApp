@@ -8,15 +8,14 @@ import FormItem from 'src/components/FormItem'
 import Radio from 'src/components/Radio'
 import DatePicker from 'src/components/DatePicker'
 import SelfInput from 'src/components/SelfInput'
+import Footer from 'src/components/Footer'
 
 import { commonApi } from 'src/utils/request2.0'
 import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
 
-type PageStateProps = {
-  helper: HelperStoreType
-}
+type PageStateProps = {}
 
 type PageDispatchProps = {}
 
@@ -32,9 +31,7 @@ type IState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-@connect(({ helper }) => ({
-  helper
-}))
+@connect()
 class Check extends Component<IProps, IState> {
   lock = false
   timeStartDate = new Date(2021, 0, 1)
@@ -245,23 +242,11 @@ class Check extends Component<IProps, IState> {
             />
           </FormItem>
         </View>
-        <View className={`footer ${this.props.helper.isIpx ? 'ipx' : ''}`}>
-          <View className="holder">
-            <View className="btn-wrapper"></View>
-            <View className="gap"></View>
-          </View>
-          <View className="fixed">
-            <View className="btn-wrapper">
-              <View
-                className={`btn ${!this.state.name ? 'disable' : ''}`}
-                onClick={this.onSubmit}
-              >
-                新增读书
-              </View>
-            </View>
-            <View className="gap"></View>
-          </View>
-        </View>
+        <Footer
+          text="添加读书"
+          disable={!this.state.name}
+          onClick={this.onSubmit}
+        />
       </View>
     )
   }
