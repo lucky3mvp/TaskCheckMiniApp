@@ -85,12 +85,12 @@ class DaysAdd extends Component<IProps, IState> {
     manualEvent.run('days-add-page')
   }
   async getCategoryList() {
-    const { categories } = await commonApi({
+    const { categories = [] } = await commonApi({
       _scope: 'days',
       _type: 'fetchCategory'
     })
     this.setState({
-      categoryOptions: (categories || []).map((c: DaysCategoryType) => ({
+      categoryOptions: categories.map((c: DaysCategoryType) => ({
         label: c.name,
         value: c._id
       }))

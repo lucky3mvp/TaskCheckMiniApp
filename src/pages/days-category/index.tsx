@@ -63,7 +63,7 @@ class DaysCategory extends Component<IProps, IState> {
       Taro.showLoading({
         title: '加载中...'
       })
-    const { code, categories } = await commonApi({
+    const { code, categories = [] } = await commonApi({
       _scope: 'days',
       _type: 'fetchCategory'
     })

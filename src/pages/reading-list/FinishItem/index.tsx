@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react'
+declare const wx
+import React, { useState, useCallback, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Image } from '@tarojs/components'
 
@@ -6,9 +7,24 @@ import './index.less'
 
 export default (props: ReadingListItemType) => {
   const [fold, setFold] = useState(true)
+  const [cover, setCover] = useState(props.cover)
+  useEffect(() => {
+    wx.cloud.init()
+  }, [])
   const toggleFold = useCallback(() => {
     setFold(!fold)
-  }, [fold])
+    // 展开的时候才展示图片，
+    if (fold && props.cover && cover === props.cover) {
+      wx.cloud.downloadFile({
+        fileID: props.cover,
+        success: res => {
+          // 返回临时文件路径
+          setCover(res.tempFilePath)
+        },
+        fail: console.error
+      })
+    }
+  }, [fold, cover])
   return (
     <View className="finish-item-component ">
       <View className={`inner border-bottom ${fold ? 'fold' : 'unfold'}`}>
@@ -16,7 +32,7 @@ export default (props: ReadingListItemType) => {
         <View className="info">
           <View className="main">
             <View className="time">{props.formatFinishTime}</View>
-            <View className="name">{props.name}</View>
+            <View className="name">《{props.name}》</View>
             {/* <View className="iconfont icon-gou" /> */}
           </View>
           {props.createTime !== props.finishTime ? (
@@ -43,7 +59,7 @@ export default (props: ReadingListItemType) => {
           ) : null}
         </View>
         {props.cover ? (
-          <Image src={props.cover} className="cover" mode="widthFix" />
+          <Image src={cover} className="cover" mode="widthFix" />
         ) : (
           <Image
             src={require('../../../assets/defaultCover.png')}

@@ -78,41 +78,58 @@ class Check extends Component<IProps, IState> {
       Taro.showLoading({
         title: '加载中...'
       })
-    const { days } = await commonApi({
+    const { days = [] } = await commonApi({
       _scope: 'days',
       _type: 'fetchDays'
     })
     console.log('days', days)
-    const f = await Promise.all<string>(
-      days.map(d => {
-        if (d.cover) {
-          return new Promise(resolve => {
-            wx.cloud.downloadFile({
-              fileID: d.cover,
-              success: res => {
-                resolve(res.tempFilePath)
-              },
-              fail: err => {
-                console.error(err)
-              }
-            })
-          })
-        }
-        return Promise.resolve('')
-      })
-    )
+    // const f = await Promise.all<string>(
+    //   days.map(d => {
+    //     if (d.cover) {
+    //       return new Promise(resolve => {
+    //         wx.cloud.downloadFile({
+    //           fileID: d.cover,
+    //           success: res => {
+    //             resolve(res.tempFilePath)
+    //           },
+    //           fail: err => {
+    //             console.error(err)
+    //           }
+    //         })
+    //       })
+    //     }
+    //     return Promise.resolve('')
+    //   })
+    // )
     const r = days.map((d, i) => {
       return {
         ...d,
-        cover: f[i],
+        // cover: f[i],
         dateFormat: formatTimestamp(d.date, 'yyyy.MM.dd'),
         dayCount: this.calDayCount(d.createTime, d.date)
       }
     })
+    const top = r.find(d => d.isTop) || ({} as DaysItemType)
+    if (top.cover) {
+      // 这页面目前只展示top的图片，其他不用下载下来
+      const c = await new Promise(resolve => {
+        wx.cloud.downloadFile({
+          fileID: top.cover,
+          success: res => {
+            console.log('download')
+            resolve(res.tempFilePath)
+          },
+          fail: err => {
+            console.error(err)
+          }
+        })
+      })
+      top.cover = c
+    }
     this.setState({
       loading: false,
       days: r,
-      top: r.find(d => d.isTop) || ({} as DaysItemType)
+      top: top
     })
     Taro.hideLoading()
   }
@@ -121,7 +138,7 @@ class Check extends Component<IProps, IState> {
       Taro.showLoading({
         title: '加载中...'
       })
-    const { categories } = await commonApi({
+    const { categories = [] } = await commonApi({
       _scope: 'days',
       _type: 'fetchCategory'
     })
