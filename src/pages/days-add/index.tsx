@@ -12,15 +12,14 @@ import Picker from 'src/components/Picker'
 import DatePicker from 'src/components/DatePicker'
 import TimePicker from 'src/components/TimePicker'
 import SelfInput from 'src/components/SelfInput'
+import Footer from 'src/components/Footer'
 
-import { commonApi, updatePlan } from 'src/utils/request2.0'
+import { commonApi } from 'src/utils/request2.0'
 import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
 
-type PageStateProps = {
-  helper: HelperStoreType
-}
+type PageStateProps = {}
 
 type PageDispatchProps = {}
 
@@ -42,12 +41,7 @@ type IState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-@connect(
-  ({ helper }) => ({
-    helper
-  }),
-  dispatch => ({})
-)
+@connect()
 class DaysAdd extends Component<IProps, IState> {
   lock = false
   startDate = new Date(1971, 0, 1)
@@ -102,33 +96,26 @@ class DaysAdd extends Component<IProps, IState> {
       }))
     })
   }
-  getValue(field: string, exception: Record<string, string | string[]>) {
+  getValue(
+    field: string,
+    exception: Record<string, string | boolean | string[]>
+  ) {
     const expFields = Object.keys(exception)
     return expFields.includes(field) ? exception[field] : this.state[field]
   }
-  checkDisable(exception: Record<string, string | string[]>) {
+  checkDisable(exception: Record<string, string | boolean | string[]>) {
     let r: boolean = !!(
       this.getValue('name', exception) &&
-      this.getValue('icon', exception) &&
-      this.getValue('unitIndex', exception) &&
-      this.getValue('goal', exception) &&
-      this.getValue('beginTime', exception) &&
-      this.getValue('endTime', exception)
+      this.getValue('categoryIndex', exception) &&
+      this.getValue('date', exception)
     )
-
     if (!r) return false
-
-    // 到这儿的证明上面几项都填了
-    const type = this.getValue('type', exception)
-    const subType = this.getValue('subType', exception)
-    if (type === '3') {
-      if (subType === '1') {
-        r = !!this.getValue('times', exception)
-      } else {
-        r = !!this.getValue('days', exception).length
-      }
-    } else if (type === '4') {
-      r = !!this.getValue('times', exception)
+    const notify = this.getValue('notify', exception)
+    if (notify) {
+      const notifyDate = !!this.getValue('notifyDate', exception)
+      const notifyTime = !!this.getValue('notifyTime', exception)
+      if (notifyDate && notifyTime) return true
+      else return false
     }
     return r
   }
@@ -140,15 +127,18 @@ class DaysAdd extends Component<IProps, IState> {
   }
   onChooseCategory = (categoryIndex: string) => {
     this.setState({
-      categoryIndex: categoryIndex
+      categoryIndex: categoryIndex,
+      disable: !this.checkDisable({ categoryIndex: categoryIndex })
     })
   }
   formatDate = (p: CommonItemType[]) => {
     return p.map(p => p.value).join('.')
   }
   onChooseDate = (p: CommonItemType[]) => {
+    const d = p.map(p => p.value).join('/')
     this.setState({
-      date: p.map(p => p.value).join('/')
+      date: d,
+      disable: !this.checkDisable({ date: d })
     })
   }
   onIsTopChange = (checked: boolean) => {
@@ -158,23 +148,34 @@ class DaysAdd extends Component<IProps, IState> {
   }
   onNotifyChange = (checked: boolean) => {
     this.setState({
-      notify: checked
+      notify: checked,
+      disable: !this.checkDisable({
+        notify: checked
+      })
     })
   }
   formatNotifyDate = (p: CommonItemType[]) => {
     return p.map(p => p.value).join('.')
   }
   onChooseNotifyDate = (p: CommonItemType[]) => {
+    const d = p.map(p => p.value).join('/')
     this.setState({
-      notifyDate: p.map(p => p.value).join('/')
+      notifyDate: d,
+      disable: !this.checkDisable({
+        notifyDate: d
+      })
     })
   }
   formatNotifyTime = (p: CommonItemType[]) => {
     return p.map(p => p.value).join(':')
   }
   onChooseNotifyTime = (p: CommonItemType[]) => {
+    const t = this.formatNotifyTime(p)
     this.setState({
-      notifyTime: this.formatNotifyTime(p)
+      notifyTime: t,
+      disable: !this.checkDisable({
+        notifyTime: t
+      })
     })
   }
   onUploadCover = () => {
@@ -198,27 +199,55 @@ class DaysAdd extends Component<IProps, IState> {
 
   onSubmit = async () => {
     if (this.state.disable) return
-
     if (this.lock) return
     this.lock = true
     Taro.showLoading({
       title: '请求中'
     })
 
-    const res = await updatePlan({
-      _type: 'submit',
-      name: this.state.name
+    const { cover } = this.state
+    let cloudFileID = ''
+    if (cover) {
+      wx.cloud.init()
+      cloudFileID = await new Promise(resolve => {
+        const tmp = cover.split('/')
+        const name = tmp[tmp.length - 1]
+        wx.cloud.uploadFile({
+          cloudPath: name, // 上传至云端的路径
+          filePath: cover, // 小程序临时文件路径
+          success: res => {
+            console.log(res.fileID)
+            resolve(res.fileID)
+          },
+          fail: console.error
+        })
+      })
+    }
+
+    const res = await commonApi({
+      _scope: 'days',
+      _type: 'submitDays',
+      name: this.state.name,
+      category: this.state.categoryOptions[this.state.categoryIndex].value,
+      date: this.state.date,
+      isTop: this.state.isTop,
+      notifyTime: this.state.notify
+        ? new Date(
+            `${this.state.notifyDate} ${this.state.notifyTime}`
+          ).getTime()
+        : null,
+      cover: cloudFileID
     })
     if (res.code === 200) {
       Taro.hideLoading()
       Taro.showToast({
-        title: '创建成功，去看看',
+        title: '添加成功',
         icon: 'none',
         duration: 2000
       })
       manualEvent.change('days-list-page', 'update days list')
       setTimeout(() => {
-        Taro.switchTab({ url: '/pages/check/index' })
+        Taro.navigateBack()
       }, 1500)
     }
     Taro.hideLoading()
@@ -337,25 +366,11 @@ class DaysAdd extends Component<IProps, IState> {
           </View>
         ) : null}
         <Gap height={30} />
-        <View className={`footer ${this.props.helper.isIpx ? 'ipx' : ''}`}>
-          <View className="holder">
-            <View className="btn-wrapper"></View>
-            <View className="gap"></View>
-          </View>
-          <View className="fixed">
-            <View className="btn-wrapper">
-              <View
-                className={`btn ${'main'}-background ${
-                  this.state.disable ? 'disable' : ''
-                }`}
-                onClick={this.onSubmit}
-              >
-                提交
-              </View>
-            </View>
-            <View className="gap"></View>
-          </View>
-        </View>
+        <Footer
+          text="提交"
+          onClick={this.onSubmit}
+          disable={this.state.disable}
+        />
       </View>
     )
   }

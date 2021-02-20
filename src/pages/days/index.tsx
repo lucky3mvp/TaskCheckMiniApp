@@ -1,15 +1,13 @@
+declare const wx
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Taro from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
-import { UnitMap } from 'src/constants/config'
+import { View, Image, Block } from '@tarojs/components'
 
 import Add from 'src/components/Add'
 import Empty from 'src/components/Empty'
-import Modal from 'src/components/Modal'
-import SelfInput from 'src/components/SelfInput'
 
-import { formatDate } from 'src/utils'
+import { formatTimestamp } from 'src/utils'
 import manualEvent from 'src/utils/manualEvent'
 
 import { commonApi } from 'src/utils/request2.0'
@@ -27,6 +25,7 @@ type IState = {
   cur: string
   categories: DaysCategoryType[]
   days: DaysItemType[]
+  top: DaysItemType
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -38,9 +37,11 @@ class Check extends Component<IProps, IState> {
     loading: true,
     cur: 'all',
     categories: [],
-    days: []
+    days: [],
+    top: {} as DaysItemType
   }
   async componentDidMount() {
+    wx.cloud.init()
     this.getDaysList()
     this.getCategoryList()
     manualEvent
@@ -65,32 +66,53 @@ class Check extends Component<IProps, IState> {
       path: '/pages/check/index'
     }
   }
-
+  calDayCount(c, d) {
+    if (c > d) {
+      return Math.floor((c - d) / (24 * 60 * 60 * 1000))
+    } else {
+      return Math.floor((d - c) / (24 * 60 * 60 * 1000) + 1)
+    }
+  }
   async getDaysList(showLoading = false) {
     showLoading &&
       Taro.showLoading({
         title: '加载中...'
       })
-    // const { code, days } = await commonApi({
-    //   _scope: 'days',
-    //   _type: 'fetchDays'
-    // })
-    // if (code === 200) {
-    //   this.setState({
-    //     days
-    //   })
-    // }
+    const { days } = await commonApi({
+      _scope: 'days',
+      _type: 'fetchDays'
+    })
+    console.log('days', days)
+    const f = await Promise.all<string>(
+      days.map(d => {
+        if (d.cover) {
+          return new Promise(resolve => {
+            wx.cloud.downloadFile({
+              fileID: d.cover,
+              success: res => {
+                resolve(res.tempFilePath)
+              },
+              fail: err => {
+                console.error(err)
+              }
+            })
+          })
+        }
+        return Promise.resolve('')
+      })
+    )
+    const r = days.map((d, i) => {
+      return {
+        ...d,
+        cover: f[i],
+        dateFormat: formatTimestamp(d.date, 'yyyy.MM.dd'),
+        dayCount: this.calDayCount(d.createTime, d.date)
+      }
+    })
     this.setState({
       loading: false,
-      days: [
-        {
-          _id: '111',
-          name: 'test',
-          category: '1111',
-          date: '2021/02/01',
-          dayCount: 0
-        }
-      ]
+      days: r,
+      top: r.find(d => d.isTop) || ({} as DaysItemType)
     })
     Taro.hideLoading()
   }
@@ -99,31 +121,13 @@ class Check extends Component<IProps, IState> {
       Taro.showLoading({
         title: '加载中...'
       })
-    // const { code, categories } = await commonApi({
-    //   _scope: 'days',
-    //   _type: 'fetchCategory'
-    // })
-    // if (code === 200) {
-    //   this.setState({
-    //     list: categories
-    //   })
-    // }
+    const { categories } = await commonApi({
+      _scope: 'days',
+      _type: 'fetchCategory'
+    })
     this.setState({
       loading: false,
-      categories: [
-        {
-          _id: '1111',
-          name: '生活',
-          icon: 'life',
-          status: 1
-        },
-        {
-          _id: '22222',
-          name: '生活222',
-          icon: 'study',
-          status: 1
-        }
-      ]
+      categories: categories
     })
     Taro.hideLoading()
   }
@@ -151,6 +155,7 @@ class Check extends Component<IProps, IState> {
   }
 
   render() {
+    const { top } = this.state
     return this.state.loading ? null : (
       <View className="days-page">
         <Add onClick={this.gotoDaysAdd} />
@@ -181,16 +186,47 @@ class Check extends Component<IProps, IState> {
         {!this.state.days.length ? (
           <Empty tip="还没有数据哦~" />
         ) : (
-          <View className="days">
-            {this.state.days.map((d: DaysItemType) => (
-              <View className="day-item">
-                <View className="name">{d.name}</View>
-                <View>还有</View>
-                <View className="count">{d.dayCount}</View>
-                <View className="unit">天</View>
+          <Block>
+            {top.name ? (
+              <View className="top">
+                {top.cover ? (
+                  <Image className="cover" mode="center" src={top.cover} />
+                ) : null}
+                <View className="inner">
+                  <View className="name">{top.name}</View>
+                  <View className="count-wrapper">
+                    <View className="count">{top.dayCount}</View>
+                    {top.dayCount === 0 ? (
+                      <View className="unit today">就是今天</View>
+                    ) : top.createTime > top.date ? (
+                      <View className="unit before">天了</View>
+                    ) : (
+                      <View className="unit after">天后</View>
+                    )}
+                  </View>
+                  <View className="date">{top.dateFormat}</View>
+                </View>
               </View>
-            ))}
-          </View>
+            ) : null}
+            <View className="days">
+              {this.state.days.map((d: DaysItemType) => {
+                return this.state.cur === 'all' ||
+                  d.category === this.state.cur ? (
+                  <View className="day-item border-bottom">
+                    <View className="name">{d.name}</View>
+                    <View className="count">{d.dayCount}</View>
+                    {d.dayCount === 0 ? (
+                      <View className="unit today">就是今天</View>
+                    ) : d.createTime > d.date ? (
+                      <View className="unit before">天了</View>
+                    ) : (
+                      <View className="unit after">天后</View>
+                    )}
+                  </View>
+                ) : null
+              })}
+            </View>
+          </Block>
         )}
       </View>
     )

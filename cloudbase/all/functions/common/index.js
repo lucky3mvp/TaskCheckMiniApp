@@ -120,5 +120,96 @@ exports.main = async (event, context) => {
         code: 200
       }
     }
+  } else if (_scope === 'days') {
+    if (_type === 'fetchCategory') {
+      const categoryCollection = db.collection('days-category')
+      const { errMsg, data } = await categoryCollection
+        .where({
+          userID: wxContext.OPENID,
+          status: 1 // 1-正常
+        })
+        .get()
+      console.log('获取days分类，', data)
+      return { code: 200, categories: data }
+    } else if (_type === 'submitCategory') {
+      const categoryCollection = db.collection('days-category')
+      const { name, icon } = event
+      const { errMsg } = await categoryCollection.add({
+        data: {
+          userID: wxContext.OPENID,
+          name,
+          icon,
+          status: 1 // 1-正常
+        }
+      })
+      console.log('添加days分类： ', errMsg)
+      return {
+        code: errMsg.indexOf('add:ok') >= 0 ? 200 : 400
+      }
+    } else if (_type === 'updateCategory') {
+      const categoryCollection = db.collection('days-category')
+      const { name, icon, id } = event
+      const { errMsg } = await categoryCollection.doc(id).update({
+        data: {
+          name,
+          icon
+        }
+      })
+      console.log('更新days分类： ', errMsg)
+      return { code: 200 }
+    } else if (_type === 'deleteCategory') {
+      const categoryCollection = db.collection('days-category')
+      const { id } = event
+      const { errMsg } = await categoryCollection.doc(id).update({
+        data: {
+          status: 2 // 2-删除
+        }
+      })
+      // 更新days表的category
+      const daysCollection = db.collection('days')
+      const { errMsg: errMsg2 } = daysCollection
+        .where({
+          userID: wxContext.OPENID,
+          category: id
+        })
+        .update({
+          // 已删除的分类，days里的分类置为空
+          data: { category: '' }
+        })
+      console.log('删除days分类，并更新days表： ', errMsg, errMsg2)
+      return { code: 200 }
+    } else if (_type === 'submitDays') {
+      const daysCollection = db.collection('days')
+      const { name, category, date, isTop, notifyTime, cover } = event
+      const d = {
+        userID: wxContext.OPENID,
+        name: name,
+        category: category,
+        date: new Date(date).getTime(),
+        isTop: isTop,
+        notifyTime: notifyTime,
+        cover: cover || '',
+        status: 1, // 1-正常,
+        createTime: Date.now()
+      }
+      const { errMsg } = await daysCollection.add({
+        data: d
+      })
+      console.log('添加日子： ', d, errMsg)
+      return {
+        code: errMsg.indexOf('add:ok') >= 0 ? 200 : 400
+      }
+    } else if (_type === 'fetchDays') {
+      const daysCollection = db.collection('days')
+      const { errMsg, data } = await daysCollection
+        .where({
+          userID: wxContext.OPENID,
+          status: 1 // 1-正常,
+        })
+        .orderBy('createTime', 'desc')
+        .get()
+      console.log('获取日子： ', data, errMsg)
+      return { code: 200, days: data }
+    }
   }
 }

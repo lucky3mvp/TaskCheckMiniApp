@@ -138,11 +138,13 @@ type DaysItemType = {
   _id: string
   name: string
   category: string
-  date: string
+  date: number
+  dateFormat: string
+  createTime: number
   dayCount: number
   notifyTime?: number
-  isTop?: boolean
-  cover?: string
+  isTop: boolean
+  cover: string
   status: number
 }
 

@@ -63,32 +63,27 @@ class DaysCategory extends Component<IProps, IState> {
       Taro.showLoading({
         title: '加载中...'
       })
-    // const { code, categories } = await commonApi({
-    //   _scope: 'days',
-    //   _type: 'fetchCategory'
-    // })
-    // if (code === 200) {
-    //   this.setState({
-    //     list: categories
-    //   })
-    // }
-    this.setState({
-      loading: false,
-      list: [
-        {
-          _id: '1111',
-          name: '生活',
-          icon: 'life',
-          status: 1
-        },
-        {
-          _id: '22222',
-          name: '生活222',
-          icon: 'life',
-          status: 1
-        }
-      ]
+    const { code, categories } = await commonApi({
+      _scope: 'days',
+      _type: 'fetchCategory'
     })
+    if (code === 200) {
+      this.setState({
+        loading: false,
+        list: categories
+      })
+    }
+    // this.setState({
+    //   loading: false,
+    //   list: [
+    //     {
+    //       _id: '1111',
+    //       name: '生活',
+    //       icon: 'life',
+    //       status: 1
+    //     }
+    //   ]
+    // })
     Taro.hideLoading()
   }
   onNameChange = (name: string) => {
@@ -153,6 +148,7 @@ class DaysCategory extends Component<IProps, IState> {
   }
 
   onShowEditPopup = (c: DaysCategoryType) => {
+    this.editItem = c
     this.setState({
       name: c.name,
       icon: c.icon,
@@ -183,6 +179,7 @@ class DaysCategory extends Component<IProps, IState> {
     const { code } = await commonApi({
       _scope: 'days',
       _type: 'updateCategory',
+      id: this.editItem._id,
       name: this.state.name,
       icon: this.state.icon
     })
@@ -206,7 +203,7 @@ class DaysCategory extends Component<IProps, IState> {
     Taro.hideLoading()
   }
 
-  onDelete = () => {
+  onDelete = c => {
     Taro.showModal({
       title: '提示',
       content: '确定要删除该分类嘛？',
@@ -220,8 +217,7 @@ class DaysCategory extends Component<IProps, IState> {
           const { code } = await commonApi({
             _scope: 'days',
             _type: 'deleteCategory',
-            name: this.state.name,
-            icon: this.state.icon
+            id: c._id
           })
           if (code === 200) {
             manualEvent.change('days-add-page', 'update days category')

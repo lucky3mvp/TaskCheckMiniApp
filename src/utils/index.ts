@@ -124,6 +124,10 @@ export function formatDate(date: Date, fmt: string): string {
   return fmt
 }
 
+export function formatTimestamp(t: number, fmt: string): string {
+  return formatDate(new Date(t), fmt)
+}
+
 let screenWidth = Taro.getSystemInfoSync().screenWidth
 export const pxTransform = (pxNumber: number) => {
   if (!screenWidth) {

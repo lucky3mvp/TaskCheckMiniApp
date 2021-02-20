@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: '倒数日分类',
+  navigationBarTitleText: '分类',
   navigationBarBackgroundColor: '#ffffff',
   navigationBarTextStyle: 'black',
   backgroundColor: '#ffffff',
