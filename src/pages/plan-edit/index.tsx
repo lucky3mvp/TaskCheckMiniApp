@@ -7,6 +7,7 @@ import classnames from 'classnames'
 import FormItem from 'src/components/FormItem'
 import FormTitle from 'src/components/FormTitle'
 import Gap from 'src/components/Gap'
+import Footer from 'src/components/Footer'
 
 import SelfInput from 'src/components/SelfInput'
 
@@ -31,9 +32,7 @@ import manualEvent from 'src/utils/manualEvent'
  * goal: 10
  */
 
-type PageStateProps = {
-  helper: HelperStoreType
-}
+type PageStateProps = {}
 
 type PageDispatchProps = {}
 
@@ -52,13 +51,8 @@ type IState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-@connect(
-  ({ helper }) => ({
-    helper
-  }),
-  dispatch => ({})
-)
-class PlanAdd extends Component<IProps, IState> {
+@connect()
+class PlanEdit extends Component<IProps, IState> {
   lock = false
   plan: PlanType = {} as PlanType
   state = {
@@ -74,7 +68,7 @@ class PlanAdd extends Component<IProps, IState> {
   onShareAppMessage() {
     return {
       title: '排骨打卡',
-      path: '/pages/home/index'
+      path: '/pages/check/index'
     }
   }
   componentDidMount() {
@@ -186,7 +180,7 @@ class PlanAdd extends Component<IProps, IState> {
     })
 
     const res = await updatePlan({
-      optType: 'update',
+      _type: 'update',
       planID: this.plan.planID,
       name: this.state.name,
       description: this.state.description,
@@ -221,7 +215,7 @@ class PlanAdd extends Component<IProps, IState> {
             title: '请求中'
           })
           await updatePlan({
-            optType: 'delete',
+            _type: 'delete',
             planID: this.plan.planID
           })
           Taro.showToast({
@@ -309,28 +303,15 @@ class PlanAdd extends Component<IProps, IState> {
           删除计划
         </View>
         <Gap height={20} />
-        <View className={`footer ${this.props.helper.isIpx ? 'ipx' : ''}`}>
-          <View className="holder">
-            <View className="btn-wrapper"></View>
-            <View className="gap"></View>
-          </View>
-          <View className="fixed">
-            <View className="btn-wrapper">
-              <View
-                className={`btn ${this.state.theme}-background ${
-                  this.state.disable ? 'disable' : ''
-                }`}
-                onClick={this.onSubmit}
-              >
-                更新计划
-              </View>
-            </View>
-            <View className="gap"></View>
-          </View>
-        </View>
+        <Footer
+          text="更新计划"
+          theme={this.state.theme}
+          disable={this.state.disable}
+          onClick={this.onSubmit}
+        />
       </View>
     )
   }
 }
 
-export default PlanAdd
+export default PlanEdit

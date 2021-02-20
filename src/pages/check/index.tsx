@@ -59,7 +59,7 @@ class Check extends Component<IProps, IState> {
   onShareAppMessage() {
     return {
       title: '排骨打卡',
-      path: '/pages/home/index'
+      path: '/pages/check/index'
     }
   }
 
@@ -160,7 +160,8 @@ class Check extends Component<IProps, IState> {
       this.getCheckList(false)
     } else {
       Taro.showToast({
-        title: '出错了，一会再试吧'
+        title: '出错了，一会再试吧',
+        icon: 'none'
       })
     }
     this.lock = false
@@ -176,7 +177,7 @@ class Check extends Component<IProps, IState> {
       <View>
         <View className="check-page">
           {/* 没有计划的时候，会有一个“去创建计划，就不加add了” */}
-          {this.state.plans.length ? <Add /> : null}
+          {this.state.plans.length ? <Add onClick={this.gotoAddPlan} /> : null}
           {!this.state.plans.length ? (
             <Empty tip="今天还没有打卡计划哦~">
               <View onClick={this.gotoAddPlan} className="add-plan">

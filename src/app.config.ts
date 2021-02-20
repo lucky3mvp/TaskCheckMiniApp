@@ -1,13 +1,17 @@
 export default {
   pages: [
     'pages/check/index',
+    'pages/days/index',
+    'pages/days-add/index',
+    'pages/days-category/index',
     'pages/my/index',
     'pages/plan-add/index',
     'pages/plan-edit/index',
     'pages/plan-list/index',
     'pages/check-list/index',
     'pages/menstruation/index',
-    'pages/mood/index'
+    'pages/reading-list/index',
+    'pages/reading-add/index'
   ],
   window: {
     backgroundTextStyle: 'light',
@@ -24,21 +28,27 @@ export default {
     borderStyle: 'white',
     position: 'bottom',
     list: [
-      // {
-      //   pagePath: 'pages/home/index',
-      //   text: '首页',
-      //   iconPath: 'assets/home.png',
-      //   selectedIconPath: 'assets/home-active.png'
-      // },
       {
         pagePath: 'pages/check/index',
-        text: '今日',
-        iconPath: 'assets/check.png',
-        selectedIconPath: 'assets/check-active.png'
+        text: 'Today',
+        iconPath: 'assets/home.png',
+        selectedIconPath: 'assets/home-active.png'
+      },
+      // {
+      //   pagePath: 'pages/check/index',
+      //   text: '今日',
+      //   iconPath: 'assets/check.png',
+      //   selectedIconPath: 'assets/check-active.png'
+      // },
+      {
+        pagePath: 'pages/days/index',
+        text: 'Days',
+        iconPath: 'assets/clock.png',
+        selectedIconPath: 'assets/clock-active.png'
       },
       {
         pagePath: 'pages/my/index',
-        text: '我的',
+        text: 'My',
         iconPath: 'assets/me.png',
         selectedIconPath: 'assets/me-active.png'
       }

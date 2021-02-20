@@ -214,7 +214,7 @@ export default (props: IProps) => {
               type: status.showStart ? 1 : 2
             }
             const { code } = await menstruation({
-              optType: 'submit',
+              _type: 'submit',
               ...p
             })
             if (code === 200) {

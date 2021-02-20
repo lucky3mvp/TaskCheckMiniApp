@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useEffect, useCallback, useMemo, useState } from 'react'
 
 import Picker from '../Picker'
 
@@ -57,6 +57,14 @@ export default (props: IProps) => {
   const [lastRange, setLastRange] = useState(getInitialRange())
   const [index, setIndex] = useState(props.initialValue || [0, 0, 0])
   const [lastIndex, setLastIndex] = useState([...index])
+
+  useEffect(() => {
+    if (props.initialValue) {
+      setIndex(props.initialValue)
+      setLastIndex(props.initialValue)
+    }
+    return () => {}
+  }, [props.initialValue])
 
   const onCancel = useCallback(() => {
     setIndex(lastIndex)

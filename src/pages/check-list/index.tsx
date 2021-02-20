@@ -53,7 +53,7 @@ class CheckList extends Component<IProps, IState> {
   onShareAppMessage() {
     return {
       title: '排骨打卡',
-      path: '/pages/home/index'
+      path: '/pages/check/index'
     }
   }
   async fetchCheckList(paramDate = '') {
@@ -101,7 +101,7 @@ class CheckList extends Component<IProps, IState> {
             : lo.filter((l: CheckListItemType) => {
                 return l.planID === curPlan
               }),
-        tabs: tabs
+        tabs: tabs.length ? tabs : this.state.tabs
       })
       this.cache[`${date}`] = lo
     }

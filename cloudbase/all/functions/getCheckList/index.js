@@ -39,7 +39,7 @@ exports.main = async (event, context) => {
     const dateBeginTimestamp = dateObj.getTime()
     const dateEndTimestamp = new Date(
       dateObj.getFullYear(),
-      dateObj.getMonth() + 1,
+      dateObj.getMonth(),
       dateObj.getDate() + 1
     ).getTime()
     console.log('get check list v2', dateBeginTimestamp, dateEndTimestamp)
@@ -48,10 +48,7 @@ exports.main = async (event, context) => {
       .where({
         userID: wxContext.OPENID,
         // 时间要在查询时间那天内
-        // todo 但是这样查不出来啊，什么鬼。。
-        // checkTime: _.in([dateBeginTimestamp, dateEndTimestamp])
-        // 先查出大于查询日期的记录吧，再过滤
-        checkTime: _.gt(dateBeginTimestamp)
+        checkTime: _.nor([_.lt(dateBeginTimestamp), _.gt(dateEndTimestamp)])
       })
       .orderBy('checkTime', 'desc')
       .get()
@@ -88,7 +85,7 @@ exports.main = async (event, context) => {
       tabs
     }
   } else {
-    // 以下是老版本，之后可以删的
+    // todo 以下是老版本，之后可以删的
     const checkCollection = db.collection('check')
     const { total } = await checkCollection
       .where({

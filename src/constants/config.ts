@@ -142,6 +142,13 @@ export const PlanStatusIconMap = {
   3: 'yijieshu'
 }
 
+export const ReadingStatusMap = {
+  1: '未读',
+  2: '在读',
+  3: '读完'
+  // 4: '已删除'
+}
+
 export const MenstruationStatusMap = {
   /**
    * status:
@@ -152,3 +159,13 @@ export const MenstruationStatusMap = {
    * 4-经期结束的当天
    */
 }
+
+export const DaysCategoryIcons = [
+  'study',
+  'life',
+  'work',
+  'holiday',
+  'birthday',
+  'festival',
+  'memorial'
+]

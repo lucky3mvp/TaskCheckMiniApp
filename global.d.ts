@@ -119,3 +119,38 @@ type CheckListItemType = {
   unit: string
   isShowComment?: boolean
 }
+
+type ReadingListItemType = {
+  _id: string
+  name: string
+  status: number
+  cover: string
+  comment: string
+  createTime: number
+  beginTime?: number
+  finishTime?: number
+  formatCreateTime?: string
+  formatBeginTime?: string
+  formatFinishTime?: string
+}
+
+type DaysItemType = {
+  _id: string
+  name: string
+  category: string
+  date: number
+  dateFormat: string
+  createTime: number
+  dayCount: number
+  notifyTime?: number
+  isTop: boolean
+  cover: string
+  status: number
+}
+
+type DaysCategoryType = {
+  _id: string
+  name: string
+  icon: string
+  status: number
+}
