@@ -15,7 +15,7 @@ exports.main = async (event, context) => {
   const collection = db.collection('menstruation')
 
   // todo optType 后期删掉
-  if (_type === 'submit' && optType === 'submit') {
+  if (_type === 'submit' || optType === 'submit') {
     const { errMsg } = await collection.add({
       data: {
         userID: wxContext.OPENID,
@@ -29,7 +29,7 @@ exports.main = async (event, context) => {
     return {
       code: errMsg.indexOf('add:ok') >= 0 ? 200 : 400
     }
-  } else if (_type === 'fetchDetail' && optType === 'fetchDetail') {
+  } else if (_type === 'fetchDetail' || optType === 'fetchDetail') {
     console.log('menstruation fetchDetail')
     const { errMsg, data } = await collection
       .where({

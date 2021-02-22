@@ -23,13 +23,13 @@ exports.main = async (event, context) => {
   const collection = db.collection('plan')
 
   // todo optType 后期删掉
-  if (_type === 'delete' && optType === 'delete') {
+  if (_type === 'delete' || optType === 'delete') {
     await collection.doc(planID).update({
       data: {
         status: 2
       }
     })
-  } else if (_type === 'update' && optType === 'update') {
+  } else if (_type === 'update' || optType === 'update') {
     await collection.doc(planID).update({
       data: {
         name,
@@ -39,7 +39,7 @@ exports.main = async (event, context) => {
         category
       }
     })
-  } else if (_type === 'submit' && optType === 'submit') {
+  } else if (_type === 'submit' || optType === 'submit') {
     const { year, month, day, type } = event
     const bt = new Date(event.beginTime).getTime()
     const et = event.endTime ? new Date(event.endTime).getTime() : null
