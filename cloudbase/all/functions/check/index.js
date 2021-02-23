@@ -43,6 +43,23 @@ const getWeekStart = function (d) {
 exports.main = async (event, context) => {
   console.log('check params: ', event)
 
+  try {
+    // result 结构
+    // { errCode: 0, errMsg: 'openapi.templateMessage.send:ok' }
+    const result = await cloud.openapi.security.msgSecCheck(
+      JSON.stringify(event)
+    )
+    if (errCode !== 0) {
+      return {
+        code: 333
+      }
+    }
+  } catch (err) {
+    return {
+      code: 333
+    }
+  }
+
   const wxContext = cloud.getWXContext()
   const { achieve, comment, planID } = event
   const checkDate = event.date ? new Date(event.date) : new Date()
