@@ -1,11 +1,25 @@
 .finish-item-component {
   padding: 0 20px;
   .inner {
-    padding: 16px 0;
+    padding: 16px 0 28px; // 给arrow留位置
     flex: 1;
     display: flex;
     align-items: flex-start;
     overflow: hidden;
+    position: relative;
+    .arrow-wrapper {
+      position: absolute;
+      bottom: 12px;
+      left: 160px; // 335/2 - 14/2
+      .icon-right-arrow {
+        color: #707070;
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        transition: transform ease-in-out 0.2s;
+        transform-origin: center;
+      }
+    }
     &.fold {
       .info {
         .main {
@@ -14,14 +28,14 @@
           }
         }
         .sub {
-          margin-bottom: -6px;
+          // margin-bottom: -6px;
           .process {
             display: none;
           }
-          .icon-right-arrow {
-            transform: rotate(90deg);
-          }
         }
+      }
+      .icon-right-arrow {
+        transform: rotate(90deg);
       }
       .cover {
         flex-shrink: 0;
@@ -40,12 +54,13 @@
             line-height: 24px;
             overflow: visible;
           }
-          .icon-right-arrow {
-            transform: rotate(-90deg);
-            position: relative;
-            left: 25px;
-          }
         }
+      }
+      .arrow-wrapper {
+        left: 150px; // 有个修正值。。。
+      }
+      .icon-right-arrow {
+        transform: rotate(-90deg);
       }
     }
   }
@@ -124,18 +139,6 @@
             font-size: 14px;
             line-height: 20px;
           }
-        }
-      }
-      .arrow-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .icon-right-arrow {
-          color: #707070;
-          font-size: 14px;
-          width: 14px;
-          height: 14px;
-          transition: transform ease-in-out 0.2s;
         }
       }
     }

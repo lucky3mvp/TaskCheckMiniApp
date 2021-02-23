@@ -33,10 +33,9 @@ export default (props: ReadingListItemType) => {
           <View className="main">
             <View className="time">{props.formatFinishTime}</View>
             <View className="name">《{props.name}》</View>
-            {/* <View className="iconfont icon-gou" /> */}
           </View>
-          {props.createTime !== props.finishTime ? (
-            <View className="sub">
+          <View className="sub">
+            {props.createTime !== props.finishTime ? (
               <View className="process">
                 <View className="line-vertical" />
                 <View className="process-item">
@@ -52,11 +51,11 @@ export default (props: ReadingListItemType) => {
                   </View>
                 ) : null}
               </View>
-              <View className="arrow-wrapper" onClick={toggleFold}>
-                <View className="iconfont icon-right-arrow " />
-              </View>
-            </View>
-          ) : null}
+            ) : null}
+          </View>
+        </View>
+        <View className="arrow-wrapper" onClick={toggleFold}>
+          <View className="iconfont icon-right-arrow " />
         </View>
         {props.cover ? (
           <Image src={cover} className="cover" mode="widthFix" />
