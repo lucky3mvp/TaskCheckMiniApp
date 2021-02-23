@@ -12,6 +12,23 @@ exports.main = async (event, context) => {
 
   console.log('common api params: ', event)
 
+  try {
+    // result 结构
+    // { errCode: 0, errMsg: 'openapi.templateMessage.send:ok' }
+    const result = await cloud.openapi.security.msgSecCheck(
+      JSON.stringify(event)
+    )
+    if (errCode !== 0) {
+      return {
+        code: 333
+      }
+    }
+  } catch (err) {
+    return {
+      code: 333
+    }
+  }
+
   if (_scope === 'reading') {
     const collection = db.collection('reading')
     if (_type === 'submit') {

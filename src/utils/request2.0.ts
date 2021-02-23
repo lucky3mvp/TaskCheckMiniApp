@@ -25,7 +25,15 @@ async function post(name, data): Promise<any> {
       // 传给云函数的参数
       data: data,
       success: function (res) {
-        resolve(res.result)
+        if (res.result.code === 333) {
+          Taro.showModal({
+            title: '提示',
+            content: '内容安全检测不通过，请重试'
+          })
+          reject()
+        } else {
+          resolve(res.result)
+        }
       },
       fail: function (err) {
         Taro.hideLoading()
