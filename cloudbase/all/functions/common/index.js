@@ -13,11 +13,9 @@ exports.main = async (event, context) => {
   console.log('common api params: ', event)
 
   try {
-    // result 结构
-    // { errCode: 0, errMsg: 'openapi.templateMessage.send:ok' }
-    const result = await cloud.openapi.security.msgSecCheck(
-      JSON.stringify(event)
-    )
+    const result = await cloud.openapi.security.msgSecCheck({
+      content: JSON.stringify(event)
+    })
     if (errCode !== 0) {
       return {
         code: 333

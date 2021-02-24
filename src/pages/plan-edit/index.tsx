@@ -96,7 +96,10 @@ class PlanEdit extends Component<IProps, IState> {
       if (subType === 1) {
         detail += ` ${times} 天`
       } else if (subType === 2) {
-        detail += `${days.map(d => SimpleWeekdays[d]).join('、')}`
+        detail += `${days
+          .split(',')
+          .map(d => SimpleWeekdays[d])
+          .join('、')}`
       }
       detail += ` ${goal} ${UnitMap[unit]}`
     } else if (type === 4) {
