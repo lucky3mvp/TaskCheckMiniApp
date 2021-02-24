@@ -82,7 +82,8 @@ type PlanType = {
     - 4-暂停
   */
   status: number
-  days: Array<string>
+  // days: Array<string>
+  days: string // 接口返回的是string,没做split
   beginTime: number
   endTime: number
   totalAchieve: number

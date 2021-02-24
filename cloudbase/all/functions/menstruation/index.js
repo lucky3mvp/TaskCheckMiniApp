@@ -8,23 +8,6 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const { year, month, day, type, optType, _type } = event
 
-  try {
-    // result 结构
-    // { errCode: 0, errMsg: 'openapi.templateMessage.send:ok' }
-    const result = await cloud.openapi.security.msgSecCheck(
-      JSON.stringify(event)
-    )
-    if (errCode !== 0) {
-      return {
-        code: 333
-      }
-    }
-  } catch (err) {
-    return {
-      code: 333
-    }
-  }
-
   console.log('menstruation params: ', event)
 
   const db = cloud.database()
