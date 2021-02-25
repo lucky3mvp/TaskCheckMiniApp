@@ -21,7 +21,7 @@ exports.main = async (event, context) => {
     const result = await cloud.openapi.security.msgSecCheck({
       content: JSON.stringify(event)
     })
-    if (errCode !== 0) {
+    if (reusult.errCode !== 0) {
       return {
         code: 333
       }
