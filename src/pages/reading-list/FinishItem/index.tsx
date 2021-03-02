@@ -26,46 +26,56 @@ export default (props: ReadingListItemType) => {
     }
   }, [fold, cover])
   return (
-    <View className="finish-item-component ">
-      <View className={`inner border-bottom ${fold ? 'fold' : 'unfold'}`}>
-        <View className="iconfont icon-star-full" />
-        <View className="info">
-          <View className="main">
-            <View className="time">{props.formatFinishTime}</View>
-            <View className="name">《{props.name}》</View>
-          </View>
-          <View className="sub">
-            {props.createTime !== props.finishTime ? (
-              <View className="process">
-                <View className="line-vertical" />
-                <View className="process-item">
-                  <View className="line-horizontal" />
-                  <View className="time">{props.formatCreateTime}</View>
-                  <View className="txt">添加书籍</View>
-                </View>
-                {props.beginTime ? (
+    <View className="finish-item-component border-bottom">
+      <View className={`inner ${fold ? 'fold' : 'unfold'}`}>
+        <View className="inner-left">
+          <View className="iconfont icon-star-full" />
+        </View>
+        <View className="inner-right">
+          <View className="info">
+            <View className="detail">
+              <View className="main">
+                <View className="time">{props.formatFinishTime}</View>
+                <View className="name">《{props.name}》</View>
+              </View>
+              <View className="sub">
+                {/* {props.createTime !== props.finishTime ? ( */}
+                <View className="process">
+                  <View className="line-vertical" />
+                  <View className="process-item">
+                    <View className="line-horizontal" />
+                    <View className="time">{props.formatCreateTime}</View>
+                    <View className="txt">添加书籍</View>
+                  </View>
+                  {/* {props.beginTime ? ( */}
                   <View className="process-item">
                     <View className="line-horizontal" />
                     <View className="time">{props.formatBeginTime}</View>
                     <View className="txt">开始阅读</View>
                   </View>
-                ) : null}
+                  {/* ) : null} */}
+                </View>
+                {/* ) : null} */}
               </View>
-            ) : null}
+            </View>
+            {props.cover ? (
+              <Image src={cover} className="cover" mode="widthFix" />
+            ) : (
+              <Image
+                src={require('../../../assets/defaultCover.png')}
+                className="cover"
+                mode="widthFix"
+              />
+            )}
           </View>
+          <View className="comment">{props.comment}</View>
         </View>
-        <View className="arrow-wrapper" onClick={toggleFold}>
-          <View className="iconfont icon-right-arrow " />
-        </View>
-        {props.cover ? (
-          <Image src={cover} className="cover" mode="widthFix" />
-        ) : (
-          <Image
-            src={require('../../../assets/defaultCover.png')}
-            className="cover"
-            mode="widthFix"
-          />
-        )}
+      </View>
+      <View
+        className={`arrow-wrapper ${fold ? 'fold' : 'unfold'}`}
+        onClick={toggleFold}
+      >
+        <View className="iconfont icon-right-arrow " />
       </View>
     </View>
   )

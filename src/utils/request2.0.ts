@@ -2,7 +2,8 @@ declare const wx: any
 
 import Taro from '@tarojs/taro'
 
-export const updatePlan = async params => post(`updatePlan`, params)
+// export const updatePlan = async params => post(`updatePlan`, params)
+// export const menstruation = async params => post(`menstruation`, params)
 
 export const getPlanByDate = async params => post(`getPlanByDate`, params)
 
@@ -11,8 +12,6 @@ export const getPlanList = async (params = {}) => post(`getPlanList`, params)
 export const check = async params => post(`check`, params)
 
 export const getCheckList = async params => post(`getCheckList`, params)
-
-export const menstruation = async params => post(`menstruation`, params)
 
 export const commonApi = async params => post(`common`, params)
 
@@ -28,7 +27,7 @@ async function post(name, data): Promise<any> {
         if (res.result.code === 333) {
           Taro.showModal({
             title: '提示',
-            content: '内容安全检测不通过，请重试'
+            content: '网络不佳，请稍后重试'
           })
           reject()
         } else {

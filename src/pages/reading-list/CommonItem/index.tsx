@@ -110,7 +110,6 @@ export default (props: IProps) => {
         />
         <View className="info">
           <View className="main">
-            {/* todo */}
             <View className="time">
               {props.status === 1
                 ? props.formatCreateTime

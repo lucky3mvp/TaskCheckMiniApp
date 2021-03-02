@@ -4,7 +4,7 @@ import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import Calendar from './Calendar'
 
-import { menstruation } from 'src/utils/request2.0'
+import { commonApi } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -98,7 +98,8 @@ class Menstruation extends Component<IProps, IState> {
     const {
       code,
       data: { records, prevStart, nextEnd }
-    } = await menstruation({
+    } = await commonApi({
+      _scope: 'menstruation',
       _type: 'fetchDetail',
       year,
       month
@@ -256,6 +257,7 @@ class Menstruation extends Component<IProps, IState> {
     }
   }
   onUpdate = async (param: MenstruationType) => {
+    this.cache[`${param.year}/${param.month}`] = null // 清空
     await this.getCurMonthMenstruationInfo(param.year, param.month)
   }
   render() {

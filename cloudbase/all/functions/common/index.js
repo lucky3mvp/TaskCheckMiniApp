@@ -24,9 +24,9 @@ exports.main = async (event, context) => {
     }
   } catch (err) {
     console.log('err: ', err)
-    return {
-      code: 333
-    }
+    // return {
+    //   code: 333
+    // }
   }
 
   if (_scope === 'reading') {
@@ -227,6 +227,183 @@ exports.main = async (event, context) => {
         .get()
       console.log('获取日子： ', data, errMsg)
       return { code: 200, days: data }
+    }
+  } else if (_scope === 'menstruation') {
+    const { year, month, day, type, _type } = event
+    const collection = db.collection('menstruation')
+
+    if (_type === 'submit') {
+      const { errMsg } = await collection.add({
+        data: {
+          userID: wxContext.OPENID,
+          year: year,
+          month: month,
+          day: day,
+          type: type
+        }
+      })
+
+      return {
+        code: errMsg.indexOf('add:ok') >= 0 ? 200 : 400
+      }
+    } else if (_type === 'fetchDetail') {
+      console.log('menstruation fetchDetail')
+      const { errMsg, data } = await collection
+        .where({
+          userID: wxContext.OPENID,
+          year: year,
+          month: month
+        })
+        .orderBy('year', 'asc')
+        .orderBy('month', 'asc')
+        .orderBy('day', 'asc')
+        .get()
+
+      console.log('menstruation query result', errMsg, data)
+
+      if (errMsg.indexOf('get:ok') < 0) {
+        return {
+          code: 200,
+          data: {
+            records: [],
+            prevStart: null,
+            nextEnd: null
+          }
+        }
+      }
+
+      let prevStart = null
+      let nextEnd = null
+      if (data && data.length) {
+        console.log('data0', data[0])
+        if (data[0].type === 2 && data[0].day < 7) {
+          const prevAllowStart = new Date(year, month - 1, data[0].day - 7)
+          const { data } = await collection
+            .where({
+              year: prevAllowStart.getFullYear(),
+              month: prevAllowStart.getMonth() + 1,
+              day: _.gt(prevAllowStart.getDate()),
+              type: 1
+            })
+            .get()
+          console.log('start', start)
+          if (data.length) {
+            prevStart = data[0]
+          }
+        }
+        const len = data.length
+        const thisMonthLastDay = new Date(year, month - 1, 0).getDate()
+
+        if (
+          data[len - 1].type === 1 &&
+          data[len - 1].day > thisMonthLastDay - 6
+        ) {
+          const nextAllowEnd = new Date(year, month - 1, data[len - 1].day + 7)
+          const { data } = await collection
+            .where({
+              year: nextAllowEnd.getFullYear(),
+              month: nextAllowEnd.getMonth() + 1,
+              day: _.lt(nextAllowEnd.getDate()),
+              type: 2
+            })
+            .get()
+          if (data.length) {
+            nextEnd = data[0]
+          }
+        }
+      }
+
+      return {
+        code: 200,
+        data: {
+          records: data.map(r => ({
+            year: r.year,
+            month: r.month,
+            day: r.day,
+            type: r.type
+          })),
+          prevStart: prevStart
+            ? {
+                year: prevStart.year,
+                month: prevStart.month,
+                day: prevStart.day,
+                type: prevStart.type
+              }
+            : null,
+          nextEnd: nextEnd
+            ? {
+                year: nextEnd.year,
+                month: nextEnd.month,
+                day: nextEnd.day,
+                type: nextEnd.type
+              }
+            : null
+        }
+      }
+    }
+  } else if (_scope === 'plan') {
+    const { _type, planID, name, description, theme, icon, category } = event
+    const collection = db.collection('plan')
+
+    if (_type === 'delete') {
+      await collection.doc(planID).update({
+        data: {
+          status: 2
+        }
+      })
+    } else if (_type === 'update') {
+      await collection.doc(planID).update({
+        data: {
+          name,
+          description,
+          theme,
+          icon,
+          category
+        }
+      })
+    } else if (_type === 'submit') {
+      const { year, month, day, type } = event
+      const bt = new Date(event.beginTime).getTime()
+      const et = event.endTime ? new Date(event.endTime).getTime() : null
+
+      const { errMsg, _id } = await collection.add({
+        data: {
+          userID: wxContext.OPENID,
+          name: event.name,
+          description: event.description,
+          theme: event.theme,
+          icon: event.icon,
+          category: event.category,
+          unit: event.unit,
+          goal: event.goal,
+          type: event.type,
+          subType: event.type === 2 ? 0 : event.subType,
+          times: event.times,
+          days: event.days,
+          beginTime: bt,
+          endTime: et,
+          status: 1
+        }
+      })
+      console.log('plan table add', errMsg, _id)
+      if (_id) {
+        // 更新 planID
+        const res = await collection.doc(_id).update({
+          data: {
+            planID: _id
+          }
+        })
+        console.log('plan table update', res)
+        return {
+          code: 200
+        }
+      }
+      return {
+        code: 400
+      }
+    }
+    return {
+      code: 200
     }
   }
 }
