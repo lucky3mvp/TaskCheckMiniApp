@@ -19,7 +19,7 @@ import {
   UnitMap,
   IconCategoryMap
 } from 'src/constants'
-import { updatePlan } from 'src/utils/request2.0'
+import { commonApi } from 'src/utils/request2.0'
 import { formatDate } from 'src/utils'
 
 import './index.less'
@@ -182,7 +182,8 @@ class PlanEdit extends Component<IProps, IState> {
       title: '请求中'
     })
 
-    const res = await updatePlan({
+    const res = await commonApi({
+      _scopee: 'plan',
       _type: 'update',
       planID: this.plan.planID,
       name: this.state.name,
@@ -217,7 +218,8 @@ class PlanEdit extends Component<IProps, IState> {
           Taro.showLoading({
             title: '请求中'
           })
-          await updatePlan({
+          await commonApi({
+            _scope: 'plan',
             _type: 'delete',
             planID: this.plan.planID
           })

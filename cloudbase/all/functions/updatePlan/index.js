@@ -3,6 +3,8 @@ const cloud = require('wx-server-sdk')
 
 cloud.init()
 
+// todo 后面把这个云函数下了
+
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
@@ -27,9 +29,9 @@ exports.main = async (event, context) => {
       }
     }
   } catch (err) {
-    return {
-      code: 333
-    }
+    // return {
+    //   code: 333
+    // }
   }
 
   console.log('updatePlan params: ', event)

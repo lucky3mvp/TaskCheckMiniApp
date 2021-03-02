@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import { rightArrow } from 'src/assets/svg'
 import Switch from 'src/components/Switch'
 
-import { menstruation } from 'src/utils/request2.0'
+import { commonApi } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -213,7 +213,8 @@ export default (props: IProps) => {
               day: selectedDay[2],
               type: status.showStart ? 1 : 2
             }
-            const { code } = await menstruation({
+            const { code } = await commonApi({
+              _scope: 'menstruation',
               _type: 'submit',
               ...p
             })

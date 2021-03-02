@@ -24,7 +24,7 @@ import {
   UnitMap,
   IconCategoryMap
 } from 'src/constants'
-import { updatePlan } from 'src/utils/request2.0'
+import { commonApi } from 'src/utils/request2.0'
 import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
@@ -269,7 +269,8 @@ class PlanAdd extends Component<IProps, IState> {
       title: '请求中'
     })
 
-    const res = await updatePlan({
+    const res = await commonApi({
+      _scope: 'plan',
       _type: 'submit',
       name: this.state.name,
       description: this.state.description,

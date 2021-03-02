@@ -1,23 +1,112 @@
 .finish-item-component {
-  padding: 0 20px;
+  padding: 15px 0;
+  margin: 0 20px;
   .inner {
-    padding: 16px 0 28px; // 给arrow留位置
-    flex: 1;
     display: flex;
     align-items: flex-start;
-    overflow: hidden;
-    position: relative;
-    .arrow-wrapper {
-      position: absolute;
-      bottom: 12px;
-      left: 160px; // 335/2 - 14/2
-      .icon-right-arrow {
+    &-left {
+      .iconfont {
+        color: #ee8787;
+        line-height: 26px;
+      }
+    }
+    &-right {
+      flex: 1;
+      margin-left: 15px;
+      .info {
+        display: flex;
+        .detail {
+          flex: 1;
+          .main {
+            display: flex;
+            line-height: 28px;
+            height: 28px;
+            .time {
+              width: 90px;
+              font-family: 'PingFangSC-Regular';
+              font-size: 16px;
+              line-height: 28px;
+              color: #222222;
+            }
+            .name {
+              flex: 1;
+              font-family: 'PingFangSC-Regular';
+              font-size: 16px;
+              line-height: 28px;
+              color: #222222;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+          .sub {
+            margin-top: 6px;
+            .process {
+              font-size: 14px;
+              line-height: 20px;
+              color: #707070;
+              margin-left: 20px;
+              position: relative;
+              .line-vertical {
+                width: 0px;
+                border-left-width: 1px;
+                border-right-width: 0;
+                border-color: #cacaca;
+                border-style: dashed;
+                position: absolute;
+                content: '';
+                top: -8px;
+                left: -16px;
+                bottom: 15px;
+              }
+              &-item {
+                display: flex;
+                align-items: center;
+                position: relative;
+                line-height: 28px;
+                height: 28px;
+                .line-horizontal {
+                  height: 0px;
+                  width: 6px;
+                  border-top-width: 1px;
+                  border-bottom-width: 0;
+                  border-color: #cacaca;
+                  border-style: dashed;
+                  position: absolute;
+                  content: '';
+                  top: 12px;
+                  left: -16px;
+                }
+                .time {
+                  width: 80px;
+                  font-family: 'PingFangSC-Regular';
+                  font-size: 14px;
+                  line-height: 28px;
+                }
+                .txx {
+                  font-family: 'PingFangSC-Regular';
+                  font-size: 14px;
+                  line-height: 28px;
+                }
+              }
+            }
+          }
+        }
+        .cover {
+          width: 70px;
+          max-height: 97px;
+          transition: all ease-in-out 0.2s;
+        }
+      }
+      .comment {
+        box-sizing: border-box;
+        margin: 15px 0;
+        padding: 10px 15px;
+        background: #f8f8f8;
+        border-radius: 10px;
+        font-size: 12px;
         color: #707070;
-        font-size: 14px;
-        width: 14px;
-        height: 14px;
-        transition: transform ease-in-out 0.2s;
-        transform-origin: center;
+        font-family: 'PingFangSC-Regular';
       }
     }
     &.fold {
@@ -28,124 +117,48 @@
           }
         }
         .sub {
-          // margin-bottom: -6px;
           .process {
             display: none;
           }
         }
       }
-      .icon-right-arrow {
-        transform: rotate(90deg);
+      .comment {
+        display: none;
       }
       .cover {
-        flex-shrink: 0;
-        height: 0 !important;
+        display: none;
       }
     }
     &.unfold {
       .info {
-        .main {
-          .name {
-            width: 134px;
-          }
-        }
-        .sub {
-          .process {
-            line-height: 24px;
-            overflow: visible;
-          }
+        .detail {
+          min-height: 97px; // 定这个minheight是因为cover有一个max-height,cover有一个展开的动画，会导致一个抖动
         }
       }
-      .arrow-wrapper {
-        left: 150px; // 有个修正值。。。
+    }
+  }
+  .arrow-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon-right-arrow {
+      color: #707070;
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      line-height: 14px;
+      transition: transform ease-in-out 0.2s;
+      transform-origin: center;
+    }
+    &.fold {
+      .icon-right-arrow {
+        transform: rotate(90deg);
       }
+    }
+    &.unfold {
       .icon-right-arrow {
         transform: rotate(-90deg);
       }
     }
-  }
-  .iconfont {
-    color: #ee8787;
-    line-height: 24px;
-  }
-  .info {
-    flex: 1;
-    margin-left: 15px;
-    .main {
-      display: flex;
-      .time {
-        width: 90px;
-        font-family: 'PingFangSC-Regular';
-        font-size: 16px;
-        line-height: 24px;
-        color: #222222;
-      }
-      .name {
-        flex: 1;
-        font-family: 'PingFangSC-Regular';
-        font-size: 16px;
-        line-height: 26ox;
-        color: #222222;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-    .sub {
-      margin-top: 6px;
-      .process {
-        margin-bottom: 5px;
-        font-size: 14px;
-        line-height: 20px;
-        color: #707070;
-        margin-left: 20px;
-        position: relative;
-        .line-vertical {
-          width: 0px;
-          border-left-width: 1px;
-          border-right-width: 0;
-          border-color: #cacaca;
-          border-style: dashed;
-          position: absolute;
-          content: '';
-          top: -8px;
-          left: -16px;
-          bottom: 10px;
-        }
-        &-item {
-          display: flex;
-          align-items: center;
-          position: relative;
-          .line-horizontal {
-            height: 0px;
-            width: 6px;
-            border-top-width: 1px;
-            border-bottom-width: 0;
-            border-color: #cacaca;
-            border-style: dashed;
-            position: absolute;
-            content: '';
-            top: 12px;
-            left: -16px;
-          }
-          .time {
-            width: 80px;
-            font-family: 'PingFangSC-Regular';
-            font-size: 14px;
-            line-height: 20px;
-          }
-          .txx {
-            font-family: 'PingFangSC-Regular';
-            font-size: 14px;
-            line-height: 20px;
-          }
-        }
-      }
-    }
-  }
-  .cover {
-    width: 70px;
-    max-height: 97px;
-    transition: all ease-in-out 0.2s;
   }
 }
