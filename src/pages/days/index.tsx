@@ -112,7 +112,7 @@ class Check extends Component<IProps, IState> {
     const top = r.find(d => d.isTop) || ({} as DaysItemType)
     if (top.cover) {
       // 这页面目前只展示top的图片，其他不用下载下来
-      const c = await new Promise(resolve => {
+      const c = await new Promise<string>(resolve => {
         wx.cloud.downloadFile({
           fileID: top.cover,
           success: res => {

@@ -143,10 +143,11 @@ type DaysItemType = {
   dateFormat: string
   createTime: number
   dayCount: number
-  notifyTime?: number
+  notifyTime?: number | null
   isTop: boolean
   cover: string
   status: number
+  userID: string
 }
 
 type DaysCategoryType = {
