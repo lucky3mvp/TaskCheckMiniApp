@@ -195,3 +195,52 @@ const checkPlans = [
     unit: '1'
   }
 ]
+
+const days = [
+  {
+    category: '79550af2604180b4085c4f825d82b526',
+    cover: '',
+    createTime: 1614906915852,
+    date: 1614470400000,
+    isTop: false,
+    name: '第一次跑步撸铁',
+    notifyTime: null,
+    status: 1,
+    userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    _id: '79550af260418623085d6f370d5ce6f4'
+  },
+  {
+    category: '79550af2604180b4085c4f825d82b526',
+    cover: '',
+    createTime: 1614905589145,
+    date: 1606694400000,
+    isTop: false,
+    name: '第一次yoga',
+    notifyTime: null,
+    status: 1,
+    userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    _id: '28ee4e3e604180f508e872842bc2bfdc'
+  },
+  {
+    category: '79550af2604180b4085c4f825d82b526',
+    cover: '',
+    createTime: 1614905559928,
+    date: 1597363200000,
+    isTop: false,
+    name: '第一次游泳',
+    notifyTime: null,
+    status: 1,
+    userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    _id: '28ee4e3e604180d708e86f62779325f2'
+  }
+]
+
+const daysCategories = [
+  {
+    icon: 'jianshen',
+    name: '运动',
+    status: 1,
+    userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    _id: '79550af2604180b4085c4f825d82b526'
+  }
+]

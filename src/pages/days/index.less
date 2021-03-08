@@ -1,5 +1,4 @@
 .days-page {
-  padding-top: 52px;
   .unit {
     &.today {
       background: #ee8787;
@@ -11,28 +10,22 @@
       background: #5c93aa;
     }
   }
-  .tabs {
+  .tabs-wrapper {
     background: #ffffff;
     display: flex;
-    flex-wrap: nowrap;
-    overflow-y: hidden;
-    overflow-x: scroll;
-    height: 52px;
     align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
     .holder {
-      width: 12px;
+      width: 10px;
       height: 100%;
       flex-shrink: 0;
     }
-    .holder-right {
-      width: 62px;
-      height: 100%;
-      flex-shrink: 0;
+    .tabs {
+      height: 52px;
+      flex: 1;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-y: hidden;
+      overflow-x: scroll;
     }
     .tab {
       text-align: center;
@@ -55,9 +48,6 @@
       }
     }
     .setting {
-      position: fixed;
-      right: 0;
-      top: 0;
       width: 66px;
       height: 52px;
       background-color: #ffffff;
@@ -76,7 +66,15 @@
     }
   }
   .days {
+    box-sizing: border-box;
     padding: 0 20px;
+  }
+  .self-border-bottom {
+    height: 0;
+    width: 200%;
+    border-bottom: 1px solid #e6e6e6;
+    transform: scale(0.5);
+    transform-origin: left bottom;
   }
   .day-item {
     min-height: 56px;
@@ -113,7 +111,6 @@
     }
   }
   .top {
-    margin-bottom: 5px;
     height: 255px;
     position: relative;
     .cover {
