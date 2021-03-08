@@ -116,7 +116,7 @@ class Check extends Component<IProps, IState> {
         wx.cloud.downloadFile({
           fileID: top.cover,
           success: res => {
-            console.log('download')
+            console.log('download', res.tempFilePath)
             resolve(res.tempFilePath)
           },
           fail: err => {
@@ -142,6 +142,7 @@ class Check extends Component<IProps, IState> {
       _scope: 'days',
       _type: 'fetchCategory'
     })
+    console.log(categories)
     this.setState({
       loading: false,
       categories: categories
@@ -176,26 +177,51 @@ class Check extends Component<IProps, IState> {
     return this.state.loading ? null : (
       <View className="days-page">
         <Add onClick={this.gotoDaysAdd} />
-        <View className="tabs border-bottom">
-          <View className="holder" />
-          <View
-            className={`tab tab-all iconfont icon-all ${
-              this.state.cur === 'all' ? 'active' : ''
-            }`}
-            onClick={this.onCategoryChangeToAll}
-          />
-          {this.state.categories.map((t: DaysCategoryType) => (
-            <View className={`tab ${this.state.cur === t._id ? 'active' : ''}`}>
-              <Image
-                src={require(`../../assets/days/${t.icon}.png`)}
-                className={`img`}
-                onClick={() => {
-                  this.onCategoryChange(t)
-                }}
-              />
+        {top.name ? (
+          <View className="top">
+            {top.cover ? (
+              <Image className="cover" mode="center" src={top.cover} />
+            ) : null}
+            <View className="inner">
+              <View className="name">{top.name}</View>
+              <View className="count-wrapper">
+                <View className="count">{top.dayCount}</View>
+                {top.dayCount === 0 ? (
+                  <View className="unit today">就是今天</View>
+                ) : top.createTime > top.date ? (
+                  <View className="unit before">天了</View>
+                ) : (
+                  <View className="unit after">天后</View>
+                )}
+              </View>
+              <View className="date">{top.dateFormat}</View>
             </View>
-          ))}
-          <View className="holder-right" />
+          </View>
+        ) : null}
+        <View className="tabs-wrapper border-bottom">
+          <View className="tabs">
+            <View className="holder" />
+            <View
+              className={`tab tab-all iconfont icon-all ${
+                this.state.cur === 'all' ? 'active' : ''
+              }`}
+              onClick={this.onCategoryChangeToAll}
+            />
+            {this.state.categories.map((t: DaysCategoryType) => (
+              <View
+                className={`tab ${this.state.cur === t._id ? 'active' : ''}`}
+              >
+                <Image
+                  src={require(`../../assets/days/${t.icon}.png`)}
+                  className={`img`}
+                  onClick={() => {
+                    this.onCategoryChange(t)
+                  }}
+                />
+              </View>
+            ))}
+            <View className="holder" />
+          </View>
           <View className="setting" onClick={this.gotoDaysCategory}>
             <View className="iconfont icon-shezhi" />
           </View>
@@ -203,33 +229,12 @@ class Check extends Component<IProps, IState> {
         {!this.state.days.length ? (
           <Empty tip="还没有数据哦~" />
         ) : (
-          <Block>
-            {top.name ? (
-              <View className="top">
-                {top.cover ? (
-                  <Image className="cover" mode="center" src={top.cover} />
-                ) : null}
-                <View className="inner">
-                  <View className="name">{top.name}</View>
-                  <View className="count-wrapper">
-                    <View className="count">{top.dayCount}</View>
-                    {top.dayCount === 0 ? (
-                      <View className="unit today">就是今天</View>
-                    ) : top.createTime > top.date ? (
-                      <View className="unit before">天了</View>
-                    ) : (
-                      <View className="unit after">天后</View>
-                    )}
-                  </View>
-                  <View className="date">{top.dateFormat}</View>
-                </View>
-              </View>
-            ) : null}
-            <View className="days">
-              {this.state.days.map((d: DaysItemType) => {
-                return this.state.cur === 'all' ||
-                  d.category === this.state.cur ? (
-                  <View className="day-item border-bottom">
+          <View className="days">
+            {this.state.days.map((d: DaysItemType) => {
+              return this.state.cur === 'all' ||
+                d.category === this.state.cur ? (
+                <Block>
+                  <View className="day-item">
                     <View className="name">{d.name}</View>
                     <View className="count">{d.dayCount}</View>
                     {d.dayCount === 0 ? (
@@ -240,10 +245,11 @@ class Check extends Component<IProps, IState> {
                       <View className="unit after">天后</View>
                     )}
                   </View>
-                ) : null
-              })}
-            </View>
-          </Block>
+                  <View className="self-border-bottom" />
+                </Block>
+              ) : null
+            })}
+          </View>
         )}
       </View>
     )

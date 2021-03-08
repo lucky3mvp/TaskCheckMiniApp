@@ -209,6 +209,23 @@ exports.main = async (event, context) => {
         status: 1, // 1-正常,
         createTime: Date.now()
       }
+
+      if (isTop) {
+        const { errMsg } = await daysCollection
+          .where({
+            userID: wxContext.OPENID,
+            isTop: true,
+            status: 1
+          })
+          .update({
+            data: { isTop: false }
+          })
+        console.log(
+          '新添加的日子isTop为true, 将此前置顶的数据取消置顶，msg： ',
+          errMsg
+        )
+      }
+
       const { errMsg } = await daysCollection.add({
         data: d
       })
