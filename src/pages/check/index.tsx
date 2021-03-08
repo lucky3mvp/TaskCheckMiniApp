@@ -71,7 +71,7 @@ class Check extends Component<IProps, IState> {
     const { code, plans = [] } = await getPlanByDate({
       date: formatDate(new Date(), 'yyyy/MM/dd')
     })
-    // console.log(plans)
+    console.log(plans)
     if (code === 200) {
       this.setState({
         loading: false,
