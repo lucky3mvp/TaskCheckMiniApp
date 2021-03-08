@@ -102,20 +102,12 @@ exports.main = async (event, context) => {
     }
     if (status === 1) {
       unStarted.push(item)
-    } else if (status === 3) {
-      const { total: totalTimes } = await statusCollection
-        .where({
-          userID: wxContext.OPENID,
-          planID: p.planID,
-          type: p.type,
-          subType: p.subType,
-          status: 1
-        })
-        .count()
-      console.log('getPlanList 累计打卡次数', totalTimes)
-      item.totalTimes = totalTimes
-      ended.push(item)
     } else {
+      /**
+       * 进行中的计划 & 已结束的计划
+       * 都需要取累计完成次数和累计打卡次数
+       */
+      // 1. 算累计完成次数
       const { total: totalTimes } = await statusCollection
         .where({
           userID: wxContext.OPENID,
@@ -125,37 +117,54 @@ exports.main = async (event, context) => {
           status: 1
         })
         .count()
-      console.log('getPlanList 累计打卡次数', totalTimes)
+      console.log('getPlanList 累计完成次数', totalTimes)
       item.totalTimes = totalTimes
 
-      const { total: monthTimes } = await statusCollection
+      // 2. 算累计打卡次数
+      const checkCollection = db.collection('check')
+      const { total: totalCheckTimes } = await checkCollection
         .where({
           userID: wxContext.OPENID,
-          year: year,
-          month: month,
-          planID: p.planID,
-          type: p.type,
-          subType: p.subType,
-          status: 1
+          planID: p.planID
         })
         .count()
-      console.log('getPlanList 本月累计打卡次数', monthTimes)
-      item.monthTimes = monthTimes
+      console.log('getPlanList 累计打卡次数', totalCheckTimes)
+      item.totalCheckTimes = totalCheckTimes
 
-      const { total: weekTimes } = await statusCollection
-        .where({
-          userID: wxContext.OPENID,
-          weekStart: getWeekStart(dateObj),
-          planID: p.planID,
-          type: p.type,
-          subType: p.subType,
-          status: 1
-        })
-        .count()
-      console.log('getPlanList 本周累计打卡次数', weekTimes)
-      item.weekTimes = weekTimes
+      if (status === 3) {
+        ended.push(item)
+      } else {
+        // 进行中的计划还需要算 本周打卡次数 和 本月打卡次数
+        // 前端还没决定到底是展示本周还是本月，先都返回吧
+        const { total: monthTimes } = await statusCollection
+          .where({
+            userID: wxContext.OPENID,
+            year: year,
+            month: month,
+            planID: p.planID,
+            type: p.type,
+            subType: p.subType,
+            status: 1
+          })
+          .count()
+        console.log('getPlanList 本月累计打卡次数', monthTimes)
+        item.monthTimes = monthTimes
 
-      started.push(item)
+        const { total: weekTimes } = await statusCollection
+          .where({
+            userID: wxContext.OPENID,
+            weekStart: getWeekStart(dateObj),
+            planID: p.planID,
+            type: p.type,
+            subType: p.subType,
+            status: 1
+          })
+          .count()
+        console.log('getPlanList 本周累计打卡次数', weekTimes)
+        item.weekTimes = weekTimes
+
+        started.push(item)
+      }
     }
   }
 
