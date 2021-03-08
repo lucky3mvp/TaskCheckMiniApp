@@ -66,14 +66,76 @@ class PlanList extends Component<IProps, IState> {
       started = [],
       ended = []
     } = await getPlanList()
-    if (code === 200) {
-      this.setState({
-        loading: false,
-        unStarted,
-        started,
-        ended
-      })
-    }
+    // const unStarted = [
+    //   {
+    //     beginTime: 1617206400000,
+    //     category: 1,
+    //     days: '',
+    //     description: '从来、坚持、都不是、轻而易举',
+    //     endTime: 1635609600000,
+    //     goal: 1500,
+    //     icon: 'skipping',
+    //     name: '跳绳',
+    //     planID: '28ee4e3e601a799802b49d9200bd73a8',
+    //     status: 1,
+    //     subType: 1,
+    //     theme: 'theme20',
+    //     times: 3,
+    //     type: 3,
+    //     unit: '1'
+    //   }
+    // ]
+    // const started = [
+    //   {
+    //     beginTime: 1609430400000,
+    //     category: 4,
+    //     days: '0',
+    //     description: '如果能重来，希望做一个知识人',
+    //     endTime: null,
+    //     goal: 300,
+    //     icon: 'reading',
+    //     monthTimes: 0,
+    //     name: '读书',
+    //     planID: '28ee4e3e601a43f402aa8a9a294acb51',
+    //     status: 2,
+    //     subType: 2,
+    //     theme: 'theme12',
+    //     times: '',
+    //     totalTimes: 4,
+    //     type: 3,
+    //     unit: '6',
+    //     weekTimes: 0
+    //   }
+    // ]
+    // const ended = [
+    //   {
+    //     beginTime: 1609430400000,
+    //     category: 4,
+    //     days: '0',
+    //     description: '如果能重来，希望做一个知识人',
+    //     endTime: null,
+    //     goal: 300,
+    //     icon: 'reading',
+    //     monthTimes: 0,
+    //     name: '读书',
+    //     planID: '28ee4e3e601a43f402aa8a9a294acb51',
+    //     status: 3,
+    //     subType: 2,
+    //     theme: 'theme12',
+    //     times: '',
+    //     totalTimes: 4,
+    //     type: 3,
+    //     unit: '6',
+    //     weekTimes: 0
+    //   }
+    // ]
+    console.log(unStarted, started, ended)
+    this.setState({
+      loading: false,
+      unStarted,
+      started,
+      ended
+    })
     Taro.hideLoading()
   }
   onSwiperChange = ({ detail: { current, source } }) => {

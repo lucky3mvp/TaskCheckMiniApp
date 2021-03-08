@@ -40,6 +40,13 @@ export default (props: IProps) => {
           } ${props.theme}-color`}
         />
       </View>
+      {/*
+        前端的status
+        - 1-未开始
+        - 2-进行中
+        - 3-已结束
+        - 4-暂停
+      */}
       {props.status === 2 || props.status === 4 ? (
         <View className="mid border-bottom">
           {props.status === 2 ? (
@@ -50,16 +57,22 @@ export default (props: IProps) => {
               </View>
             </View>
           ) : null}
-          {props.status === 2 ? (
+          {/* {props.status === 2 ? (
             <View className="mid-item">
               <View>本月打卡次数</View>
               <View className={`mid-item-times ${props.theme}-color`}>
                 {props.monthTimes || 0}
               </View>
             </View>
-          ) : null}
+          ) : null} */}
           <View className="mid-item">
             <View>累计打卡次数</View>
+            <View className={`mid-item-times ${props.theme}-color`}>
+              {props.totalCheckTimes || 0}
+            </View>
+          </View>
+          <View className="mid-item">
+            <View>累计完成次数</View>
             <View className={`mid-item-times ${props.theme}-color`}>
               {props.totalTimes || 0}
             </View>
@@ -68,12 +81,24 @@ export default (props: IProps) => {
       ) : null}
       {props.status === 3 ? (
         <View className="mid border-bottom">
-          <View className="mid-item-horizon">
+          <View className="mid-item">
+            <View>累计打卡次数</View>
+            <View className={`mid-item-times ${props.theme}-color`}>
+              {props.totalCheckTimes || 0}
+            </View>
+          </View>
+          <View className="mid-item">
+            <View>累计完成次数</View>
+            <View className={`mid-item-times ${props.theme}-color`}>
+              {props.totalTimes || 0}
+            </View>
+          </View>
+          {/* <View className="mid-item-horizon">
             <View>累计打卡次数</View>
             <View className={`num ${props.theme}-color`}>
               {props.totalTimes || 0}
             </View>
-          </View>
+          </View> */}
         </View>
       ) : null}
       <View className="btm">

@@ -88,6 +88,7 @@ type PlanType = {
   endTime: number
   totalAchieve: number
   /**
+   * 累计完成的次数
    * 指的是计划在当前计划周期内，完成了多少次
    * 比如计划是每周5次xxx
    * 那么这里的totalTimes指的是本周这个计划当前完成了多少次
@@ -96,6 +97,13 @@ type PlanType = {
   totalTimes: number
   weekTimes?: number
   monthTimes?: number
+  /**
+   * 累计打卡的次数
+   * eg: 目标是每次跑5km，但某次打卡，可能只跑了3km，此时不会记成完成状态，但会记录此次打卡
+   * 因此 totalTimes 不会包含本次打卡，
+   * 但 totalCheckTimes 会包含本次打卡
+   */
+  totalCheckTimes: number
 }
 
 type PlanTabType = {
@@ -143,10 +151,11 @@ type DaysItemType = {
   dateFormat: string
   createTime: number
   dayCount: number
-  notifyTime?: number
+  notifyTime?: number | null
   isTop: boolean
   cover: string
   status: number
+  userID: string
 }
 
 type DaysCategoryType = {

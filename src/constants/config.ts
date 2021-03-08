@@ -167,5 +167,6 @@ export const DaysCategoryIcons = [
   'holiday',
   'birthday',
   'festival',
-  'memorial'
+  'memorial',
+  'jianshen'
 ]
