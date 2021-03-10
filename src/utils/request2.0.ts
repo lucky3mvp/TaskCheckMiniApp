@@ -2,9 +2,6 @@ declare const wx: any
 
 import Taro from '@tarojs/taro'
 
-// export const updatePlan = async params => post(`updatePlan`, params)
-// export const menstruation = async params => post(`menstruation`, params)
-
 export const getPlanByDate = async params => post(`getPlanByDate`, params)
 
 export const getPlanList = async (params = {}) => post(`getPlanList`, params)
