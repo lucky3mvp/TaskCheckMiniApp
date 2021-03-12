@@ -16,6 +16,7 @@ import Footer from 'src/components/Footer'
 
 import { commonApi } from 'src/utils/request2.0'
 import manualEvent from 'src/utils/manualEvent'
+import { formatDate } from 'src/utils'
 
 import './index.less'
 
@@ -42,8 +43,9 @@ type IState = {
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
 @connect()
-class DaysAdd extends Component<IProps, IState> {
+class DaysEdit extends Component<IProps, IState> {
   lock = false
+  day: DaysItemType
   startDate = new Date(1971, 0, 1)
   endDate = new Date(2051, 11, 31)
   state = {
@@ -66,7 +68,42 @@ class DaysAdd extends Component<IProps, IState> {
     }
   }
   async componentDidMount() {
-    await this.getCategoryList()
+    const options = await this.getCategoryList()
+    console.log('options', options)
+    this.day = Taro.getStorageSync('day')
+    // Taro.removeStorageSync('day')
+    const {
+      category,
+      cover,
+      createTime,
+      date,
+      isTop,
+      name,
+      notifyTime,
+      status
+    } = this.day
+
+    let categoryIndex = 0
+    options.find((o, i) => {
+      if (o.value === category) {
+        categoryIndex = i
+        return true
+      }
+      return false
+    })
+    console.log('categoryIndex', categoryIndex)
+    this.setState({
+      name,
+      categoryIndex: `${categoryIndex}`,
+      date: formatDate(new Date(date), 'yyyy/MM/dd'),
+      dateInitialValue: [0, 0, 0],
+      isTop,
+      notify: !!notifyTime,
+      // todo
+      // notifyDate: '',
+      // notifyTime: '',
+      cover: ''
+    })
 
     const today = new Date()
     const y = today.getFullYear()
@@ -75,26 +112,29 @@ class DaysAdd extends Component<IProps, IState> {
     this.setState({
       dateInitialValue: [y - 1971, m, d - 1]
     })
-
-    manualEvent.register('days-add-page').on('update days category', () => {
-      this.getCategoryList()
-      manualEvent.clear('days-add-page')
-    })
-  }
-  componentDidShow() {
-    manualEvent.run('days-add-page')
   }
   async getCategoryList() {
-    const { categories = [] } = await commonApi({
-      _scope: 'days',
-      _type: 'fetchCategory'
-    })
+    // const { categories = [] } = await commonApi({
+    //   _scope: 'days',
+    //   _type: 'fetchCategory'
+    // })
+    const categories = [
+      {
+        icon: 'jianshen',
+        name: '运动',
+        status: 1,
+        userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+        _id: '79550af2604180b4085c4f825d82b526'
+      }
+    ]
+    const options = categories.map((c: DaysCategoryType) => ({
+      label: c.name,
+      value: c._id
+    }))
     this.setState({
-      categoryOptions: categories.map((c: DaysCategoryType) => ({
-        label: c.name,
-        value: c._id
-      }))
+      categoryOptions: options
     })
+    return options
   }
   getValue(
     field: string,
@@ -126,7 +166,6 @@ class DaysAdd extends Component<IProps, IState> {
     })
   }
   onChooseCategory = (categoryIndex: string) => {
-    console.log(categoryIndex)
     this.setState({
       categoryIndex: categoryIndex,
       disable: !this.checkDisable({ categoryIndex: categoryIndex })
@@ -274,25 +313,17 @@ class DaysAdd extends Component<IProps, IState> {
           />
         </FormItem>
         <FormItem label="分类" key="picker">
-          {this.state.categoryOptions.length ? (
-            <View className="picker">
-              <Picker
-                rightArrow
-                mode="selector"
-                placeholder="选择分类"
-                index={+this.state.categoryIndex}
-                range={this.state.categoryOptions}
-                onChange={this.onChooseCategory}
-              />
-            </View>
-          ) : (
-            <View className="picker-txt">
-              <View className="txt" onClick={this.gotoDaysCategory}>
-                管理分类
-              </View>
-              <View className="iconfont icon-right-arrow" />
-            </View>
-          )}
+          <View className="picker">
+            <Picker
+              defaultSelected
+              rightArrow
+              mode="selector"
+              placeholder="选择分类"
+              index={+this.state.categoryIndex}
+              range={this.state.categoryOptions}
+              onChange={this.onChooseCategory}
+            />
+          </View>
         </FormItem>
         <FormItem
           label="日期"
@@ -377,4 +408,4 @@ class DaysAdd extends Component<IProps, IState> {
   }
 }
 
-export default DaysAdd
+export default DaysEdit

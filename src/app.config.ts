@@ -3,6 +3,7 @@ export default {
     'pages/check/index',
     'pages/days/index',
     'pages/days-add/index',
+    'pages/days-edit/index',
     'pages/days-category/index',
     'pages/my/index',
     'pages/plan-add/index',
