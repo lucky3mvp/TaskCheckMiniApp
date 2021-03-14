@@ -112,8 +112,8 @@ exports.main = async (event, context) => {
         .where({
           userID: wxContext.OPENID,
           planID: p.planID,
-          type: p.type,
-          subType: p.subType,
+          // type: p.type,
+          // subType: p.subType,
           status: 1
         })
         .count()
@@ -142,8 +142,8 @@ exports.main = async (event, context) => {
             year: year,
             month: month,
             planID: p.planID,
-            type: p.type,
-            subType: p.subType,
+            // type: p.type,
+            // subType: p.subType,
             status: 1
           })
           .count()
@@ -155,8 +155,8 @@ exports.main = async (event, context) => {
             userID: wxContext.OPENID,
             weekStart: getWeekStart(dateObj),
             planID: p.planID,
-            type: p.type,
-            subType: p.subType,
+            // type: p.type,
+            // subType: p.subType,
             status: 1
           })
           .count()
