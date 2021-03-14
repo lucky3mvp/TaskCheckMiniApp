@@ -126,7 +126,6 @@ class DaysAdd extends Component<IProps, IState> {
     })
   }
   onChooseCategory = (categoryIndex: string) => {
-    console.log(categoryIndex)
     this.setState({
       categoryIndex: categoryIndex,
       disable: !this.checkDisable({ categoryIndex: categoryIndex })
