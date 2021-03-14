@@ -59,6 +59,14 @@ exports.main = async (event, context) => {
   const todayMonth = today.getMonth() + 1
   const todayDay = today.getDate()
 
+  /**
+   * 从小程序打卡页面进来的，isQueryToday都是true
+   * 这里这个其实是区分补打卡的case
+   * 但没法区分，
+   * 比如跑步是一周三次，在周五的时候这周就跑完三次了，那周六再查的时候，isQueryToday 就还是true,
+   * 所以哪怕total>p.times 还是会return
+   * 修改成不通过完成次数决定返不返回了，如果完成了，那么也展示，只不过是完成状态
+   */
   const isQueryToday =
     queryYear === todayYear &&
     queryMonth === todayMonth &&
@@ -162,22 +170,22 @@ exports.main = async (event, context) => {
           .where({
             userID: wxContext.OPENID,
             planID: p.planID,
-            type: p.type,
-            subType: p.subType,
-            year: dateObj.getFullYear(),
-            month: dateObj.getMonth() + 1,
-            day: dateObj.getDate(),
+            // type: p.type,
+            // subType: p.subType,
+            // year: dateObj.getFullYear(),
+            // month: dateObj.getMonth() + 1,
+            // day: dateObj.getDate(),
             weekStart: getWeekStart(dateObj)
           })
           .get()
         console.log('should return query params: ', {
           userID: wxContext.OPENID,
           planID: p.planID,
-          type: p.type,
-          subType: p.subType,
-          year: dateObj.getFullYear(),
-          month: dateObj.getMonth() + 1,
-          day: dateObj.getDate(),
+          // type: p.type,
+          // subType: p.subType,
+          // year: dateObj.getFullYear(),
+          // month: dateObj.getMonth() + 1,
+          // day: dateObj.getDate(),
           weekStart: getWeekStart(dateObj)
         })
         console.log('should return query result: ', data)
