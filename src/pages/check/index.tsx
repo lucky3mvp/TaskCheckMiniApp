@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Taro from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View, Image } from '@tarojs/components'
 import { UnitMap } from 'src/constants/config'
 
 import Add from 'src/components/Add'
@@ -209,6 +209,14 @@ class Check extends Component<IProps, IState> {
                   <View className="left">
                     <View className={`iconfont icon-${p.icon}`} />
                     <View>{p.name}</View>
+                    {/* 这类计划允许完成后继续打卡的，所以 */}
+                    {p.totalTimes >= p.times &&
+                      (p.type === 4 || (p.type === 3 && p.subType === 1)) && (
+                        <Image
+                          className="wancheng"
+                          src={require('../../assets/wancheng.png')}
+                        />
+                      )}
                   </View>
                   <View className="right">
                     {p.status === 1 ? (
