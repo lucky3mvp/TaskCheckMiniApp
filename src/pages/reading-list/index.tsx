@@ -163,19 +163,6 @@ class Check extends Component<IProps, IState> {
       year: params.year,
       status: params.status
     })
-    // const list = [
-    //   {
-    //     comment: '想做一个温柔的人，被世界温柔以待，love and peace！',
-    //     cover:
-    //       'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/WqIfq66XcVe8272b96ddb074ddd9c1f1f8283aa73e9e.jpg',
-    //     createTime: 1613779200000,
-    //     finishTime: 1613779200000,
-    //     name: '小王子',
-    //     status: 3,
-    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
-    //     _id: '79550af260378f70070e9e597f0797cd'
-    //   }
-    // ]
     Taro.hideLoading()
 
     const r = list.map((l: ReadingListItemType) => ({
@@ -196,7 +183,6 @@ class Check extends Component<IProps, IState> {
       list: r
     })
     console.log(list)
-    Taro.hideLoading()
 
     // 考虑到下载图片可能需要一定的时间，故把图片的下载拎出来处理，页面可以先渲染其他的数据
     // list.map((item: ReadingListItemType, index) => {
