@@ -213,8 +213,8 @@ class Check extends Component<IProps, IState> {
                     {p.totalTimes >= p.times &&
                       (p.type === 4 || (p.type === 3 && p.subType === 1)) && (
                         <Image
-                          className="wancheng"
-                          src={require('../../assets/wancheng.png')}
+                          className="price"
+                          src={require('../../assets/jiangli.png')}
                         />
                       )}
                   </View>
