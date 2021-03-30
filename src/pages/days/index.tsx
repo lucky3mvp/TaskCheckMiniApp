@@ -82,31 +82,27 @@ class Check extends Component<IProps, IState> {
       _scope: 'days',
       _type: 'fetchDays'
     })
+    // const days = [
+    //   {
+    //     category: '79550af2604180b4085c4f825d82b526',
+    //     cover: '',
+    //     createTime: 1614906915852,
+    //     date: 1614470400000,
+    //     isTop: false,
+    //     name: '第一次跑步撸铁',
+    //     notifyTime: null,
+    //     status: 1,
+    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    //     _id: '79550af260418623085d6f370d5ce6f4'
+    //   }
+    // ]
     console.log('days', days)
-    // const f = await Promise.all<string>(
-    //   days.map(d => {
-    //     if (d.cover) {
-    //       return new Promise(resolve => {
-    //         wx.cloud.downloadFile({
-    //           fileID: d.cover,
-    //           success: res => {
-    //             resolve(res.tempFilePath)
-    //           },
-    //           fail: err => {
-    //             console.error(err)
-    //           }
-    //         })
-    //       })
-    //     }
-    //     return Promise.resolve('')
-    //   })
-    // )
     const r = days.map((d, i) => {
       return {
         ...d,
         // cover: f[i],
         dateFormat: formatTimestamp(d.date, 'yyyy.MM.dd'),
-        dayCount: this.calDayCount(d.createTime, d.date)
+        dayCount: this.calDayCount(Date.now(), d.date)
       }
     })
     const top = r.find(d => d.isTop) || ({} as DaysItemType)
@@ -142,6 +138,15 @@ class Check extends Component<IProps, IState> {
       _scope: 'days',
       _type: 'fetchCategory'
     })
+    // const categories = [
+    //   {
+    //     icon: 'jianshen',
+    //     name: '运动',
+    //     status: 1,
+    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    //     _id: '79550af2604180b4085c4f825d82b526'
+    //   }
+    // ]
     console.log(categories)
     this.setState({
       loading: false,
@@ -170,6 +175,13 @@ class Check extends Component<IProps, IState> {
     Taro.navigateTo({
       url: '/pages/days-category/index'
     })
+  }
+
+  onGotoDetail = (day: DaysItemType) => {
+    // Taro.setStorageSync('day', day)
+    // Taro.navigateTo({
+    //   url: '/pages/days-edit/index'
+    // })
   }
 
   render() {
@@ -234,7 +246,10 @@ class Check extends Component<IProps, IState> {
               return this.state.cur === 'all' ||
                 d.category === this.state.cur ? (
                 <Block>
-                  <View className="day-item">
+                  <View
+                    className="day-item"
+                    onClick={() => this.onGotoDetail(d)}
+                  >
                     <View className="name">{d.name}</View>
                     <View className="count">{d.dayCount}</View>
                     {d.dayCount === 0 ? (

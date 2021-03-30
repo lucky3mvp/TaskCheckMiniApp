@@ -81,8 +81,7 @@ class CheckList extends Component<IProps, IState> {
     console.log('未命中cache，发起请求')
     const { code, list = [], tabs = [] } = await getCheckList({
       date: date,
-      returnPlanTabs: !this.state.inited, // 后面的请求就不用再请求tabs了
-      version: 'v2'
+      returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
     })
     if (code === 200) {
       const lo = list.map(l => {

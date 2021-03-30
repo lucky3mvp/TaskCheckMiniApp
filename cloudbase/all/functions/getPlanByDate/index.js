@@ -59,10 +59,19 @@ exports.main = async (event, context) => {
   const todayMonth = today.getMonth() + 1
   const todayDay = today.getDate()
 
-  const isQueryToday =
-    queryYear === todayYear &&
-    queryMonth === todayMonth &&
-    queryDay === todayDay
+  /**
+   * 从小程序打卡页面进来的，isQueryToday都是true
+   * 这里这个其实是区分补打卡的case
+   * 但没法区分，
+   * 比如跑步是一周三次，在周五的时候这周就跑完三次了，那周六再查的时候，isQueryToday 就还是true,
+   * 所以哪怕total>p.times 还是会return
+   * 修改成不通过完成次数决定返不返回了，如果完成了，那么也展示，
+   * 因此返回的status其实只表示今天这一天计划的状态
+   */
+  // const isQueryToday =
+  //   queryYear === todayYear &&
+  //   queryMonth === todayMonth &&
+  //   queryDay === todayDay
 
   const db = cloud.database()
   const _ = db.command
@@ -85,60 +94,41 @@ exports.main = async (event, context) => {
     // 查询日期的在计划的时间范围内
     if (dateTime >= p.beginTime && (!p.endTime || dateTime <= p.endTime)) {
       if (
-        // 每日的计划都可以返回
         p.type === 2 ||
-        // 每周的周几的计划，需要判断查询日期是否是指定的周几之一
+        p.type === 4 ||
+        (p.type === 3 && p.subType === 1) ||
         (p.type === 3 &&
           p.subType === 2 &&
           days.indexOf(`${dateObj.getDay()}`) >= 0)
       ) {
-        shouldReturn = true
-      } else if (p.type === 4) {
-        // 每月或每周几次的case, 如果当前次数已经完成，就不返回了
-        let { total } = await statusCollection
-          .where({
-            userID: wxContext.OPENID,
-            planID: p.planID,
-            type: p.type,
-            subType: p.subType,
-            year: dateObj.getFullYear(),
-            month: dateObj.getMonth() + 1,
-            status: 1 // 1-已完成 0-未完成
-          })
-          .count()
-        console.log('getPlanByDate 月计划 times 完成的次数', total)
-        totalTimes = total
-        // 当天应该返回，要不在check页打完卡就看不见了
-        if (total >= p.times && !isQueryToday) {
-          shouldReturn = false
-        } else {
-          shouldReturn = true
+        if (p.type === 4) {
+          let { total } = await statusCollection
+            .where({
+              userID: wxContext.OPENID,
+              planID: p.planID,
+              year: dateObj.getFullYear(),
+              month: dateObj.getMonth() + 1,
+              status: 1 // 1-已完成 0-未完成
+            })
+            .count()
+          console.log('getPlanByDate 月计划 times 完成的次数', total)
+          totalTimes = total
+        } else if (p.type === 3 && p.subType === 1) {
+          let { total } = await statusCollection
+            .where({
+              userID: wxContext.OPENID,
+              planID: p.planID,
+              year: dateObj.getFullYear(),
+              month: dateObj.getMonth() + 1,
+              weekStart: getWeekStart(dateObj),
+              status: 1 // 1-已完成 0-未完成
+            })
+            .count()
+          console.log('getPlanByDate 周计划 times 完成的次数', total)
+          totalTimes = total
         }
-      } else if (p.type === 3 && p.subType === 1) {
-        let { total } = await statusCollection
-          .where({
-            userID: wxContext.OPENID,
-            planID: p.planID,
-            type: p.type,
-            subType: p.subType,
-            year: dateObj.getFullYear(),
-            month: dateObj.getMonth() + 1,
-            weekStart: getWeekStart(dateObj),
-            status: 1 // 1-已完成 0-未完成
-          })
-          .count()
-        console.log('getPlanByDate 周计划 times 完成的次数', total)
-        totalTimes = total
-        if (total >= p.times && !isQueryToday) {
-          shouldReturn = false
-        } else {
-          shouldReturn = true
-        }
-      } else {
-        shouldReturn = false
-      }
 
-      if (shouldReturn) {
+        // 改成都返回吧，这样即使任务完成了，还可以继续打卡
         const item = {
           planID: p.planID,
           name: p.name,
@@ -162,25 +152,13 @@ exports.main = async (event, context) => {
           .where({
             userID: wxContext.OPENID,
             planID: p.planID,
-            type: p.type,
-            subType: p.subType,
             year: dateObj.getFullYear(),
             month: dateObj.getMonth() + 1,
             day: dateObj.getDate(),
             weekStart: getWeekStart(dateObj)
           })
           .get()
-        console.log('should return query params: ', {
-          userID: wxContext.OPENID,
-          planID: p.planID,
-          type: p.type,
-          subType: p.subType,
-          year: dateObj.getFullYear(),
-          month: dateObj.getMonth() + 1,
-          day: dateObj.getDate(),
-          weekStart: getWeekStart(dateObj)
-        })
-        console.log('should return query result: ', data)
+
         let detail = data[0]
         if (!detail) {
           detail = {

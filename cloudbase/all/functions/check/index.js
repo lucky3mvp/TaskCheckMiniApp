@@ -55,9 +55,6 @@ exports.main = async (event, context) => {
     }
   } catch (err) {
     console.log('err: ', err)
-    // return {
-    //   code: 333
-    // }
   }
 
   const wxContext = cloud.getWXContext()
@@ -94,13 +91,14 @@ exports.main = async (event, context) => {
   const planCollection = db.collection('plan')
   const statusCollection = db.collection('planCheckStatus')
   const { errMsg: errMsg2, data: data2 } = await planCollection
-    .where({
-      userID: wxContext.OPENID,
-      planID: planID,
-      status: 1 // 1-正常 2-已删除
-    })
+    // .where({
+    //   userID: wxContext.OPENID,
+    //   planID: planID,
+    //   status: 1 // 1-正常 2-已删除
+    // })
+    .doc(planID)
     .get()
-  const plan = data2[0]
+  const plan = data2
   console.log('check 查 plan : ', data2)
   if (plan) {
     // 2.查这个计划当前的打卡状态
@@ -108,8 +106,8 @@ exports.main = async (event, context) => {
       .where({
         userID: wxContext.OPENID,
         planID: planID,
-        type: plan.type,
-        subType: plan.subType,
+        // type: plan.type,
+        // subType: plan.subType,
         year: checkYear,
         month: checkMonth,
         day: checkDay,
@@ -126,8 +124,8 @@ exports.main = async (event, context) => {
         planID: planID,
         totalAchieve: achieve,
         status: achieve >= plan.goal ? 1 : 0, // 1-已完成 0-未完成
-        type: plan.type,
-        subType: plan.subType,
+        // type: plan.type,
+        // subType: plan.subType,
         year: checkYear,
         month: checkMonth,
         day: checkDay,

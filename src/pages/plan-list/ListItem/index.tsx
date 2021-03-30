@@ -57,26 +57,26 @@ export default (props: IProps) => {
               </View>
             </View>
           ) : null}
-          {/* {props.status === 2 ? (
+          {props.status === 2 ? (
             <View className="mid-item">
               <View>本月打卡次数</View>
               <View className={`mid-item-times ${props.theme}-color`}>
                 {props.monthTimes || 0}
               </View>
             </View>
-          ) : null} */}
+          ) : null}
           <View className="mid-item">
             <View>累计打卡次数</View>
             <View className={`mid-item-times ${props.theme}-color`}>
               {props.totalCheckTimes || 0}
             </View>
           </View>
-          <View className="mid-item">
+          {/* <View className="mid-item">
             <View>累计完成次数</View>
             <View className={`mid-item-times ${props.theme}-color`}>
               {props.totalTimes || 0}
             </View>
-          </View>
+          </View> */}
         </View>
       ) : null}
       {props.status === 3 ? (
