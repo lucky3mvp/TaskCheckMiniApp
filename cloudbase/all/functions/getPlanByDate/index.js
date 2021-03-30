@@ -102,7 +102,6 @@ exports.main = async (event, context) => {
           days.indexOf(`${dateObj.getDay()}`) >= 0)
       ) {
         if (p.type === 4) {
-          // 每月或每周几次的case, 如果当前次数已经完成，就不返回了
           let { total } = await statusCollection
             .where({
               userID: wxContext.OPENID,
