@@ -1,3 +1,26 @@
+const startedPlan = [
+  {
+    beginTime: 1609430400000,
+    category: 4,
+    days: '0',
+    description: '如果能重来，希望做一个知识人',
+    endTime: null,
+    goal: 300,
+    icon: 'reading',
+    monthTimes: 2,
+    name: '读书',
+    planID: '28ee4e3e601a43f402aa8a9a294acb51',
+    status: 2,
+    subType: 2,
+    theme: 'theme12',
+    times: '',
+    totalCheckTimes: 13,
+    totalTimes: 6,
+    type: 3,
+    unit: '6',
+    weekTimes: 0
+  }
+]
 const planLists = [
   {
     beginTime: 1617206400000,
@@ -242,5 +265,45 @@ const daysCategories = [
     status: 1,
     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
     _id: '79550af2604180b4085c4f825d82b526'
+  }
+]
+
+const checkList = [
+  {
+    achieve: 1,
+    checkTime: 1617959027026,
+    comment: '超累',
+    icon: 'yoga',
+    name: '瑜伽',
+    planID: '79550af2601a7525026aa98d1a450897',
+    theme: 'theme11',
+    unit: '1'
+  }
+]
+
+const checkListTabs = [
+  {
+    beginTime: 1609430400000,
+    category: 1,
+    description: '要优雅~~',
+    endTime: null,
+    icon: 'yoga',
+    name: '瑜伽',
+    planID: '79550af2601a7525026aa98d1a450897',
+    theme: 'theme11'
+  }
+]
+
+const readingList = [
+  {
+    comment: '很难过，愿世界和平，love and peace',
+    cover:
+      'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/jfRSjZDMz6aY81b3609a7f1a0776de38ee992bd5d9ee.jpg',
+    createTime: 1616457600000,
+    finishTime: 1616457600000,
+    name: '房思琪的初恋乐园',
+    status: 3,
+    userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    _id: 'b00064a760631b2c0ca05dd31764ae9e'
   }
 ]

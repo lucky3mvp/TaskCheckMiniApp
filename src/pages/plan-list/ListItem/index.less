@@ -79,7 +79,10 @@
     padding: 15px 20px 5px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    // justify-content: space-between;
+    .left {
+      flex: 1;
+    }
     &-item {
       font-size: 12px;
       font-family: 'PingFangSC-Medium';
@@ -89,6 +92,16 @@
     }
     .status-icon {
       font-size: 56px;
+    }
+    .icon-daka,
+    .icon-edit {
+      font-size: 16px;
+      margin-left: 15px;
+      color: #707070;
+      color: #444444;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
   }
 }

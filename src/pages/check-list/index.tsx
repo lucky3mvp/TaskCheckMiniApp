@@ -79,10 +79,36 @@ class CheckList extends Component<IProps, IState> {
     }
 
     console.log('未命中cache，发起请求')
-    const { code, list = [], tabs = [] } = await getCheckList({
-      date: date,
-      returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
-    })
+    // const { code, list = [], tabs = [] } = await getCheckList({
+    //   date: date,
+    //   returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
+    // })
+    const code = 200
+    const list = [
+      {
+        achieve: 1,
+        checkTime: 1617959027026,
+        comment: '超累',
+        icon: 'yoga',
+        name: '瑜伽',
+        planID: '79550af2601a7525026aa98d1a450897',
+        theme: 'theme11',
+        unit: '1'
+      }
+    ]
+    const tabs = [
+      {
+        beginTime: 1609430400000,
+        category: 1,
+        description: '要优雅~~',
+        endTime: null,
+        icon: 'yoga',
+        name: '瑜伽',
+        planID: '79550af2601a7525026aa98d1a450897',
+        theme: 'theme11'
+      }
+    ]
+    console.log(list, tabs)
     if (code === 200) {
       const lo = list.map(l => {
         return {

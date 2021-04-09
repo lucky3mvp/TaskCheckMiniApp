@@ -60,12 +60,81 @@ class PlanList extends Component<IProps, IState> {
       Taro.showLoading({
         title: '加载中...'
       })
-    const {
-      code,
-      unStarted = [],
-      started = [],
-      ended = []
-    } = await getPlanList()
+    // const {
+    //   code,
+    //   unStarted = [],
+    //   started = [],
+    //   ended = []
+    // } = await getPlanList()
+    const unStarted = [
+      {
+        beginTime: 1609430400000,
+        category: 4,
+        days: '0',
+        description: '如果能重来，希望做一个知识人',
+        endTime: null,
+        goal: 300,
+        icon: 'reading',
+        monthTimes: 2,
+        name: '读书',
+        planID: '28ee4e3e601a43f402aa8a9a294acb51',
+        status: 1,
+        subType: 2,
+        theme: 'theme12',
+        times: '',
+        totalCheckTimes: 13,
+        totalTimes: 6,
+        type: 3,
+        unit: '6',
+        weekTimes: 0
+      }
+    ]
+    const started = [
+      {
+        beginTime: 1609430400000,
+        category: 4,
+        days: '0',
+        description: '如果能重来，希望做一个知识人',
+        endTime: null,
+        goal: 300,
+        icon: 'reading',
+        monthTimes: 2,
+        name: '读书',
+        planID: '28ee4e3e601a43f402aa8a9a294acb51',
+        status: 2,
+        subType: 2,
+        theme: 'theme12',
+        times: '',
+        totalCheckTimes: 13,
+        totalTimes: 6,
+        type: 3,
+        unit: '6',
+        weekTimes: 0
+      }
+    ]
+    const ended = [
+      {
+        beginTime: 1609430400000,
+        category: 4,
+        days: '0',
+        description: '如果能重来，希望做一个知识人',
+        endTime: null,
+        goal: 300,
+        icon: 'reading',
+        monthTimes: 2,
+        name: '读书',
+        planID: '28ee4e3e601a43f402aa8a9a294acb51',
+        status: 3,
+        subType: 2,
+        theme: 'theme12',
+        times: '',
+        totalCheckTimes: 13,
+        totalTimes: 6,
+        type: 3,
+        unit: '6',
+        weekTimes: 0
+      }
+    ]
     console.log(unStarted, started, ended)
     this.setState({
       loading: false,
@@ -86,10 +155,15 @@ class PlanList extends Component<IProps, IState> {
       index: index
     })
   }
-  onClickPlan = (plan: PlanType) => {
+  onGotoEdit = (plan: PlanType) => {
     Taro.setStorageSync('plan', plan)
     Taro.navigateTo({
       url: '/pages/plan-edit/index'
+    })
+  }
+  onGotoRecord = (plan: PlanType) => {
+    Taro.showToast({
+      title: 'todo'
     })
   }
   render() {
@@ -114,7 +188,7 @@ class PlanList extends Component<IProps, IState> {
                   {this.state.unStarted.map(item => (
                     <ListItem
                       {...item}
-                      onClick={this.onClickPlan.bind(this, item)}
+                      onEdit={this.onGotoEdit.bind(this, item)}
                     />
                   ))}
                 </View>
@@ -128,7 +202,8 @@ class PlanList extends Component<IProps, IState> {
                   {this.state.started.map(item => (
                     <ListItem
                       {...item}
-                      onClick={this.onClickPlan.bind(this, item)}
+                      onEdit={this.onGotoEdit.bind(this, item)}
+                      onRecord={this.onGotoRecord.bind(this, item)}
                     />
                   ))}
                 </View>
@@ -140,7 +215,10 @@ class PlanList extends Component<IProps, IState> {
               {this.state.loading ? null : this.state.ended.length ? (
                 <View className="swiper-item-scroll">
                   {this.state.ended.map(item => (
-                    <ListItem {...item} />
+                    <ListItem
+                      {...item}
+                      onRecord={this.onGotoRecord.bind(this, item)}
+                    />
                   ))}
                 </View>
               ) : (
