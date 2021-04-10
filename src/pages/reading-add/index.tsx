@@ -22,6 +22,7 @@ type PageDispatchProps = {}
 type PageOwnProps = {}
 
 type IState = {
+  initialValue: Number[]
   fileID: string
   name: string
   status: number
@@ -36,13 +37,22 @@ class Check extends Component<IProps, IState> {
   lock = false
   timeStartDate = new Date(2021, 0, 1)
   state = {
+    initialValue: [0, 0, 0],
     fileID: '',
     name: '',
     status: 3, // 1-未读 2-在读 3-读完
     time: '',
     comment: ''
   }
-  async componentDidMount() {}
+  componentDidMount() {
+    const today = new Date()
+    const y = today.getFullYear()
+    const m = today.getMonth()
+    const d = today.getDate()
+    this.setState({
+      initialValue: [y - 2021, m, d - 1]
+    })
+  }
 
   componentDidShow() {}
 
@@ -227,6 +237,7 @@ class Check extends Component<IProps, IState> {
               <DatePicker
                 placeholder="选择时间"
                 startDate={this.timeStartDate}
+                initialValue={this.state.initialValue}
                 formatter={this.formatTime}
                 onChange={this.onChooseTime}
               />
