@@ -52,7 +52,7 @@ class Check extends Component<IProps, IState> {
     list: [],
     loading: true,
     yearOptions: [],
-    yearIndex: 0,
+    yearIndex: 1,
     year: new Date().getFullYear(),
     statusOptions: [],
     statusIndex: 3,
@@ -105,11 +105,16 @@ class Check extends Component<IProps, IState> {
   }
 
   initData() {
-    const yearOptions: Array<CommonItemType> = []
+    const yearOptions: Array<CommonItemType> = [
+      {
+        label: '全部',
+        value: '0'
+      }
+    ]
     const year = new Date().getFullYear()
     this.thisYear = year // 存一下
     let yearIndex = 0
-    for (let i = 2021, j = 0; i <= year; i++, j++) {
+    for (let i = 2021, j = 1; i <= year; i++, j++) {
       if (year === i) {
         yearIndex = j
       }
@@ -118,10 +123,15 @@ class Check extends Component<IProps, IState> {
         value: `${year}`
       })
     }
-    const statusOptions: Array<CommonItemType> = []
-    let status = 3 // 全部
+    const statusOptions: Array<CommonItemType> = [
+      {
+        label: '全部',
+        value: '0'
+      }
+    ]
+    let status = 3 // 默认选中读完
     let statusIndex = 0
-    let index = -1
+    let index = 0
     for (let key of Object.keys(ReadingStatusMap)) {
       index++
       if (+key === status) {
@@ -156,13 +166,26 @@ class Check extends Component<IProps, IState> {
     Taro.showLoading({
       title: '加载中...'
     })
-    console.log('去请求数据')
-    const { list = [] } = await commonApi({
-      _scope: 'reading',
-      _type: 'fetchList',
-      year: params.year,
-      status: params.status
-    })
+    console.log('去请求数据', params)
+    // const { list = [] } = await commonApi({
+    //   _scope: 'reading',
+    //   _type: 'fetchList',
+    //   year: params.year,
+    //   status: params.status
+    // })
+    const list = [
+      {
+        comment: '很难过，愿世界和平，love and peace',
+        cover:
+          'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/jfRSjZDMz6aY81b3609a7f1a0776de38ee992bd5d9ee.jpg',
+        createTime: 1616457600000,
+        finishTime: 1616457600000,
+        name: '房思琪的初恋乐园',
+        status: 3,
+        userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+        _id: 'b00064a760631b2c0ca05dd31764ae9e'
+      }
+    ]
     Taro.hideLoading()
 
     const r = list.map((l: ReadingListItemType) => ({

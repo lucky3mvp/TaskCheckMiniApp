@@ -42,22 +42,10 @@ const getWeekStart = function (d) {
 
 exports.main = async (event, context) => {
   console.log('getPlanByDate params: ', event)
-
   const wxContext = cloud.getWXContext()
-
   const { date } = event
   const dateObj = new Date(date)
   const dateTime = dateObj.getTime()
-
-  let [queryYear, queryMonth, queryDay] = date.split('/')
-  queryYear = Number(queryYear)
-  queryMonth = Number(queryMonth)
-  queryDay = Number(queryDay)
-
-  const today = new Date()
-  const todayYear = today.getFullYear()
-  const todayMonth = today.getMonth() + 1
-  const todayDay = today.getDate()
 
   /**
    * 从小程序打卡页面进来的，isQueryToday都是true
@@ -68,6 +56,14 @@ exports.main = async (event, context) => {
    * 修改成不通过完成次数决定返不返回了，如果完成了，那么也展示，
    * 因此返回的status其实只表示今天这一天计划的状态
    */
+  // let [queryYear, queryMonth, queryDay] = date.split('/')
+  // queryYear = Number(queryYear)
+  // queryMonth = Number(queryMonth)
+  // queryDay = Number(queryDay)
+  // const today = new Date()
+  // const todayYear = today.getFullYear()
+  // const todayMonth = today.getMonth() + 1
+  // const todayDay = today.getDate()
   // const isQueryToday =
   //   queryYear === todayYear &&
   //   queryMonth === todayMonth &&
@@ -111,20 +107,18 @@ exports.main = async (event, context) => {
               status: 1 // 1-已完成 0-未完成
             })
             .count()
-          console.log('getPlanByDate 月计划 times 完成的次数', total)
+          console.log('getPlanByDate 月计划完成的次数', p.name, total)
           totalTimes = total
         } else if (p.type === 3 && p.subType === 1) {
           let { total } = await statusCollection
             .where({
               userID: wxContext.OPENID,
               planID: p.planID,
-              year: dateObj.getFullYear(),
-              month: dateObj.getMonth() + 1,
               weekStart: getWeekStart(dateObj),
               status: 1 // 1-已完成 0-未完成
             })
             .count()
-          console.log('getPlanByDate 周计划 times 完成的次数', total)
+          console.log('getPlanByDate 周计划完成的次数', p.name, total)
           totalTimes = total
         }
 
@@ -159,6 +153,7 @@ exports.main = async (event, context) => {
           })
           .get()
 
+        console.log('取status： ', p.name, data)
         let detail = data[0]
         if (!detail) {
           detail = {
