@@ -4,7 +4,6 @@ import { View, Swiper, SwiperItem, Block, Image } from '@tarojs/components'
 import Empty from 'src/components/Empty'
 import TopBar from 'src/components/TopBar'
 import ListItem from './ListItem'
-
 import { getPlanList } from 'src/utils/request2.0'
 import { pxTransform } from 'src/utils'
 import manualEvent from 'src/utils/manualEvent'

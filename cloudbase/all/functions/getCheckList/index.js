@@ -3,12 +3,11 @@ cloud.init()
 
 exports.main = async (event, context) => {
   console.log('getCheckList params: ', event)
-
   const db = cloud.database()
   const _ = db.command
   const wxContext = cloud.getWXContext()
 
-  let { pageSize = 20, pageNo = 1, date, version, returnPlanTabs } = event
+  let { date, returnPlanTabs } = event
 
   let tabs = []
   let list = []
@@ -35,13 +34,19 @@ exports.main = async (event, context) => {
     console.log('check list should return plan tabs', tabs)
   }
 
+  /**
+   * 坑?微信是utc时间，不是东八区
+   */
   const dateObj = new Date(date)
-  const dateBeginTimestamp = dateObj.getTime()
-  const dateEndTimestamp = new Date(
-    dateObj.getFullYear(),
-    dateObj.getMonth(),
-    dateObj.getDate() + 1
-  ).getTime()
+  const dateBeginTimestamp = dateObj.getTime() - 8 * 60 * 60 * 1000
+  const dateEndTimestamp =
+    new Date(
+      dateObj.getFullYear(),
+      dateObj.getMonth(),
+      dateObj.getDate() + 1
+    ).getTime() -
+    8 * 60 * 60 * 1000 -
+    1
   console.log('get check list v2', dateBeginTimestamp, dateEndTimestamp)
   const checkCollection = db.collection('check')
   const { data: checkList } = await checkCollection
@@ -70,6 +75,7 @@ exports.main = async (event, context) => {
         planID,
         comment: check.comment,
         checkTime: check.checkTime,
+        actualCheckTime: check.actualCheckTime,
         achieve: check.achieve,
         name: plan.name,
         icon: plan.icon,

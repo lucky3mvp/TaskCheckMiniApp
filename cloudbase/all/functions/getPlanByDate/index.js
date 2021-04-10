@@ -56,19 +56,6 @@ exports.main = async (event, context) => {
    * 修改成不通过完成次数决定返不返回了，如果完成了，那么也展示，
    * 因此返回的status其实只表示今天这一天计划的状态
    */
-  // let [queryYear, queryMonth, queryDay] = date.split('/')
-  // queryYear = Number(queryYear)
-  // queryMonth = Number(queryMonth)
-  // queryDay = Number(queryDay)
-  // const today = new Date()
-  // const todayYear = today.getFullYear()
-  // const todayMonth = today.getMonth() + 1
-  // const todayDay = today.getDate()
-  // const isQueryToday =
-  //   queryYear === todayYear &&
-  //   queryMonth === todayMonth &&
-  //   queryDay === todayDay
-
   const db = cloud.database()
   const _ = db.command
   const collection = db.collection('plan')

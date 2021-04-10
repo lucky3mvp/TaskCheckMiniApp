@@ -28,7 +28,11 @@
     "dev:jd": "npm run build:jd -- --watch",
     "dev:quickapp": "npm run build:quickapp -- --watch"
   },
-  "browserslist": ["last 3 versions", "Android >= 4.1", "ios >= 8"],
+  "browserslist": [
+    "last 3 versions",
+    "Android >= 4.1",
+    "ios >= 8"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {

@@ -58,31 +58,25 @@ exports.main = async (event, context) => {
   }
 
   const wxContext = cloud.getWXContext()
-  const { achieve, comment, planID } = event
+  const { achieve, comment, planID, isReCheck } = event
   const checkDate = event.date ? new Date(event.date) : new Date()
-  let checkYear, checkMonth, checkDay
-  if (event.date) {
-    const arr = event.date.split('/')
-    checkYear = +arr[0]
-    checkMonth = +arr[1]
-    checkDay = +arr[2]
-  } else {
-    checkYear = checkDate.getFullYear()
-    checkMonth = checkDate.getMonth() + 1
-    checkDay = checkDate.getDate()
-  }
+  const checkYear = checkDate.getFullYear()
+  const checkMonth = checkDate.getMonth() + 1
+  const checkDay = checkDate.getDate()
 
   const db = cloud.database()
   const _ = db.command
   const collection = db.collection('check')
 
+  const t = Date.now()
   const { errMsg, _id } = await collection.add({
     data: {
       userID: wxContext.OPENID,
       planID: planID,
       achieve: achieve,
       comment: comment,
-      checkTime: new Date().getTime() // 记录实际打卡的时间
+      actualCheckTime: t,
+      checkTime: isReCheck ? checkDate.getTime() - 8 * 60 * 60 * 1000 : t
     }
   })
 
