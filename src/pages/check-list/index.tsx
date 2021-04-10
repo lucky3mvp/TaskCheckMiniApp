@@ -7,6 +7,7 @@ import Gap from 'src/components/Gap'
 import { UnitMap } from 'src/constants/config'
 import { getCheckList } from 'src/utils/request2.0'
 import { formatDate } from 'src/utils'
+import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
 import Calendar from './Calendar'
@@ -43,6 +44,7 @@ class CheckList extends Component<IProps, IState> {
     inited: false,
     curPlan: 'all',
     selectedDate: formatDate(new Date(), 'yyyy/MM/dd'),
+    todayDate: formatDate(new Date(), 'yyyy/MM/dd'),
     tabs: [],
     list: [],
     listOrigin: []
@@ -83,37 +85,16 @@ class CheckList extends Component<IProps, IState> {
       date: date,
       returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
     })
-    // const code = 200
-    // const list = [
-    //   {
-    //     achieve: 1,
-    //     checkTime: 1617959027026,
-    //     comment: '超累',
-    //     icon: 'yoga',
-    //     name: '瑜伽',
-    //     planID: '79550af2601a7525026aa98d1a450897',
-    //     theme: 'theme11',
-    //     unit: '1'
-    //   }
-    // ]
-    // const tabs = [
-    //   {
-    //     beginTime: 1609430400000,
-    //     category: 1,
-    //     description: '要优雅~~',
-    //     endTime: null,
-    //     icon: 'yoga',
-    //     name: '瑜伽',
-    //     planID: '79550af2601a7525026aa98d1a450897',
-    //     theme: 'theme11'
-    //   }
-    // ]
     console.log(list, tabs)
     if (code === 200) {
       const lo = list.map(l => {
         return {
           ...l,
           checkTime: formatDate(new Date(l.checkTime), 'yyyy.MM.dd hh:mm'),
+          actualCheckTime:
+            l.actualCheckTime && l.actualCheckTime !== l.checkTime
+              ? formatDate(new Date(l.actualCheckTime), 'yyyy.MM.dd hh:mm')
+              : '',
           isShowComment: false
         }
       })
@@ -135,6 +116,15 @@ class CheckList extends Component<IProps, IState> {
   gotoCheckPage = () => {
     Taro.switchTab({
       url: '/pages/check/index'
+    })
+  }
+  gotoSpecificCheckPage = () => {
+    //  manualEvent.change
+    /**
+     * todo
+     */
+    Taro.navigateTo({
+      url: `/pages/check/index?date=${this.state.selectedDate}`
     })
   }
   onClickComment = (index: number) => {
@@ -205,12 +195,21 @@ class CheckList extends Component<IProps, IState> {
           </View>
         ) : !this.state.listOrigin.length ? (
           <View className="has-plan-but-no-check">
-            <Empty tip="还没有打卡记录，要加油了鸭！">
-              <View className="go-check" onClick={this.gotoCheckPage}>
-                <View>去打卡</View>
-                <View className="iconfont icon-right-arrow" />
-              </View>
-            </Empty>
+            {this.state.selectedDate === this.state.todayDate ? (
+              <Empty tip="还没有打卡记录，要加油了鸭！">
+                <View className="go-check" onClick={this.gotoCheckPage}>
+                  <View>去打卡</View>
+                  <View className="iconfont icon-right-arrow" />
+                </View>
+              </Empty>
+            ) : (
+              <Empty tip="没有找到打卡记录，是忘记打卡了嘛？">
+                <View className="go-check" onClick={this.gotoSpecificCheckPage}>
+                  <View>去补打卡</View>
+                  <View className="iconfont icon-right-arrow" />
+                </View>
+              </Empty>
+            )}
           </View>
         ) : !this.state.list.length ? (
           <View className="no-more">暂无数据~</View>
@@ -230,7 +229,11 @@ class CheckList extends Component<IProps, IState> {
                       </View>
                     </View>
                     <View className="detail-item">
-                      <View className="time">{l.checkTime}</View>
+                      <View className="time">
+                        {l.actualCheckTime
+                          ? `${l.actualCheckTime} 补打卡`
+                          : l.checkTime}
+                      </View>
                       {l.comment ? (
                         <View
                           className="check-comment"

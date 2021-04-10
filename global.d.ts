@@ -121,6 +121,7 @@ type CheckListItemType = {
   planID: string
   comment: string
   checkTime: string
+  actualCheckTime: string
   achieve: number
   name: string
   icon: string
