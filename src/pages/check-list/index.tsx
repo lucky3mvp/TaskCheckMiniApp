@@ -7,6 +7,7 @@ import Gap from 'src/components/Gap'
 import { UnitMap } from 'src/constants/config'
 import { getCheckList } from 'src/utils/request2.0'
 import { formatDate } from 'src/utils'
+
 import manualEvent from 'src/utils/manualEvent'
 
 import './index.less'
@@ -51,6 +52,14 @@ class CheckList extends Component<IProps, IState> {
   }
   componentDidMount() {
     this.fetchCheckList()
+    manualEvent
+      .register('check-list')
+      .on('update current day check list', () => {
+        this.fetchCheckList({ isForce: true })
+      })
+  }
+  componentDidShow() {
+    manualEvent.run('check-list')
   }
   onShareAppMessage() {
     return {
@@ -58,14 +67,14 @@ class CheckList extends Component<IProps, IState> {
       path: '/pages/check/index'
     }
   }
-  async fetchCheckList(paramDate = '') {
+  async fetchCheckList(params: Record<string, any> = {}) {
+    const { date = this.state.selectedDate, isForce = false } = params
     !this.state.inited &&
       Taro.showLoading({
         title: '加载中...'
       })
     const { curPlan, selectedDate } = this.state
-    const date = paramDate || selectedDate
-    if (this.cache[`${date}`]) {
+    if (this.cache[`${date}`] && !isForce) {
       console.log('命中cache，不会请求')
       const listOrigin = this.cache[`${date}`]
       this.setState({
@@ -80,7 +89,7 @@ class CheckList extends Component<IProps, IState> {
       return
     }
 
-    console.log('未命中cache，发起请求')
+    console.log('未命中cache，或强制刷新，发起请求')
     const { code, list = [], tabs = [] } = await getCheckList({
       date: date,
       returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
@@ -119,12 +128,8 @@ class CheckList extends Component<IProps, IState> {
     })
   }
   gotoSpecificCheckPage = () => {
-    //  manualEvent.change
-    /**
-     * todo
-     */
     Taro.navigateTo({
-      url: `/pages/check/index?date=${this.state.selectedDate}`
+      url: `/pages/recheck/index?date=${this.state.selectedDate}`
     })
   }
   onClickComment = (index: number) => {
@@ -169,7 +174,7 @@ class CheckList extends Component<IProps, IState> {
         selectedDate: d
       },
       () => {
-        this.fetchCheckList(d)
+        this.fetchCheckList({ date: d })
       }
     )
   }
@@ -212,7 +217,13 @@ class CheckList extends Component<IProps, IState> {
             )}
           </View>
         ) : !this.state.list.length ? (
-          <View className="no-more">暂无数据~</View>
+          <View className="no-more">
+            暂无数据~是不是忘记打卡了？
+            <View className="go-check" onClick={this.gotoSpecificCheckPage}>
+              <View>去补打卡</View>
+              <View className="iconfont icon-right-arrow" />
+            </View>
+          </View>
         ) : (
           <Block>
             {this.state.list.map((l: CheckListItemType, index) => (

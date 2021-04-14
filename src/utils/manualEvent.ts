@@ -4,6 +4,7 @@ type PageNameType =
   | 'reading-list-page'
   | 'days-add-page'
   | 'days-list-page'
+  | 'check-list'
 
 type EventNameType =
   | ''
@@ -13,6 +14,7 @@ type EventNameType =
   | 'update reading list'
   | 'update days category'
   | 'update days list'
+  | 'update current day check list'
 
 class Events {
   constructor() {
