@@ -59,81 +59,12 @@ class PlanList extends Component<IProps, IState> {
       Taro.showLoading({
         title: '加载中...'
       })
-    // const {
-    //   code,
-    //   unStarted = [],
-    //   started = [],
-    //   ended = []
-    // } = await getPlanList()
-    const unStarted = [
-      {
-        beginTime: 1609430400000,
-        category: 4,
-        days: '0',
-        description: '如果能重来，希望做一个知识人',
-        endTime: null,
-        goal: 300,
-        icon: 'reading',
-        monthTimes: 2,
-        name: '读书',
-        planID: '28ee4e3e601a43f402aa8a9a294acb51',
-        status: 1,
-        subType: 2,
-        theme: 'theme12',
-        times: '',
-        totalCheckTimes: 13,
-        totalTimes: 6,
-        type: 3,
-        unit: '6',
-        weekTimes: 0
-      }
-    ]
-    const started = [
-      {
-        beginTime: 1609430400000,
-        category: 4,
-        days: '0',
-        description: '如果能重来，希望做一个知识人',
-        endTime: null,
-        goal: 300,
-        icon: 'reading',
-        monthTimes: 2,
-        name: '读书',
-        planID: '28ee4e3e601a43f402aa8a9a294acb51',
-        status: 2,
-        subType: 2,
-        theme: 'theme12',
-        times: '',
-        totalCheckTimes: 13,
-        totalTimes: 6,
-        type: 3,
-        unit: '6',
-        weekTimes: 0
-      }
-    ]
-    const ended = [
-      {
-        beginTime: 1609430400000,
-        category: 4,
-        days: '0',
-        description: '如果能重来，希望做一个知识人',
-        endTime: null,
-        goal: 300,
-        icon: 'reading',
-        monthTimes: 2,
-        name: '读书',
-        planID: '28ee4e3e601a43f402aa8a9a294acb51',
-        status: 3,
-        subType: 2,
-        theme: 'theme12',
-        times: '',
-        totalCheckTimes: 13,
-        totalTimes: 6,
-        type: 3,
-        unit: '6',
-        weekTimes: 0
-      }
-    ]
+    const {
+      code,
+      unStarted = [],
+      started = [],
+      ended = []
+    } = await getPlanList()
     console.log(unStarted, started, ended)
     this.setState({
       loading: false,

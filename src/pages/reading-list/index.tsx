@@ -167,25 +167,12 @@ class Check extends Component<IProps, IState> {
       title: '加载中...'
     })
     console.log('去请求数据', params)
-    // const { list = [] } = await commonApi({
-    //   _scope: 'reading',
-    //   _type: 'fetchList',
-    //   year: params.year,
-    //   status: params.status
-    // })
-    const list = [
-      {
-        comment: '很难过，愿世界和平，love and peace',
-        cover:
-          'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/jfRSjZDMz6aY81b3609a7f1a0776de38ee992bd5d9ee.jpg',
-        createTime: 1616457600000,
-        finishTime: 1616457600000,
-        name: '房思琪的初恋乐园',
-        status: 3,
-        userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
-        _id: 'b00064a760631b2c0ca05dd31764ae9e'
-      }
-    ]
+    const { list = [] } = await commonApi({
+      _scope: 'reading',
+      _type: 'fetchList',
+      year: params.year,
+      status: params.status
+    })
     Taro.hideLoading()
 
     const r = list.map((l: ReadingListItemType) => ({
