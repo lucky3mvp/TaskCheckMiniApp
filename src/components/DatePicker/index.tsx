@@ -8,7 +8,7 @@ interface IProps {
   placeholder?: string
   startDate?: Date
   endDate?: Date
-  range?: number // range 和 endDate 必须二传一
+  range?: number
   specificStart?: Array<Array<CommonItemType>>
   initialValue?: Array<number>
   leftArrow?: boolean

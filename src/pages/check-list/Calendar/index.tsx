@@ -14,7 +14,7 @@ type IProps = {
 }
 
 export default (props: IProps) => {
-  const [fold, setFold] = useState(false)
+  const [fold, setFold] = useState(true)
   const onToggleFold = useCallback(() => {
     setFold(!fold)
   }, [fold])

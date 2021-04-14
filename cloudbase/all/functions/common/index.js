@@ -64,8 +64,25 @@ exports.main = async (event, context) => {
       const yearBeginTime = new Date(year, 0, 1).getTime()
       const yearEndTime = new Date(year + 1, 0, 1).getTime()
       let list = []
-      if (status === 0) {
-        // 全部
+      if (year === 0 && status === 0) {
+        const { errMsg, data } = await collection
+          .where({
+            userID: wxContext.OPENID,
+            status: _.neq(4) // 非删除的书
+          })
+          .orderBy('createTime', 'desc')
+          .get()
+        list = data
+      } else if (year === 0) {
+        const { errMsg, data } = await collection
+          .where({
+            userID: wxContext.OPENID,
+            status: status
+          })
+          .orderBy('createTime', 'desc')
+          .get()
+        list = data
+      } else if (status === 0) {
         const { errMsg, data } = await collection
           .where({
             userID: wxContext.OPENID,
@@ -75,8 +92,7 @@ exports.main = async (event, context) => {
           .orderBy('createTime', 'desc')
           .get()
         list = data
-        console.log('fetch reading list all：', list)
-      } else if (status === 1 || status === 2 || status === 3) {
+      } else {
         const { errMsg, data } = await collection
           .where({
             userID: wxContext.OPENID,
@@ -93,9 +109,8 @@ exports.main = async (event, context) => {
           )
           .get()
         list = data
-        console.log('fetch reading list not all：', status, list)
       }
-
+      console.log('fetch reading list not all：', status, list)
       return {
         code: 200,
         list

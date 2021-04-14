@@ -10,6 +10,7 @@ export default {
     'pages/plan-edit/index',
     'pages/plan-list/index',
     'pages/check-list/index',
+    'pages/recheck/index',
     'pages/menstruation/index',
     'pages/reading-list/index',
     'pages/reading-add/index'

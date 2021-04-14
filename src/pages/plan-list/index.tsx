@@ -4,7 +4,6 @@ import { View, Swiper, SwiperItem, Block, Image } from '@tarojs/components'
 import Empty from 'src/components/Empty'
 import TopBar from 'src/components/TopBar'
 import ListItem from './ListItem'
-
 import { getPlanList } from 'src/utils/request2.0'
 import { pxTransform } from 'src/utils'
 import manualEvent from 'src/utils/manualEvent'
@@ -86,10 +85,15 @@ class PlanList extends Component<IProps, IState> {
       index: index
     })
   }
-  onClickPlan = (plan: PlanType) => {
+  onGotoEdit = (plan: PlanType) => {
     Taro.setStorageSync('plan', plan)
     Taro.navigateTo({
       url: '/pages/plan-edit/index'
+    })
+  }
+  onGotoRecord = (plan: PlanType) => {
+    Taro.showToast({
+      title: 'todo'
     })
   }
   render() {
@@ -114,7 +118,7 @@ class PlanList extends Component<IProps, IState> {
                   {this.state.unStarted.map(item => (
                     <ListItem
                       {...item}
-                      onClick={this.onClickPlan.bind(this, item)}
+                      onEdit={this.onGotoEdit.bind(this, item)}
                     />
                   ))}
                 </View>
@@ -128,7 +132,8 @@ class PlanList extends Component<IProps, IState> {
                   {this.state.started.map(item => (
                     <ListItem
                       {...item}
-                      onClick={this.onClickPlan.bind(this, item)}
+                      onEdit={this.onGotoEdit.bind(this, item)}
+                      onRecord={this.onGotoRecord.bind(this, item)}
                     />
                   ))}
                 </View>
@@ -140,7 +145,10 @@ class PlanList extends Component<IProps, IState> {
               {this.state.loading ? null : this.state.ended.length ? (
                 <View className="swiper-item-scroll">
                   {this.state.ended.map(item => (
-                    <ListItem {...item} />
+                    <ListItem
+                      {...item}
+                      onRecord={this.onGotoRecord.bind(this, item)}
+                    />
                   ))}
                 </View>
               ) : (

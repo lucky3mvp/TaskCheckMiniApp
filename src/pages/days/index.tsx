@@ -42,7 +42,7 @@ class Check extends Component<IProps, IState> {
   }
   async componentDidMount() {
     wx.cloud.init()
-    this.getDaysList()
+    this.getDaysList(true)
     this.getCategoryList()
     manualEvent
       .register('days-list-page')

@@ -5,7 +5,8 @@ import { formatDate } from 'src/utils'
 import './index.less'
 
 interface IProps extends PlanType {
-  onClick?: () => {}
+  onEdit?: () => {}
+  onRecord?: () => {}
 }
 
 export default (props: IProps) => {
@@ -21,11 +22,14 @@ export default (props: IProps) => {
     }
     return '永远'
   }, [props.endTime])
-  const onClick = useCallback(() => {
-    props.onClick && props.onClick()
+  const onEdit = useCallback(() => {
+    props.onEdit && props.onEdit()
+  }, [])
+  const onRecord = useCallback(() => {
+    props.onRecord && props.onRecord()
   }, [])
   return (
-    <View className="plan-list-item" onClick={onClick}>
+    <View className="plan-list-item">
       <View className="top border-bottom">
         <View
           className={`plan-icon iconfont icon-${props.icon} ${props.theme}-color`}
@@ -102,7 +106,7 @@ export default (props: IProps) => {
         </View>
       ) : null}
       <View className="btm">
-        <View>
+        <View className="left">
           <View className="btm-item">
             目标：{props.goal}
             {UnitMap[props.unit]}
@@ -111,6 +115,12 @@ export default (props: IProps) => {
             时间：{beginTime} - {endTime}
           </View>
         </View>
+        {props.status === 1 || props.status === 2 ? (
+          <View className="iconfont icon-edit" onClick={onEdit} />
+        ) : null}
+        {props.status === 2 || props.status === 3 ? (
+          <View className="iconfont icon-daka" onClick={onRecord} />
+        ) : null}
       </View>
     </View>
   )

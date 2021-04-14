@@ -5,6 +5,7 @@ import './index.less'
 type IProps = {
   title?: string
   visible: boolean
+  hideCloseIcon?: boolean
   transparent?: boolean
   maskCloseable?: boolean
   children?: any
@@ -45,9 +46,11 @@ export default (props: IProps) => {
         onClick={onMaskClose}
       />
       <View className={`content ${status > 1 ? 'slide-up' : ''}`}>
-        <View className="close" onClick={onClose}>
-          <View className="iconfont icon-close" />
-        </View>
+        {!props.hideCloseIcon ? (
+          <View className="close" onClick={onClose}>
+            <View className="iconfont icon-close" />
+          </View>
+        ) : null}
         {props.title ? <View className="title">{props.title}</View> : null}
         {props.children}
       </View>
