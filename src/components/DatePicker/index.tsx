@@ -2,9 +2,10 @@ import React, { useEffect, useCallback, useMemo, useState } from 'react'
 
 import Picker from '../Picker'
 
-import { createDateRange } from 'src/utils'
+import { createDateRange, createDateRange2 } from 'src/utils'
 
 interface IProps {
+  isBackForward?: boolean
   placeholder?: string
   startDate?: Date
   endDate?: Date
@@ -41,18 +42,22 @@ export default (props: IProps) => {
   }, [props.endDate, props.range, startYear, startMonth, startDate])
 
   const endYear = useMemo(() => end.getFullYear(), [end])
-  const endMonth = useMemo(() => end.getMonth(), [end])
+  const endMonth = useMemo(() => end.getMonth() + 1, [end])
   const endDate = useMemo(() => end.getDate(), [end])
 
-  const getInitialRange = useCallback(
-    () =>
-      createDateRange({
-        start: start,
-        end: end,
-        specificStart: props.specificStart
-      }),
-    [start, end, props.specificStart]
-  )
+  const getInitialRange = useCallback(() => {
+    return props.isBackForward
+      ? createDateRange2({
+          start: start,
+          end: end,
+          specificStart: props.specificStart
+        })
+      : createDateRange({
+          start: start,
+          end: end,
+          specificStart: props.specificStart
+        })
+  }, [start, end, props])
   const [range, setRange] = useState(getInitialRange())
   const [lastRange, setLastRange] = useState(getInitialRange())
   const [index, setIndex] = useState(props.initialValue || [0, 0, 0])
