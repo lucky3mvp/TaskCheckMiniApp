@@ -33,7 +33,7 @@ type IState = {
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
 @connect()
-class Check extends Component<IProps, IState> {
+class ReadingAdd extends Component<IProps, IState> {
   lock = false
   timeStartDate = new Date(2021, 0, 1)
   state = {
@@ -263,4 +263,4 @@ class Check extends Component<IProps, IState> {
   }
 }
 
-export default Check
+export default ReadingAdd

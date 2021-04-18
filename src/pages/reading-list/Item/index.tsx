@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Image } from '@tarojs/components'
 import Radio from 'src/components/Radio'
+import { formatDate } from 'src/utils'
 
 import './index.less'
 import { commonApi } from 'src/utils/request2.0'
@@ -105,46 +106,80 @@ export default (props: IProps) => {
       <View className="inner border-bottom">
         <View
           className={`iconfont icon-${
-            props.status === 1 ? 'star-empty' : 'star-half'
+            props.status === 1
+              ? 'star-empty'
+              : props.status === 2
+              ? 'star-half'
+              : 'star-full'
           }`}
         />
-        <View className="info">
-          <View className="main">
-            <View className="time">
-              {props.status === 1
-                ? props.formatCreateTime
-                : props.formatBeginTime}
-            </View>
-            <View className="name">{props.name}</View>
-          </View>
-          <View className="operation">
-            <View className="update">
-              {props.status === 1 ? (
-                <View className="radio-item first">
-                  <Radio checked={beginStatus} onChange={onBeginStatusChange} />
-                  <View onClick={onBeginStatusChange}>标记为在读</View>
-                </View>
-              ) : null}
-              <View className="radio-item">
-                <Radio checked={finishStatus} onChange={onFinishStatusChange} />
-                <View onClick={onFinishStatusChange}>标记为读完</View>
+        <View className="main">
+          <View className="main-top">
+            <View className="info">
+              <View className="name">《{props.name}》</View>
+              <View className="detail">
+                {props.createTime ? (
+                  <View className="time">
+                    - {formatDate(new Date(props.createTime), 'yyyy.MM.dd')}{' '}
+                    添加书籍
+                  </View>
+                ) : null}
+                {props.beginTime ? (
+                  <View className="time">
+                    - {formatDate(new Date(props.beginTime), 'yyyy.MM.dd')}{' '}
+                    开始阅读
+                  </View>
+                ) : null}
+                {props.finishTime ? (
+                  <View className="time">
+                    - {formatDate(new Date(props.finishTime), 'yyyy.MM.dd')}{' '}
+                    读完数据
+                  </View>
+                ) : null}
               </View>
+              {props.status === 3 ? null : (
+                <View className="operation">
+                  {props.status === 1 ? (
+                    <View className="radio-item first">
+                      <Radio
+                        checked={beginStatus}
+                        onChange={onBeginStatusChange}
+                      />
+                      <View onClick={onBeginStatusChange}>开始阅读</View>
+                    </View>
+                  ) : null}
+                  <View className="radio-item">
+                    <Radio
+                      checked={finishStatus}
+                      onChange={onFinishStatusChange}
+                    />
+                    <View onClick={onFinishStatusChange}>读完</View>
+                  </View>
+                  <View className="delete">
+                    <View className="iconfont icon-delete" onClick={onDelete} />
+                    <View onClick={onDelete}>删除</View>
+                  </View>
+                </View>
+              )}
             </View>
-            <View className="delete">
-              <View className="iconfont icon-delete" onClick={onDelete} />
-              <View onClick={onDelete}>删除书籍</View>
-            </View>
+            {props.cover ? (
+              <Image src={props.cover} className="cover" mode="widthFix" />
+            ) : (
+              <Image
+                src={require('../../../assets/defaultCover.png')}
+                className="cover"
+                mode="widthFix"
+              />
+            )}
           </View>
+          {props.status === 3 && props.comment ? (
+            <View className="comment">
+              <View className="iconfont icon-quote left" />
+              <View className="text">{props.comment}</View>
+              <View className="iconfont icon-quote right" />
+            </View>
+          ) : null}
         </View>
-        {props.cover ? (
-          <Image src={props.cover} className="cover" mode="widthFix" />
-        ) : (
-          <Image
-            src={require('../../../assets/defaultCover.png')}
-            className="cover"
-            mode="widthFix"
-          />
-        )}
       </View>
     </View>
   )

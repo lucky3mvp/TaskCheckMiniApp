@@ -85,8 +85,8 @@ class Check extends Component<IProps, IState> {
   }
 
   onCheck = (p: PlanType) => {
-    if (p.status === 1 || p.totalAchieve > p.goal || p.totalTimes > p.times)
-      return // 已完成返回
+    // if (p.status === 1 || p.totalAchieve > p.goal || p.totalTimes > p.times)
+    if (p.status === 1 || p.totalAchieve > p.goal) return // 已完成返回
     this.onShowModal(p)
   }
 
@@ -228,7 +228,7 @@ class Check extends Component<IProps, IState> {
                     )}
                     <View className="dot-wrapper">
                       {(p.type === 4 || (p.type === 3 && p.subType === 1)) &&
-                        Array(p.times)
+                        Array(p.times > p.totalTimes ? p.times : p.totalTimes)
                           .fill('1')
                           .map((i, j) => (
                             <View
