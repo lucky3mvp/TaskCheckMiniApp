@@ -28,6 +28,7 @@ declare const process: {
 }
 
 type UserInfoStoreType = {
+  isLogin: boolean
   openID: string
   avatarUrl: string
   gender: number

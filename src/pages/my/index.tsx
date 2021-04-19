@@ -7,6 +7,7 @@ import { updateUserInfo } from 'src/store/actions/userInfo'
 import { Greetings } from 'src/constants'
 import Gap from 'src/components/Gap'
 import Dialog from 'src/components/Dialog'
+import { commonApi } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -53,11 +54,16 @@ class My extends Component<IProps, IState> {
     }
   }
   getUserProfile = async () => {
-    const [res] = await wit.getUserProfile()
-    console.log(2, res)
+    if (this.props.userInfo.isLogin) return
 
+    const [res] = await wit.getUserProfile()
     if (res) {
       this.props.updateUserInfo(res)
+      commonApi({
+        _scope: 'login',
+        _type: 'updateUserProfile',
+        ...res
+      })
     }
   }
   getGreetings(): GreetingType {

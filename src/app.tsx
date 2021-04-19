@@ -9,6 +9,8 @@ const store = configStore()
 const { dispatch } = store
 
 import './app.less'
+import wit from './utils/wit'
+import { updateUserInfo } from './store/actions/userInfo'
 
 class App extends Component {
   checkUpdate() {
@@ -49,6 +51,7 @@ class App extends Component {
   }
 
   async componentDidMount() {
+    dispatch(updateUserInfo(await wit.login()))
     dispatch(
       updateHelperInfo({
         isIpx: isIpx()
