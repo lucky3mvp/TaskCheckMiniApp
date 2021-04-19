@@ -35,7 +35,7 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 @connect()
 class ReadingAdd extends Component<IProps, IState> {
   lock = false
-  timeStartDate = new Date(2021, 0, 1)
+  startDate = new Date(2021, 0, 1)
   state = {
     initialValue: [0, 0, 0],
     fileID: '',
@@ -236,7 +236,7 @@ class ReadingAdd extends Component<IProps, IState> {
             <View className="picker">
               <DatePicker
                 placeholder="选择时间"
-                startDate={this.timeStartDate}
+                startDate={this.startDate}
                 initialValue={this.state.initialValue}
                 formatter={this.formatTime}
                 onChange={this.onChooseTime}

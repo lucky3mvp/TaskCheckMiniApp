@@ -41,7 +41,7 @@ export default (props: IProps) => {
   }, [props.endDate, props.range, startYear, startMonth, startDate])
 
   const endYear = useMemo(() => end.getFullYear(), [end])
-  const endMonth = useMemo(() => end.getMonth(), [end])
+  const endMonth = useMemo(() => end.getMonth() + 1, [end])
   const endDate = useMemo(() => end.getDate(), [end])
 
   const getInitialRange = useCallback(
@@ -60,8 +60,11 @@ export default (props: IProps) => {
 
   useEffect(() => {
     if (props.initialValue) {
-      setIndex(props.initialValue)
-      setLastIndex(props.initialValue)
+      if (props.initialValue[0] !== 0) onColumnChange(0, props.initialValue[0])
+      if (props.initialValue[1] !== 0) onColumnChange(1, props.initialValue[1])
+      if (props.initialValue[2] !== 0) onColumnChange(2, props.initialValue[2])
+      // setIndex(props.initialValue)
+      // setLastIndex(props.initialValue)
     }
     return () => {}
   }, [props.initialValue])
@@ -83,80 +86,81 @@ export default (props: IProps) => {
       ])
   }, [range, index])
 
-  const onColumnChange = useCallback(
-    (columnIndex: number, rowIndex: number) => {
-      const data = {
-        range: range,
-        index: index
-      }
-      if (columnIndex === 0 && rowIndex === 0) {
-        // 因为有“永远”这种case，需要特殊处理
-        data.index = [0, 0, 0]
-        data.range = getInitialRange()
-      } else if (columnIndex === 2) {
-        data.index[2] = rowIndex
-      } else {
-        data.index[2] = 0
+  // const onColumnChange = useCallback(
+  const onColumnChange = (columnIndex: number, rowIndex: number) => {
+    const data = {
+      range: range,
+      index: index
+    }
+    if (columnIndex === 0 && rowIndex === 0) {
+      // 因为有“永远”这种case，需要特殊处理
+      data.index = [0, 0, 0]
+      data.range = getInitialRange()
+    } else if (columnIndex === 2) {
+      data.index[2] = rowIndex
+    } else {
+      data.index[2] = 0
 
-        if (columnIndex === 0) {
-          data.index[0] = rowIndex
-          data.index[1] = 0
-          const year = Number(range[columnIndex][rowIndex].value)
-          const _startMonth = year === startYear ? startMonth : 1
-          const _endMonth = year === endYear ? endMonth : 12
-          const month: Array<CommonItemType> = []
-          for (let i = _startMonth; i <= _endMonth; i++) {
-            month.push({
-              value: `${i < 10 ? '0' : ''}${i}`,
-              label: `${i}月`
-            })
-          }
-          data.range[1] = month
-        }
-
-        if (columnIndex === 1) {
-          data.index[1] = rowIndex
-        }
-
-        const year = +range[0][data.index[0]].value
-        const month = +range[1][data.index[1]].value
-
-        const _startDate =
-          year === startYear && month === startMonth ? startDate : 1
-
-        let _endDate: number = 0
-        if (year === endYear && month === endMonth) {
-          _endDate = endDate
-        } else {
-          _endDate = new Date(year, month, 0).getDate()
-        }
-
-        const day: Array<CommonItemType> = []
-        for (let i = _startDate; i <= _endDate; i++) {
-          day.push({
+      if (columnIndex === 0) {
+        data.index[0] = rowIndex
+        data.index[1] = 0
+        const year = Number(range[columnIndex][rowIndex].value)
+        const _startMonth = year === startYear ? startMonth : 1
+        const _endMonth = year === endYear ? endMonth : 12
+        const month: Array<CommonItemType> = []
+        for (let i = _startMonth; i <= _endMonth; i++) {
+          month.push({
             value: `${i < 10 ? '0' : ''}${i}`,
-            label: `${i}日`
+            label: `${i}月`
           })
         }
-        data.range[2] = day
+        data.range[1] = month
       }
 
-      setRange([...data.range])
-      setIndex([...data.index])
-    },
-    [
-      range,
-      index,
-      startYear,
-      startMonth,
-      startDate,
-      endYear,
-      endMonth,
-      endDate,
-      start,
-      end
-    ]
-  )
+      if (columnIndex === 1) {
+        data.index[1] = rowIndex
+      }
+
+      const year = +range[0][data.index[0]].value
+      const month = +range[1][data.index[1]].value
+
+      const _startDate =
+        year === startYear && month === startMonth ? startDate : 1
+
+      let _endDate: number = 0
+      if (year === endYear && month === endMonth) {
+        _endDate = endDate
+      } else {
+        _endDate = new Date(year, month, 0).getDate()
+      }
+
+      const day: Array<CommonItemType> = []
+      for (let i = _startDate; i <= _endDate; i++) {
+        day.push({
+          value: `${i < 10 ? '0' : ''}${i}`,
+          label: `${i}日`
+        })
+      }
+      data.range[2] = day
+    }
+
+    setRange([...data.range])
+    setIndex([...data.index])
+  }
+  //   [
+  //     range,
+  //     index,
+  //     startYear,
+  //     startMonth,
+  //     startDate,
+  //     endYear,
+  //     endMonth,
+  //     endDate,
+  //     start,
+  //     end
+  //   ]
+  // )
+
   return (
     <Picker
       index={index}
