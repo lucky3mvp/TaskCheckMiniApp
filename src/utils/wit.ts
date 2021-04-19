@@ -3,10 +3,8 @@ declare const wx: any
 interface Wit {
   login(): Promise<[any, any]>
   getUserInfo(opts?: any): Promise<[any, any]>
+  getUserProfile(opts?: any): Promise<[any, any]>
 }
-// import Taro from '@tarojs/taro'
-// import { login } from './request'
-// import Global, { setGlobal } from './global'
 
 export default {
   login: async () => {
@@ -58,6 +56,22 @@ export default {
     return await new Promise(res => {
       wx.getUserInfo({
         ...opts,
+        success: r => {
+          console.log('aa', r)
+          res([r.userInfo, null])
+        },
+        fail: e => {
+          console.log('bb', e)
+          res([null, e])
+        }
+      })
+    })
+  },
+  getUserProfile: async (opts = {}) => {
+    return await new Promise(res => {
+      wx.getUserProfile({
+        ...opts,
+        desc: '获取信息',
         success: r => {
           res([r.userInfo, null])
         },

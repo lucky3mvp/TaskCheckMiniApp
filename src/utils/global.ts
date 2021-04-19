@@ -1,10 +1,6 @@
-type GLOBAL = {
-  openID: string
-}
+type GLOBAL = {}
 
-const Global = {
-  openID: ''
-} as GLOBAL
+const Global = {} as GLOBAL
 
 export const setGlobal = params => Object.assign(Global, params)
 

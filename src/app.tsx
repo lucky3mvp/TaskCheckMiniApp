@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import Taro from '@tarojs/taro'
-import wit from './utils/wit'
-import { updateUserInfo } from './store/actions/userInfo'
 import { updateHelperInfo } from './store/actions/helper'
 import { isIpx } from 'src/utils'
 import configStore from './store'
@@ -51,10 +49,6 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const [userInfoRes] = await wit.getUserInfo()
-    if (userInfoRes) {
-      dispatch(updateUserInfo(userInfoRes))
-    }
     dispatch(
       updateHelperInfo({
         isIpx: isIpx()
