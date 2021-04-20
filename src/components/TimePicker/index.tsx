@@ -2,8 +2,6 @@ import React, { useEffect, useCallback, useMemo, useState } from 'react'
 
 import Picker from '../Picker'
 
-import { createDateRange } from 'src/utils'
-
 interface IProps {
   placeholder?: string
   initialValue?: Array<number>

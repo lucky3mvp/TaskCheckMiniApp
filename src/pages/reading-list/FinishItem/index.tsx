@@ -47,13 +47,13 @@ export default (props: ReadingListItemType) => {
                     <View className="time">{props.formatCreateTime}</View>
                     <View className="txt">添加书籍</View>
                   </View>
-                  {/* {props.beginTime ? ( */}
-                  <View className="process-item">
-                    <View className="line-horizontal" />
-                    <View className="time">{props.formatBeginTime}</View>
-                    <View className="txt">开始阅读</View>
-                  </View>
-                  {/* ) : null} */}
+                  {props.beginTime ? (
+                    <View className="process-item">
+                      <View className="line-horizontal" />
+                      <View className="time">{props.formatBeginTime}</View>
+                      <View className="txt">开始阅读</View>
+                    </View>
+                  ) : null}
                 </View>
                 {/* ) : null} */}
               </View>
@@ -68,7 +68,7 @@ export default (props: ReadingListItemType) => {
               />
             )}
           </View>
-          <View className="comment">{props.comment}</View>
+          {props.comment && <View className="comment">{props.comment}</View>}
         </View>
       </View>
       <View

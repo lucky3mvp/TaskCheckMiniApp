@@ -33,9 +33,9 @@ type IState = {
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
 @connect()
-class Check extends Component<IProps, IState> {
+class ReadingAdd extends Component<IProps, IState> {
   lock = false
-  timeStartDate = new Date(2021, 0, 1)
+  startDate = new Date(2021, 0, 1)
   state = {
     initialValue: [0, 0, 0],
     fileID: '',
@@ -236,7 +236,7 @@ class Check extends Component<IProps, IState> {
             <View className="picker">
               <DatePicker
                 placeholder="选择时间"
-                startDate={this.timeStartDate}
+                startDate={this.startDate}
                 initialValue={this.state.initialValue}
                 formatter={this.formatTime}
                 onChange={this.onChooseTime}
@@ -263,4 +263,4 @@ class Check extends Component<IProps, IState> {
   }
 }
 
-export default Check
+export default ReadingAdd

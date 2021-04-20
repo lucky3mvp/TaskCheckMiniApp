@@ -87,12 +87,14 @@ export function createDateRange(
     startYear === endYear && startMonth === endMonth
       ? endDate
       : new Date(startYear, startMonth + 1, 0).getDate() // 取这个月的天数
+
   for (let i = startDate; i <= _ed; i++) {
     day.push({
       value: `${i < 10 ? '0' : ''}${i}`,
       label: `${i}日`
     })
   }
+
   return [year, month, day]
 }
 

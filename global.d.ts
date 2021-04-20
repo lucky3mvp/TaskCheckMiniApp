@@ -82,7 +82,6 @@ type PlanType = {
     - 4-暂停
   */
   status: number
-  // days: Array<string>
   days: string // 接口返回的是string,没做split
   beginTime: number
   endTime: number
@@ -133,15 +132,18 @@ type CheckListItemType = {
 type ReadingListItemType = {
   _id: string
   name: string
+  /**
+   * status
+   * 1-未读
+   * 2-在读
+   * 3-读完
+   */
   status: number
   cover: string
   comment: string
   createTime: number
   beginTime?: number
   finishTime?: number
-  formatCreateTime?: string
-  formatBeginTime?: string
-  formatFinishTime?: string
 }
 
 type DaysItemType = {
@@ -155,6 +157,11 @@ type DaysItemType = {
   notifyTime?: number | null
   isTop: boolean
   cover: string
+  /**
+   * status
+   * 1-正常
+   * 2-已删除
+   */
   status: number
   userID: string
 }
@@ -163,5 +170,10 @@ type DaysCategoryType = {
   _id: string
   name: string
   icon: string
+  /**
+   * status
+   * 1-正常
+   * 2-已删除
+   */
   status: number
 }

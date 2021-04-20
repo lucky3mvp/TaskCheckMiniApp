@@ -2,7 +2,7 @@ declare const wx
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Taro from '@tarojs/taro'
-import { View, ScrollView } from '@tarojs/components'
+import { View, Image, Block } from '@tarojs/components'
 
 import { ReadingStatusMap } from 'src/constants/config'
 
@@ -11,12 +11,9 @@ import Add from 'src/components/Add'
 import Empty from 'src/components/Empty'
 import manualEvent from 'src/utils/manualEvent'
 
-import { formatDate } from 'src/utils'
-
 import { commonApi } from 'src/utils/request2.0'
 
-import FinishItem from './FinishItem'
-import CommonItem from './CommonItem'
+import Item from './Item'
 
 import './index.less'
 
@@ -29,6 +26,7 @@ type PageDispatchProps = {}
 type PageOwnProps = {}
 
 type IState = {
+  isShowList: boolean
   loading: boolean
   list: Array<ReadingListItemType>
   yearOptions: Array<CommonItemType>
@@ -44,11 +42,12 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 @connect(({ helper }) => ({
   helper
 }))
-class Check extends Component<IProps, IState> {
+class ReadingList extends Component<IProps, IState> {
   lock = false
   cache: Record<string, any> = {}
   thisYear: number = 2021
   state = {
+    isShowList: true,
     list: [],
     loading: true,
     yearOptions: [],
@@ -60,6 +59,8 @@ class Check extends Component<IProps, IState> {
   }
 
   async componentDidMount() {
+    wx.cloud.init()
+
     manualEvent
       .register('reading-list-page')
       .on('update reading list', (params: { status: number; year: number }) => {
@@ -173,44 +174,121 @@ class Check extends Component<IProps, IState> {
       year: params.year,
       status: params.status
     })
+    // let list = [
+    //   {
+    //     _id: 'b00064a760631b2c0ca05dd31764ae9e',
+    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    //     name: '房思琪的初恋乐园',
+    //     cover:
+    //       'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/jfRSjZDMz6aY81b3609a7f1a0776de38ee992bd5d9ee.jpg',
+    //     status: 3,
+    //     comment: '很难过，愿世界和平，love and peace',
+    //     createTime: 1616457600000,
+    //     finishTime: 1616457600000
+    //   },
+    //   {
+    //     _id: '28ee4e3e605451730b81d0bc1023cc79',
+    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    //     name: '从一到无穷大',
+    //     cover:
+    //       'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/0mM2yZDCFEPWc95873707abefb5bd950d060d9466027.jpg',
+    //     status: 1,
+    //     comment: '挺有意思的科普读物，以及核物理真的太难了',
+    //     createTime: 1615766400000,
+    //     finishTime: 1615766400000
+    //   },
+    //   {
+    //     _id: '79550af260378f70070e9e597f0797cd',
+    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    //     name: '小王子',
+    //     cover:
+    //       'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/WqIfq66XcVe8272b96ddb074ddd9c1f1f8283aa73e9e.jpg',
+    //     status: 2,
+    //     comment: '想做一个温柔的人，被世界温柔以待，love and peace！',
+    //     createTime: 1613779200000,
+    //     finishTime: 1613779200000
+    //   },
+    //   {
+    //     _id: '28ee4e3e6024f9a70489d1734a9d52d1',
+    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    //     name: '星空的琴弦',
+    //     cover:
+    //       'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/QGdCOEItbNCc3f74f07fca950a8c542a5a9dedf8da4c.jpg',
+    //     status: 2,
+    //     comment: '书名太美啦~~',
+    //     createTime: 1612886400000,
+    //     finishTime: 1612886400000
+    //   },
+    //   {
+    //     _id: '79550af26024f96b0425ee9134fac983',
+    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    //     name: '未来简史',
+    //     cover:
+    //       'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/y6aUpq2CiJ9D7b4af74eb921dd6e47e1183b9e688e18.jpg',
+    //     status: 3,
+    //     comment: '',
+    //     createTime: 1612281600000,
+    //     finishTime: 1612281600000
+    //   },
+    //   {
+    //     _id: 'b00064a76024f8fa044fba1049171c66',
+    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    //     name: '人类简史',
+    //     cover:
+    //       'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/5idTE4G4n3PF8f268473ee877a88ac94f94310d57dcd.jpg',
+    //     status: 3,
+    //     comment: '',
+    //     createTime: 1610380800000,
+    //     finishTime: 1610380800000
+    //   }
+    // ]
+    console.log(list)
     Taro.hideLoading()
 
-    const r = list.map((l: ReadingListItemType) => ({
-      ...l,
-      formatCreateTime: l.createTime
-        ? formatDate(new Date(l.createTime), 'yyyy.MM.dd')
-        : '',
-      formatBeginTime: l.beginTime
-        ? formatDate(new Date(l.beginTime), 'yyyy.MM.dd')
-        : '',
-      formatFinishTime: l.finishTime
-        ? formatDate(new Date(l.finishTime), 'yyyy.MM.dd')
-        : ''
-    }))
-    this.cache[`${params.year}-${params.status}`] = r
-    this.setState({
-      loading: false,
-      list: r
-    })
-    console.log(list)
-
-    // 考虑到下载图片可能需要一定的时间，故把图片的下载拎出来处理，页面可以先渲染其他的数据
-    // list.map((item: ReadingListItemType, index) => {
-    //   if (item.cover) {
-    //     wx.cloud.init()
-    //     wx.cloud.downloadFile({
-    //       fileID:
-    //         'cloud://mini-0g21wdbp3f6c8c18.6d69-mini-0g21wdbp3f6c8c18-1304926316/88hTTWF7qWS23f74f07fca950a8c542a5a9dedf8da4c.jpg',
-    //       success: res => {
-    //         // 返回临时文件路径
-    //         this.setState({
-    //           file: res.tempFilePath
-    //         })
-    //       },
-    //       fail: console.error
-    //     })
-    //   }
-    // })
+    this.cache[`${params.year}-${params.status}`] = list
+    this.setState(
+      {
+        loading: false,
+        list: list
+      },
+      async () => {
+        // 考虑到下载图片可能需要一定的时间，故把图片的下载拎出来处理，页面可以先渲染其他的数据
+        const coverTmpFile = await Promise.all<string>(
+          list.map((item: ReadingListItemType, index) => {
+            return new Promise(resolve => {
+              if (item.cover) {
+                wx.cloud.downloadFile({
+                  fileID: item.cover,
+                  success: res => {
+                    // 返回临时文件路径
+                    resolve(res.tempFilePath)
+                  },
+                  fail: err => {
+                    resolve('')
+                  }
+                })
+              } else {
+                resolve('')
+              }
+            })
+          })
+        )
+        // const coverTmpFile = [
+        //   'http://tmp/XAKFUO4Movu981b3609a7f1a0776de38ee992bd5d9ee.jpg',
+        //   'http://tmp/mXkBu4w5mEz5c95873707abefb5bd950d060d9466027.jpg',
+        //   'http://tmp/eatwmKr87jaL272b96ddb074ddd9c1f1f8283aa73e9e.jpg',
+        //   'http://tmp/ZTcNzugNVown3f74f07fca950a8c542a5a9dedf8da4c.jpg',
+        //   'http://tmp/4PLmhSkzF5vy7b4af74eb921dd6e47e1183b9e688e18.jpg',
+        //   'http://tmp/nVqjf7bCLvSw8f268473ee877a88ac94f94310d57dcd.jpg'
+        // ]
+        this.setState({
+          list: list.map((item: ReadingListItemType, index) => {
+            item.cover = coverTmpFile[index]
+            return item
+          })
+        })
+      }
+    )
   }
 
   onYearChange = (index: string) => {
@@ -272,6 +350,11 @@ class Check extends Component<IProps, IState> {
     })
   }
 
+  onChangeDisplayMode = () => {
+    this.setState({
+      isShowList: !this.state.isShowList
+    })
+  }
   render() {
     return this.state.loading ? null : (
       <View className="reading-list-page">
@@ -304,28 +387,47 @@ class Check extends Component<IProps, IState> {
             </View>
             <View className="filter-item-icon  =iconfont icon-right-arrow" />
           </View>
+          <View className="filter-item mode" onClick={this.onChangeDisplayMode}>
+            {this.state.isShowList ? (
+              <View className="iconfont icon-liebiao" />
+            ) : (
+              <View className="iconfont icon-suoluetu" />
+            )}
+          </View>
         </View>
-        {!this.state.list.length ? (
-          <Empty tip="暂无数据..." />
-        ) : this.state.status === 3 ? (
-          <ScrollView key={this.state.status}>
+        {!this.state.list.length && <Empty tip="暂无数据..." />}
+        {this.state.isShowList && (
+          <View>
             {this.state.list.map((item: ReadingListItemType) => {
-              return <FinishItem {...item} key={item._id} />
+              return <Item {...item} key={item._id} onUpdate={this.onUpdate} />
             })}
-          </ScrollView>
-        ) : (
-          <ScrollView key={this.state.status}>
+          </View>
+        )}
+        {!this.state.isShowList && (
+          <View className="covers">
             {this.state.list.map((item: ReadingListItemType) => {
               return (
-                <CommonItem {...item} key={item._id} onUpdate={this.onUpdate} />
+                <View className="item">
+                  {item.cover ? (
+                    <Image src={item.cover} className="cover" mode="widthFix" />
+                  ) : (
+                    <Image
+                      src={require('../../assets/defaultCover.png')}
+                      className="cover"
+                      mode="widthFix"
+                    />
+                  )}
+                  <View className="name">{item.name}</View>
+                </View>
               )
             })}
-          </ScrollView>
+          </View>
         )}
+        {this.props.helper.isIpx && <View className="gap"></View>}
         <Add onClick={this.gotoAdd} />
       </View>
     )
   }
 }
 
-export default Check
+export default ReadingList
