@@ -1,11 +1,9 @@
 import Taro from '@tarojs/taro'
 import config from '../../host'
-import Global from './global'
 
 function addHeader(params = {}) {
   return {
     header: {
-      uid: Global.openID,
       isTest: process.env.NODE_ENV === 'production' ? 0 : 1
     },
     ...params

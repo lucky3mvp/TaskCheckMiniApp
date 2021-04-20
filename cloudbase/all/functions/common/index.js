@@ -29,7 +29,54 @@ exports.main = async (event, context) => {
     // }
   }
 
-  if (_scope === 'reading') {
+  if (_scope === 'login') {
+    /**
+     * openID
+     * avatarUrl
+     * gender
+     * nickName
+     */
+    const collection = db.collection('user')
+    if (_type === 'getUserProfile') {
+      const { errMsg, data } = await collection
+        .where({
+          openID: wxContext.OPENID
+        })
+        .get()
+      console.log('查用户： ', errMsg, data)
+      let result = null
+      if (!data || !data[0]) {
+        result = {
+          openID: wxContext.OPENID,
+          avatarUrl: '',
+          gender: 0,
+          nickName: ''
+        }
+        const { errMsg } = await collection.add({
+          data: result
+        })
+        console.log('查用户, 新增用户')
+      } else {
+        result = data[0]
+      }
+      return result
+    } else if (_type === 'updateUserProfile') {
+      const { errMsg, data } = collection
+        .where({
+          openID: wxContext.OPENID
+        })
+        .update({
+          data: {
+            gender: event.gender,
+            nickName: event.nickName,
+            avatarUrl: event.avatarUrl
+          }
+        })
+      return {
+        code: 200
+      }
+    }
+  } else if (_scope === 'reading') {
     const collection = db.collection('reading')
     if (_type === 'submit') {
       const { name, status, time, comment, cover } = event

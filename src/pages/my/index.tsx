@@ -7,6 +7,7 @@ import { updateUserInfo } from 'src/store/actions/userInfo'
 import { Greetings } from 'src/constants'
 import Gap from 'src/components/Gap'
 import Dialog from 'src/components/Dialog'
+import { commonApi } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -52,10 +53,17 @@ class My extends Component<IProps, IState> {
       path: '/pages/check/index'
     }
   }
-  getUserInfo = async () => {
-    const [res] = await wit.getUserInfo()
+  getUserProfile = async () => {
+    if (this.props.userInfo.isLogin) return
+
+    const [res] = await wit.getUserProfile()
     if (res) {
       this.props.updateUserInfo(res)
+      commonApi({
+        _scope: 'login',
+        _type: 'updateUserProfile',
+        ...res
+      })
     }
   }
   getGreetings(): GreetingType {
@@ -119,28 +127,17 @@ class My extends Component<IProps, IState> {
     const txts = this.getGreetings()
     return (
       <View className="my-page">
-        <View className={'header'}>
-          <Button
-            open-type="getUserInfo"
-            onGetUserInfo={this.getUserInfo}
-            className="avatar no-button"
-          >
-            <Image
-              src={
-                userInfo.avatarUrl ||
-                'https://sf3-ttcdn-tos.pstatp.com/obj/static-assets/e28ab4819d63c0277b996592cde9fd6a.png'
-              }
-              className="img"
-            />
-          </Button>
-          <View className="txt">
-            <Button
-              open-type="getUserInfo"
-              className="txt-main no-button"
-              onGetUserInfo={this.getUserInfo}
-            >
-              {txts.main}
-            </Button>
+        <View className="header">
+          <Image
+            src={
+              userInfo.avatarUrl ||
+              'https://sf3-ttcdn-tos.pstatp.com/obj/static-assets/e28ab4819d63c0277b996592cde9fd6a.png'
+            }
+            className="avatar img"
+            onClick={this.getUserProfile}
+          />
+          <View className="txt txt-main" onClick={this.getUserProfile}>
+            {txts.main}
             <View className="txt-sub">{txts.sub}</View>
           </View>
         </View>
