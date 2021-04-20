@@ -235,7 +235,6 @@ class ReadingAdd extends Component<IProps, IState> {
           <FormItem label="时间">
             <View className="picker">
               <DatePicker
-                isBackForward
                 placeholder="选择时间"
                 startDate={this.startDate}
                 initialValue={this.state.initialValue}
