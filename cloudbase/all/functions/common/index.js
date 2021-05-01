@@ -378,7 +378,7 @@ exports.main = async (event, context) => {
           data[len - 1].day > thisMonthLastDay - 6
         ) {
           const nextAllowEnd = new Date(year, month - 1, data[len - 1].day + 7)
-          const { data } = await collection
+          const { data: data2 } = await collection
             .where({
               year: nextAllowEnd.getFullYear(),
               month: nextAllowEnd.getMonth() + 1,
@@ -386,8 +386,8 @@ exports.main = async (event, context) => {
               type: 2
             })
             .get()
-          if (data.length) {
-            nextEnd = data[0]
+          if (data2.length) {
+            nextEnd = data2[0]
           }
         }
       }
