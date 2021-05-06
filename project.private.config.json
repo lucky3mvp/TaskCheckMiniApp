@@ -83,6 +83,12 @@
           "pathName": "pages/days-add/index",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "pages/days-detail/index",
+          "pathName": "pages/days-detail/index",
+          "query": "",
+          "scene": null
         }
       ]
     }

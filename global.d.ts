@@ -36,6 +36,8 @@ type UserInfoStoreType = {
 }
 type HelperStoreType = {
   isIpx: boolean
+  statusBarHeight: number
+  windowWidth: number
 }
 
 type DateType = {

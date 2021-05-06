@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import Taro from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
+import { View, Image, Text } from '@tarojs/components'
 import Radio from 'src/components/Radio'
 import { formatDate } from 'src/utils'
 
@@ -12,6 +12,7 @@ interface IProps extends ReadingListItemType {
 }
 
 export default (props: IProps) => {
+  const [isShowComment, setIsShowComment] = useState(false)
   const [beginStatus, setBeginStatus] = useState(false)
   const [finishStatus, setFinishStatus] = useState(false)
   const onBeginStatusChange = useCallback(() => {
@@ -101,11 +102,14 @@ export default (props: IProps) => {
       }
     })
   }, [props])
+  const toggle = () => {
+    setIsShowComment(!isShowComment)
+  }
   return (
     <View className="common-item-component">
       <View className="inner border-bottom">
         <View
-          className={`iconfont icon-${
+          className={`iconfont star icon-${
             props.status === 1
               ? 'star-empty'
               : props.status === 2
@@ -133,11 +137,20 @@ export default (props: IProps) => {
                 {props.finishTime ? (
                   <View className="time">
                     - {formatDate(new Date(props.finishTime), 'yyyy.MM.dd')}{' '}
-                    读完数据
+                    读完书籍
                   </View>
                 ) : null}
               </View>
-              {props.status === 3 ? null : (
+              {props.status === 3 ? (
+                <View className="operation">
+                  <Text
+                    className="check-comment border-bottom"
+                    onClick={toggle}
+                  >
+                    查看评论
+                  </Text>
+                </View>
+              ) : (
                 <View className="operation">
                   {props.status === 1 ? (
                     <View className="radio-item first">
@@ -172,11 +185,13 @@ export default (props: IProps) => {
               />
             )}
           </View>
-          {props.status === 3 && props.comment ? (
+          {props.status === 3 && props.comment && isShowComment ? (
             <View className="comment">
-              <View className="iconfont icon-quote left" />
-              <View className="text">{props.comment}</View>
-              <View className="iconfont icon-quote right" />
+              <View className="cur" />
+              {props.comment}
+              {/* <View className="iconfont icon-quote left" /> */}
+              {/* <View className="text">{props.comment}</View> */}
+              {/* <View className="iconfont icon-quote right" /> */}
             </View>
           ) : null}
         </View>

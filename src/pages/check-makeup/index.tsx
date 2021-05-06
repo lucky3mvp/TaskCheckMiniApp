@@ -30,7 +30,7 @@ type IState = {
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
 @connect()
-class ReCheck extends Component<IProps, IState> {
+class CheckMakeup extends Component<IProps, IState> {
   lock = false
   state = {
     loading: true,
@@ -204,7 +204,7 @@ class ReCheck extends Component<IProps, IState> {
                   )}
                   <View className="dot-wrapper">
                     {(p.type === 4 || (p.type === 3 && p.subType === 1)) &&
-                      Array(p.times)
+                      Array(p.times > p.totalTimes ? p.times : p.totalTimes)
                         .fill('1')
                         .map((i, j) => (
                           <View
@@ -264,4 +264,4 @@ class ReCheck extends Component<IProps, IState> {
   }
 }
 
-export default ReCheck
+export default CheckMakeup
