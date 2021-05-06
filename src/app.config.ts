@@ -1,16 +1,16 @@
 export default {
   pages: [
     'pages/check/index',
+    'pages/check-makeup/index',
     'pages/days/index',
     'pages/days-add/index',
-    'pages/days-edit/index',
+    'pages/days-detail/index',
     'pages/days-category/index',
     'pages/my/index',
     'pages/plan-add/index',
     'pages/plan-edit/index',
     'pages/plan-list/index',
     'pages/check-list/index',
-    'pages/recheck/index',
     'pages/menstruation/index',
     'pages/reading-list/index',
     'pages/reading-add/index'

@@ -1,10 +1,12 @@
 import { UPDATE_HELPER_INFO } from 'src/constants'
 
 const INITIAL_STATE: HelperStoreType = {
-  isIpx: false
+  isIpx: false,
+  statusBarHeight: 0,
+  windowWidth: 375
 }
 
-export default function userInfo(state = INITIAL_STATE, action) {
+export default function helper(state = INITIAL_STATE, action) {
   switch (action.type) {
     case UPDATE_HELPER_INFO:
       return {

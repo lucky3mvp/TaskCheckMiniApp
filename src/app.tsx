@@ -52,9 +52,12 @@ class App extends Component {
 
   async componentDidMount() {
     dispatch(updateUserInfo(await wit.login()))
+    const { statusBarHeight, windowWidth } = Taro.getSystemInfoSync()
     dispatch(
       updateHelperInfo({
-        isIpx: isIpx()
+        isIpx: isIpx(),
+        statusBarHeight,
+        windowWidth
       })
     )
     this.checkUpdate()

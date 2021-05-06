@@ -129,7 +129,7 @@ class CheckList extends Component<IProps, IState> {
   }
   gotoSpecificCheckPage = () => {
     Taro.navigateTo({
-      url: `/pages/recheck/index?date=${this.state.selectedDate}`
+      url: `/pages/check-makeup/index?date=${this.state.selectedDate}`
     })
   }
   onClickComment = (index: number) => {
