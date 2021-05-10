@@ -61,12 +61,12 @@ class CheckList extends Component<IProps, IState> {
   componentDidShow() {
     manualEvent.run('check-list')
   }
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
   async fetchCheckList(params: Record<string, any> = {}) {
     const { date = this.state.selectedDate, isForce = false } = params
     !this.state.inited &&
@@ -94,6 +94,33 @@ class CheckList extends Component<IProps, IState> {
       date: date,
       returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
     })
+    // const { code, list, tabs } = {
+    //   code: 200,
+    //   list: [
+    //     {
+    //       achieve: 1,
+    //       checkTime: 1617959027026,
+    //       comment: '超累',
+    //       icon: 'yoga',
+    //       name: '瑜伽',
+    //       planID: '79550af2601a7525026aa98d1a450897',
+    //       theme: 'theme11',
+    //       unit: '1'
+    //     }
+    //   ],
+    //   tabs: [
+    //     {
+    //       beginTime: 1609430400000,
+    //       category: 1,
+    //       description: '要优雅~~',
+    //       endTime: null,
+    //       icon: 'yoga',
+    //       name: '瑜伽',
+    //       planID: '79550af2601a7525026aa98d1a450897',
+    //       theme: 'theme11'
+    //     }
+    //   ]
+    // }
     console.log(list, tabs)
     if (code === 200) {
       const lo = list.map(l => {
@@ -141,16 +168,20 @@ class CheckList extends Component<IProps, IState> {
       list: [...list]
     })
   }
-  onPlanChange = planTab => {
+  onPlanChange = plan => {
     const { listOrigin } = this.state
     this.setState({
-      curPlan: planTab,
-      list:
-        planTab === 'all'
-          ? listOrigin
-          : listOrigin.filter((l: CheckListItemType) => {
-              return l.planID === planTab
-            })
+      curPlan: plan.planID,
+      list: listOrigin.filter((l: CheckListItemType) => {
+        return l.planID === plan.planID
+      })
+    })
+  }
+  onPlanChangeToAll = () => {
+    const { listOrigin } = this.state
+    this.setState({
+      curPlan: 'all',
+      list: listOrigin
     })
   }
   onDayClick = ({ year, month, date }) => {
@@ -186,9 +217,29 @@ class CheckList extends Component<IProps, IState> {
           onDayClick={this.onDayClick}
           plans={this.state.tabs}
           curPlan={this.state.curPlan}
-          onPlanChange={this.onPlanChange}
         />
-
+        {this.state.tabs.length ? (
+          <View className="tabs border-bottom">
+            <View className="holder" />
+            <View
+              className={`tab tab-all iconfont icon-all ${
+                this.state.curPlan === 'all' ? 'active' : ''
+              }`}
+              onClick={this.onPlanChangeToAll}
+            />
+            {this.state.tabs.map((t: PlanTabType) => (
+              <View
+                className={`tab iconfont icon-${t.icon} ${t.theme}-color ${
+                  this.state.curPlan === t.planID ? 'active' : ''
+                }`}
+                onClick={() => {
+                  this.onPlanChange(t)
+                }}
+              />
+            ))}
+            <View className="holder" />
+          </View>
+        ) : null}
         {!this.state.inited ? null : !this.state.tabs.length ? (
           <View className="no-plan-and-no-check">
             <Empty tip="没有打卡任务，enjoy your day~">

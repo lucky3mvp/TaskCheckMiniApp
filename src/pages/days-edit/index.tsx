@@ -61,12 +61,12 @@ class DaysEdit extends Component<IProps, IState> {
     notifyTime: '',
     cover: ''
   }
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
   async componentDidMount() {
     const options = await this.getCategoryList()
     console.log('options', options)

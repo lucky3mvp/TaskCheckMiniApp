@@ -54,12 +54,12 @@ class Menstruation extends Component<IProps, IState> {
   }
   cache: Record<string, any> = {}
   cur: DateType = {} as DateType
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
   componentDidMount() {
     const d = new Date()
     this.cur.year = d.getFullYear()

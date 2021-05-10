@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: '编辑计划',
+  navigationBarTitleText: '报表',
   navigationBarBackgroundColor: '#ffffff',
   navigationBarTextStyle: 'black',
   backgroundColor: '#ffffff',

@@ -36,7 +36,8 @@ Plan.status 跟前端的status有区别，注意下
 | planID | string | 计划id
 | userID | string | 用户id
 | comment | string | 备注
-| checkTime | number | 打卡时间戳
+| checkTime | number | 打卡计划的时间戳
+| actualCheckTime | number | 实际打卡时间戳
 | achieve | number | 打开成就，eg： 阅读30min这种，允许打卡阅读了x分钟，x<=30
 
 ### PlanCheckStatus 表

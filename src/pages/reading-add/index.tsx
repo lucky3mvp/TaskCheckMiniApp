@@ -56,12 +56,12 @@ class ReadingAdd extends Component<IProps, IState> {
 
   componentDidShow() {}
 
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
 
   onUploadCover = () => {
     wx.chooseImage({

@@ -86,12 +86,12 @@ class PlanAdd extends Component<IProps, IState> {
     daysBtns: [],
     unitOptions: []
   }
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
   componentDidMount() {
     const index = Math.floor(Math.random() * BannerImgs.length)
     this.setState({

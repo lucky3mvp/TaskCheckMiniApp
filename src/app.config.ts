@@ -13,7 +13,8 @@ export default {
     'pages/check-list/index',
     'pages/menstruation/index',
     'pages/reading-list/index',
-    'pages/reading-add/index'
+    'pages/reading-add/index',
+    'pages/charts/index'
   ],
   window: {
     backgroundTextStyle: 'light',
