@@ -60,12 +60,12 @@ class Check extends Component<IProps, IState> {
     manualEvent.run('days-list-page')
   }
 
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
   calDayCount(c, d) {
     if (c > d) {
       return Math.floor((c - d) / (24 * 60 * 60 * 1000))

@@ -4,6 +4,6 @@ export default {
   navigationBarTextStyle: 'black',
   backgroundColor: '#ffffff',
   backgroundTextStyle: 'light',
-  disableScroll: true,
-  enableShareAppMessage: true
+  disableScroll: true
+  // enableShareAppMessage: true
 }

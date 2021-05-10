@@ -51,12 +51,12 @@ class DaysCategory extends Component<IProps, IState> {
 
   componentDidShow() {}
 
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
 
   async getCategoryList(showLoading = false) {
     showLoading &&

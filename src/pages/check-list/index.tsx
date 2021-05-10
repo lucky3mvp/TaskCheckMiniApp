@@ -61,12 +61,12 @@ class CheckList extends Component<IProps, IState> {
   componentDidShow() {
     manualEvent.run('check-list')
   }
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
   async fetchCheckList(params: Record<string, any> = {}) {
     const { date = this.state.selectedDate, isForce = false } = params
     !this.state.inited &&

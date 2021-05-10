@@ -5,6 +5,6 @@ export default {
   backgroundColor: '#ffffff',
   backgroundTextStyle: 'light',
   disableScroll: false,
-  onReachBottomDistance: 100,
-  enableShareAppMessage: true
+  onReachBottomDistance: 100
+  // enableShareAppMessage: true
 }

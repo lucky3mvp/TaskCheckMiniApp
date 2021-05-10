@@ -59,12 +59,12 @@ class DaysAdd extends Component<IProps, IState> {
     notifyTime: '',
     cover: ''
   }
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
   async componentDidMount() {
     await this.getCategoryList()
 

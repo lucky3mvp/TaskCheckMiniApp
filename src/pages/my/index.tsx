@@ -47,12 +47,12 @@ class My extends Component<IProps, IState> {
     visible: false
   }
   greetingIndex: number = 0
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
   getUserProfile = async () => {
     if (this.props.userInfo.isLogin) return
 

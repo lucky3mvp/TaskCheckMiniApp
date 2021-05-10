@@ -65,12 +65,12 @@ class PlanEdit extends Component<IProps, IState> {
     beginTime: '',
     endTime: ''
   }
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
   componentDidMount() {
     this.plan = Taro.getStorageSync('plan')
     Taro.removeStorageSync('plan')

@@ -45,12 +45,12 @@ class CheckMakeup extends Component<IProps, IState> {
     this.getCheckList(true)
   }
 
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
 
   async getCheckList(showLoading = false) {
     showLoading &&

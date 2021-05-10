@@ -80,12 +80,12 @@ class ReadingList extends Component<IProps, IState> {
     manualEvent.run('reading-list-page')
   }
 
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
 
   eventHandler(params: { status: number; year: number }) {
     const yi: CommonItemType = this.state.yearOptions[this.state.yearIndex]

@@ -56,12 +56,12 @@ class Check extends Component<IProps, IState> {
     manualEvent.run('check-page')
   }
 
-  onShareAppMessage() {
-    return {
-      title: '排骨打卡',
-      path: '/pages/check/index'
-    }
-  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '排骨打卡',
+  //     path: '/pages/check/index'
+  //   }
+  // }
 
   async getCheckList(showLoading = false) {
     showLoading &&
