@@ -1,4 +1,5 @@
 import React, { useMemo, useEffect, useState, useCallback } from 'react'
+import Taro from '@tarojs/taro'
 import { View, Button, Text, Image, Block } from '@tarojs/components'
 import classnames from 'classnames'
 import { rightArrow } from 'src/assets/svg'
@@ -7,14 +8,13 @@ import './index.less'
 
 type IProps = {
   onDayClick: (d: DateType) => void
-  onPlanChange: (p: string) => void
   theme?: string
   curPlan: string
   plans: Array<PlanTabType>
 }
 
 export default (props: IProps) => {
-  const [fold, setFold] = useState(true)
+  const [fold, setFold] = useState(false)
   const onToggleFold = useCallback(() => {
     setFold(!fold)
   }, [fold])
@@ -38,8 +38,14 @@ export default (props: IProps) => {
   }, [selectedDay])
   const displayHeader = useMemo(() => {
     if (fold) {
+      Taro.setNavigationBarTitle({
+        title: `${curYear}-${displayMonth}-${displayDate}`
+      })
       return `${curYear}-${displayMonth}-${displayDate}`
     } else {
+      Taro.setNavigationBarTitle({
+        title: `${curYear}-${displayMonth}`
+      })
       return `${curYear}-${displayMonth}`
     }
   }, [fold, curYear, displayMonth, displayDate])
@@ -146,32 +152,21 @@ export default (props: IProps) => {
     [todayYear, todayMonth, todayDate, curYear, curMonth]
   )
 
-  const onPlanChangeToAll = useCallback(() => {
-    props.onPlanChange('all')
-  }, [])
-  const onPlanChange = useCallback(t => {
-    props.onPlanChange(t.planID)
-  }, [])
-
   return (
     <View className="check-list-calendar">
-      <View className={`check-list-calendar-holder ${fold ? '' : 'hide'}`} />
-      <View className={`check-list-calendar-main ${fold ? 'fixed' : ''}`}>
+      <View className={`check-list-calendar-main ${fold ? 'fold' : ''}`}>
+        <View className="arrow left" onClick={onPrev}>
+          <Image src={rightArrow} className="img"></Image>
+        </View>
+        <View
+          className={`arrow right ${
+            curYear === todayYear && curMonth === todayMonth ? 'hide' : ''
+          }`}
+          onClick={onNext}
+        >
+          <Image src={rightArrow} className="img"></Image>
+        </View>
         <View className={`inner `}>
-          <View className="header border-bottom">
-            <View className="arrow trans" onClick={onPrev}>
-              <Image src={rightArrow} className="img"></Image>
-            </View>
-            <View className="txt">{displayHeader}</View>
-            <View
-              className={`arrow ${
-                curYear === todayYear && curMonth === todayMonth ? 'hide' : ''
-              }`}
-              onClick={onNext}
-            >
-              <Image src={rightArrow} className="img"></Image>
-            </View>
-          </View>
           <View className="labels">
             <View className="label">日</View>
             <View className="label">一</View>
@@ -223,28 +218,6 @@ export default (props: IProps) => {
           ></Image>
         </View>
       </View>
-      {props.plans.length ? (
-        <View className="tabs border-bottom">
-          <View className="holder" />
-          <View
-            className={`tab tab-all iconfont icon-all ${
-              props.curPlan === 'all' ? 'active' : ''
-            }`}
-            onClick={onPlanChangeToAll}
-          />
-          {props.plans.map((t: PlanTabType) => (
-            <View
-              className={`tab iconfont icon-${t.icon} ${t.theme}-color ${
-                props.curPlan === t.planID ? 'active' : ''
-              }`}
-              onClick={() => {
-                onPlanChange(t)
-              }}
-            />
-          ))}
-          <View className="holder" />
-        </View>
-      ) : null}
     </View>
   )
 }

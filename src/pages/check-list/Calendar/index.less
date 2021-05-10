@@ -1,79 +1,62 @@
 .check-list-calendar {
-  .check-list-calendar-holder {
-    height: 67px;
-    &.hide {
-      display: none;
-    }
-  }
-  .check-list-calendar-main {
+  &-main {
     background-color: #ffffff;
-    &.fixed {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1;
-      .inner {
-        height: 48px;
-        min-height: 48px;
-        padding-bottom: 0;
-        .border-bottom {
-          &:after {
-            display: none;
-          }
-        }
-        .arrow {
-          opacity: 0;
-        }
+    padding-top: 5px;
+    transition: all ease-in-out 0.2s;
+    position: relative;
+
+    &.fold {
+      height: 19px;
+      overflow: hidden;
+      position: relative;
+      .fold-icon {
+        position: absolute;
+        top: 5px;
+        left: 0;
+        right: 0;
       }
     }
 
+    .arrow {
+      position: absolute;
+      top: 135px;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &.left {
+        left: 5px;
+        transform: rotate(180deg);
+      }
+      &.right {
+        transform: rotate(0deg);
+        right: 5px;
+      }
+      &.hide {
+        display: none;
+      }
+      .img {
+        width: 8px;
+        height: 16px;
+      }
+    }
     .inner {
-      margin: 0 20px;
+      margin: 0 auto;
       min-height: 200px;
-      width: 335px;
+      width: 315px;
       border-radius: 10px;
       padding-bottom: 10px;
       transition: all ease-in-out 0.3s;
       overflow: hidden;
     }
-    .header {
-      height: 48px;
-      display: flex;
-      margin: 0 0 6px;
-      .txt {
-        flex: 1;
-        font-size: 16px;
-        line-height: 48px;
-        font-family: 'PingFangSC-Medium';
-        color: #222222;
-        text-align: center;
-      }
-      .arrow {
-        width: 48px;
-        height: 48px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: opacity ease-in 0.3s;
-        &.hide {
-          opacity: 0;
-        }
-        &.trans {
-          transform: rotate(180deg);
-        }
-        .img {
-          width: 8px;
-          height: 16px;
-        }
-      }
-    }
     .labels {
-      padding: 0 3px;
+      // padding: 0 3px;
       display: flex;
       align-items: center;
       .label {
-        width: 47px;
+        width: 45px;
         height: 36px;
         line-height: 36px;
         text-align: center;
@@ -83,12 +66,12 @@
       }
     }
     .days {
-      padding: 0 3px;
+      // padding: 0 3px;
       display: flex;
       flex-wrap: wrap;
       .day-wrapper {
         flex-shrink: 0;
-        width: 47px;
+        width: 45px;
         height: 42px;
         font-family: 'PingFangSC-Regular';
         display: flex;
@@ -146,34 +129,6 @@
           transform: rotate(90deg);
         }
       }
-    }
-  }
-  .tabs {
-    background: #ffffff;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow: scroll;
-    height: 52px;
-    align-items: center;
-    .holder {
-      width: 12px;
-      height: 100%;
-      flex-shrink: 0;
-    }
-    .tab {
-      text-align: center;
-      width: 45px;
-      flex-shrink: 0;
-      opacity: 0.35;
-      &.active {
-        opacity: 1;
-      }
-      &.tab-all {
-        color: #ee8787;
-      }
-    }
-    .iconfont {
-      font-size: 28px;
     }
   }
 }
