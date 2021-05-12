@@ -431,7 +431,7 @@ exports.main = async (event, context) => {
         }
       })
     } else if (_type === 'update') {
-      await collection.doc(planID).update({
+      const res = await collection.doc(planID).update({
         data: {
           name,
           description,
@@ -440,6 +440,7 @@ exports.main = async (event, context) => {
           category
         }
       })
+      console.log('plan update res: ', res)
     } else if (_type === 'submit') {
       const { year, month, day, type } = event
       const bt = new Date(event.beginTime).getTime()

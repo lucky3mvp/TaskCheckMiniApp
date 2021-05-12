@@ -183,7 +183,7 @@ class PlanEdit extends Component<IProps, IState> {
     })
 
     const res = await commonApi({
-      _scopee: 'plan',
+      _scope: 'plan',
       _type: 'update',
       planID: this.plan.planID,
       name: this.state.name,
