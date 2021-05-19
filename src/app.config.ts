@@ -2,7 +2,7 @@ export default {
   pages: [
     'pages/check/index',
     'pages/check-makeup/index',
-    'pages/days/index',
+    'pages/days-list/index',
     'pages/days-add/index',
     'pages/days-detail/index',
     'pages/days-category/index',
@@ -44,7 +44,7 @@ export default {
       //   selectedIconPath: 'assets/check-active.png'
       // },
       {
-        pagePath: 'pages/days/index',
+        pagePath: 'pages/days-list/index',
         text: 'Days',
         iconPath: 'assets/clock.png',
         selectedIconPath: 'assets/clock-active.png'
