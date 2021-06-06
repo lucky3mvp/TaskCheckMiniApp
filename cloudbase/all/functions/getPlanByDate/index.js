@@ -101,6 +101,53 @@ exports.main = async (event, context) => {
         .done(),
       as: 'planCheckStatus'
     })
+    .lookup({
+      from: 'planCheckStatus',
+      let: {
+        planID: '$planID',
+        userID: '$userID',
+        type: '$type'
+      },
+      pipeline: $.pipeline()
+        .match(
+          _.expr(
+            $.and([
+              $.eq(['$planID', '$$planID']),
+              $.eq(['$userID', '$$userID']),
+              $.eq(['$year', dateObj.getFullYear()]),
+              $.eq(['$month', dateObj.getMonth() + 1]),
+              $.eq(['$$type', 4]),
+              $.eq(['$status', 1])
+            ])
+          )
+        )
+        .done(),
+      as: 'monthFulfillTimes'
+    })
+    .lookup({
+      from: 'planCheckStatus',
+      let: {
+        planID: '$planID',
+        userID: '$userID',
+        type: '$type',
+        subType: '$subType'
+      },
+      pipeline: $.pipeline()
+        .match(
+          _.expr(
+            $.and([
+              $.eq(['$planID', '$$planID']),
+              $.eq(['$userID', '$$userID']),
+              $.eq(['$weekStart', getWeekStart(dateObj)]),
+              $.eq(['$$type', 3]),
+              $.eq(['$$subType', 1]),
+              $.eq(['$status', 1])
+            ])
+          )
+        )
+        .done(),
+      as: 'weekFulfillTimes'
+    })
     .replaceRoot({
       newRoot: $.mergeObjects([
         '$$ROOT',
