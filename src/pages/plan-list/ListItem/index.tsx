@@ -57,7 +57,7 @@ export default (props: IProps) => {
             <View className="mid-item">
               <View>本周打卡次数</View>
               <View className={`mid-item-times ${props.theme}-color`}>
-                {props.weekTimes || 0}
+                {props.weekCheckTimes || 0}
               </View>
             </View>
           ) : null}
@@ -65,7 +65,7 @@ export default (props: IProps) => {
             <View className="mid-item">
               <View>本月打卡次数</View>
               <View className={`mid-item-times ${props.theme}-color`}>
-                {props.monthTimes || 0}
+                {props.monthCheckTimes || 0}
               </View>
             </View>
           ) : null}
@@ -75,12 +75,6 @@ export default (props: IProps) => {
               {props.totalCheckTimes || 0}
             </View>
           </View>
-          {/* <View className="mid-item">
-            <View>累计完成次数</View>
-            <View className={`mid-item-times ${props.theme}-color`}>
-              {props.totalTimes || 0}
-            </View>
-          </View> */}
         </View>
       ) : null}
       {props.status === 3 ? (
@@ -94,15 +88,9 @@ export default (props: IProps) => {
           <View className="mid-item">
             <View>累计完成次数</View>
             <View className={`mid-item-times ${props.theme}-color`}>
-              {props.totalTimes || 0}
+              {props.totalFulfillTimes || 0}
             </View>
           </View>
-          {/* <View className="mid-item-horizon">
-            <View>累计打卡次数</View>
-            <View className={`num ${props.theme}-color`}>
-              {props.totalTimes || 0}
-            </View>
-          </View> */}
         </View>
       ) : null}
       <View className="btm">

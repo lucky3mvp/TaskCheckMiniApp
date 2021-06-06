@@ -200,8 +200,9 @@ exports.main = async (event, context) => {
       }
     }
   } else if (_scope === 'days') {
+    const categoryCollection = db.collection('days-category')
+    const daysCollection = db.collection('days')
     if (_type === 'fetchCategory') {
-      const categoryCollection = db.collection('days-category')
       const { errMsg, data } = await categoryCollection
         .where({
           userID: wxContext.OPENID,
@@ -211,7 +212,6 @@ exports.main = async (event, context) => {
       console.log('获取days分类，', data)
       return { code: 200, categories: data }
     } else if (_type === 'submitCategory') {
-      const categoryCollection = db.collection('days-category')
       const { name, icon } = event
       const { errMsg } = await categoryCollection.add({
         data: {
@@ -226,7 +226,6 @@ exports.main = async (event, context) => {
         code: errMsg.indexOf('add:ok') >= 0 ? 200 : 400
       }
     } else if (_type === 'updateCategory') {
-      const categoryCollection = db.collection('days-category')
       const { name, icon, id } = event
       const { errMsg } = await categoryCollection.doc(id).update({
         data: {
@@ -237,7 +236,6 @@ exports.main = async (event, context) => {
       console.log('更新days分类： ', errMsg)
       return { code: 200 }
     } else if (_type === 'deleteCategory') {
-      const categoryCollection = db.collection('days-category')
       const { id } = event
       const { errMsg } = await categoryCollection.doc(id).update({
         data: {
@@ -245,7 +243,6 @@ exports.main = async (event, context) => {
         }
       })
       // 更新days表的category
-      const daysCollection = db.collection('days')
       const { errMsg: errMsg2 } = daysCollection
         .where({
           userID: wxContext.OPENID,
@@ -258,7 +255,6 @@ exports.main = async (event, context) => {
       console.log('删除days分类，并更新days表： ', errMsg, errMsg2)
       return { code: 200 }
     } else if (_type === 'submitDays') {
-      const daysCollection = db.collection('days')
       const { name, category, date, isTop, notifyTime, cover } = event
       const d = {
         userID: wxContext.OPENID,
@@ -296,7 +292,6 @@ exports.main = async (event, context) => {
         code: errMsg.indexOf('add:ok') >= 0 ? 200 : 400
       }
     } else if (_type === 'fetchDays') {
-      const daysCollection = db.collection('days')
       const { errMsg, data } = await daysCollection
         .where({
           userID: wxContext.OPENID,

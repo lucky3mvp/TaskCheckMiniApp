@@ -7,7 +7,8 @@ const startedPlan = [
     endTime: null,
     goal: 300,
     icon: 'reading',
-    monthTimes: 2,
+    monthFulfillTimes: 2,
+    monthCheckTimes: 2,
     name: '读书',
     planID: '28ee4e3e601a43f402aa8a9a294acb51',
     status: 2,
@@ -15,10 +16,11 @@ const startedPlan = [
     theme: 'theme12',
     times: '',
     totalCheckTimes: 13,
-    totalTimes: 6,
+    totalFulfillTimes: 6,
     type: 3,
     unit: '6',
-    weekTimes: 0
+    weekFulfillTimes: 0,
+    weekCheckTimes: 0
   }
 ]
 const planLists = [
@@ -38,10 +40,12 @@ const planLists = [
     beginTime: 1609430400000,
     endTime: null,
     status: 2,
-    totalTimes: 10,
+    totalFulfillTimes: 10,
     totalCheckTimes: 18,
-    monthTimes: 1,
-    weekTimes: 0
+    monthFulfillTimes: 1,
+    monthCheckTimes: 1,
+    weekFulfillTimes: 0,
+    weekCheckTimes: 0
   },
   {
     planID: '79550af2601a7409026a6137022e9ca8',
@@ -59,10 +63,12 @@ const planLists = [
     beginTime: 1609430400000,
     endTime: null,
     status: 2,
-    totalTimes: 5,
+    totalFulfillTimes: 5,
     totalCheckTimes: 5,
-    monthTimes: 0,
-    weekTimes: 0
+    monthFulfillTimes: 0,
+    monthCheckTimes: 0,
+    weekFulfillTimes: 0,
+    weekCheckTimes: 0
   },
   {
     planID: '79550af2601a7525026aa98d1a450897',
@@ -80,10 +86,12 @@ const planLists = [
     beginTime: 1609430400000,
     endTime: null,
     status: 2,
-    totalTimes: 17,
+    totalFulfillTimes: 17,
     totalCheckTimes: 17,
-    monthTimes: 0,
-    weekTimes: 0
+    monthFulfillTimes: 0,
+    monthCheckTimes: 0,
+    weekFulfillTimes: 0,
+    weekCheckTimes: 0
   },
   {
     planID: '28ee4e3e601a799802b49d9200bd73a8',
@@ -101,10 +109,12 @@ const planLists = [
     beginTime: 1617206400000,
     endTime: 1635609600000,
     status: 2,
-    totalTimes: 0,
+    totalFulfillTimes: 0,
     totalCheckTimes: 0,
-    monthTimes: 0,
-    weekTimes: 0
+    monthFulfillTimes: 0,
+    weekCheckTimes: 0,
+    monthCheckTimes: 0,
+    weekFulfillTimes: 0
   },
   {
     planID: '1526e12a601a79f5020250253d35c871',
@@ -122,10 +132,12 @@ const planLists = [
     beginTime: 1609430400000,
     endTime: null,
     status: 2,
-    totalTimes: 9,
+    totalFulfillTimes: 9,
     totalCheckTimes: 9,
-    monthTimes: 1,
-    weekTimes: 0
+    monthFulfillTimes: 1,
+    weekFulfillTimes: 0,
+    monthCheckTimes: 1,
+    weekCheckTimes: 0
   },
   {
     planID: '79550af26041e90f0873e7c70e7b0a29',
@@ -143,10 +155,12 @@ const planLists = [
     beginTime: 1614441600000,
     endTime: null,
     status: 2,
-    totalTimes: 22,
+    totalFulfillTimes: 22,
     totalCheckTimes: 22,
-    monthTimes: 2,
-    weekTimes: 1
+    monthFulfillTimes: 2,
+    weekFulfillTimes: 1,
+    monthCheckTimes: 2,
+    weekCheckTimes: 1
   }
 ]
 
@@ -166,7 +180,7 @@ const checkPlans = [
     theme: 'theme20',
     times: 1,
     totalAchieve: 0,
-    totalTimes: 0,
+    totalFulfillTimes: 0,
     type: 3,
     unit: '1'
   },
@@ -185,7 +199,7 @@ const checkPlans = [
     theme: 'theme12',
     times: 1,
     totalAchieve: 0,
-    totalTimes: 0,
+    totalFulfillTimes: 0,
     type: 3,
     unit: '1'
   },
@@ -204,7 +218,7 @@ const checkPlans = [
     theme: 'theme14',
     times: 1,
     totalAchieve: 0,
-    totalTimes: 0,
+    totalFulfillTimes: 0,
     type: 3,
     unit: '1'
   },
@@ -223,7 +237,7 @@ const checkPlans = [
     theme: 'theme11',
     times: 1,
     totalAchieve: 0,
-    totalTimes: 0,
+    totalFulfillTimes: 0,
     type: 3,
     unit: '1'
   },
@@ -242,7 +256,7 @@ const checkPlans = [
     theme: 'theme22',
     times: 1,
     totalAchieve: 0,
-    totalTimes: 0,
+    totalFulfillTimes: 0,
     type: 3,
     unit: '1'
   }

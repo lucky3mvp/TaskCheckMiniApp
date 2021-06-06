@@ -92,19 +92,21 @@ type PlanType = {
    * 累计完成的次数
    * 指的是计划在当前计划周期内，完成了多少次
    * 比如计划是每周5次xxx
-   * 那么这里的totalTimes指的是本周这个计划当前完成了多少次
+   * 那么这里的totalFulfillTimes指的是本周这个计划当前完成了多少次
    * 使用的地方如：今日打卡页的dot指示
    */
-  totalTimes: number
-  weekTimes?: number
-  monthTimes?: number
+  totalFulfillTimes: number
+  weekFulfillTimes?: number
+  monthFulfillTimes?: number
   /**
    * 累计打卡的次数
    * eg: 目标是每次跑5km，但某次打卡，可能只跑了3km，此时不会记成完成状态，但会记录此次打卡
-   * 因此 totalTimes 不会包含本次打卡，
+   * 因此 totalFulfillTimes 不会包含本次打卡，
    * 但 totalCheckTimes 会包含本次打卡
    */
   totalCheckTimes: number
+  weekCheckTimes: number
+  monthCheckTimes: number
 }
 
 type PlanTabType = {
@@ -134,6 +136,11 @@ type CheckListItemType = {
 type ReadingListItemType = {
   _id: string
   name: string
+  cover: string
+  createTime: number
+  beginTime?: number
+  finishTime?: number
+  comment: string
   /**
    * status
    * 1-未读
@@ -141,31 +148,26 @@ type ReadingListItemType = {
    * 3-读完
    */
   status: number
-  cover: string
-  comment: string
-  createTime: number
-  beginTime?: number
-  finishTime?: number
 }
 
 type DaysItemType = {
   _id: string
-  name: string
+  userID: string
   category: string
-  date: number
-  dateFormat: string
-  createTime: number
-  dayCount: number
-  notifyTime?: number | null
-  isTop: boolean
   cover: string
+  name: string
+  createTime: number
+  notifyTime?: number | null
+  date: number
+  isTop: boolean
   /**
    * status
    * 1-正常
    * 2-已删除
    */
   status: number
-  userID: string
+  dateFormat: string
+  dayCount: number
 }
 
 type DaysCategoryType = {

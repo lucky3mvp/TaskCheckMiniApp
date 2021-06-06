@@ -89,6 +89,12 @@
           "pathName": "pages/days-detail/index",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "pages/check-makeup/index",
+          "pathName": "pages/check-makeup/index",
+          "query": "",
+          "scene": null
         }
       ]
     }

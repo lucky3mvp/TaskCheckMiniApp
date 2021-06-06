@@ -51,116 +51,130 @@ exports.main = async (event, context) => {
 
   const db = cloud.database()
   const _ = db.command
-  const collection = db.collection('plan')
-  const statusCollection = db.collection('planCheckStatus')
+  const $ = db.command.aggregate
 
-  const unStarted = []
-  const started = []
-  const ended = []
-
-  const { errMsg, data } = await collection
-    .where({
+  // 未开始计划
+  const { list: unStarted } = await db
+    .collection('plan')
+    .aggregate()
+    .match({
       userID: wxContext.OPENID,
-      status: 1 // 1-正常 2-已删除
+      status: 1, // 1-正常 2-已删除
+      beginTime: _.gt(dateTime)
     })
-    .get()
-  console.log('get plan list data: ', data)
-  for (let p of data) {
-    // 给前端的status
-    // - 1-未开始
-    // - 2-进行中
-    // - 3-已结束
-    let status = 0
-    if (dateTime < p.beginTime) {
-      status = 1
-    } else if (
-      dateTime >= p.beginTime &&
-      (!p.endTime || dateTime <= p.endTime)
-    ) {
-      status = 2
-    } else {
-      status = 3
-    }
+    .addFields({
+      status: 1 // 这是给前端的status，不是计划本身的status，注意下
+    })
+    .end()
+  console.log('unStarted: ', unStarted)
 
-    const item = {
-      planID: p.planID,
-      name: p.name,
-      description: p.description,
-      theme: p.theme,
-      icon: p.icon,
-      category: p.category,
-      unit: p.unit,
-      goal: p.goal,
-      type: p.type,
-      subType: p.subType,
-      times: p.times,
-      days: p.days,
-      beginTime: p.beginTime,
-      endTime: p.endTime,
-      status: status
-      // totalTimes: totalTimes
-    }
-    if (status === 1) {
-      unStarted.push(item)
-    } else {
-      /**
-       * 进行中的计划 & 已结束的计划
-       * 都需要取累计完成次数和累计打卡次数
-       */
-      // 1. 算累计完成次数
-      const { total: totalTimes } = await statusCollection
-        .where({
-          userID: wxContext.OPENID,
-          planID: p.planID,
-          status: 1
-        })
-        .count()
-      console.log('getPlanList 累计完成次数', totalTimes)
-      item.totalTimes = totalTimes
+  // 进行中计划
+  const { list: started } = await db
+    .collection('plan')
+    .aggregate()
+    .match({
+      userID: wxContext.OPENID,
+      status: 1, // 1-正常 2-已删除
+      beginTime: _.lte(dateTime),
+      endTime: _.eq(null).or(_.gte(dateTime))
+    })
+    .lookup({
+      from: 'planCheckStatus',
+      let: {
+        planID: '$planID',
+        userID: '$userID'
+      },
+      pipeline: $.pipeline()
+        .match(
+          _.expr(
+            $.and([
+              $.eq(['$planID', '$$planID']),
+              $.eq(['$userID', '$$userID']),
+              // $.eq(['$status', 1]), // 取完成次数的时候再加上
+              $.eq(['$weekStart', getWeekStart(dateObj)])
+            ])
+          )
+        )
+        .done(),
+      as: 'weekCheckTimes'
+    })
+    .lookup({
+      from: 'planCheckStatus',
+      let: {
+        planID: '$planID',
+        userID: '$userID'
+      },
+      pipeline: $.pipeline()
+        .match(
+          _.expr(
+            $.and([
+              $.eq(['$planID', '$$planID']),
+              $.eq(['$userID', '$$userID']),
+              // $.eq(['$status', 1]), // 取完成次数的时候再加上
+              $.eq(['$year', year]),
+              $.eq(['$month', month])
+            ])
+          )
+        )
+        .done(),
+      as: 'monthCheckTimes'
+    })
+    .lookup({
+      from: 'check',
+      localField: 'planID',
+      foreignField: 'planID',
+      as: 'totalCheckTimes'
+    })
+    .addFields({
+      status: 2, // 这是给前端的status，不是计划本身的status，注意下
+      weekCheckTimes: $.size('$weekCheckTimes'), // 累计打卡次数
+      monthCheckTimes: $.size('$monthCheckTimes'), // 累计打卡次数
+      totalCheckTimes: $.size('$totalCheckTimes') // 累计打卡次数
+    })
+    .end()
+  console.log('started: ', started)
 
-      // 2. 算累计打卡次数
-      const checkCollection = db.collection('check')
-      const { total: totalCheckTimes } = await checkCollection
-        .where({
-          userID: wxContext.OPENID,
-          planID: p.planID
-        })
-        .count()
-      console.log('getPlanList 累计打卡次数', totalCheckTimes)
-      item.totalCheckTimes = totalCheckTimes
-
-      if (status === 3) {
-        ended.push(item)
-      } else {
-        // 进行中的计划还需要算 本周打卡次数 和 本月打卡次数
-        // 前端还没决定到底是展示本周还是本月，先都返回吧
-        const { total: monthTimes } = await statusCollection
-          .where({
-            userID: wxContext.OPENID,
-            year: year,
-            month: month,
-            planID: p.planID,
-            status: 1
-          })
-          .count()
-        console.log('getPlanList 本月累计打卡次数', monthTimes)
-        item.monthTimes = monthTimes
-
-        const { total: weekTimes } = await statusCollection
-          .where({
-            userID: wxContext.OPENID,
-            weekStart: getWeekStart(dateObj),
-            planID: p.planID,
-            status: 1
-          })
-          .count()
-        console.log('getPlanList 本周累计打卡次数', weekTimes)
-        item.weekTimes = weekTimes
-
-        started.push(item)
-      }
-    }
-  }
+  // 已结束计划
+  const { list: ended } = await db
+    .collection('plan')
+    .aggregate()
+    .match({
+      userID: wxContext.OPENID,
+      status: 1, // 1-正常 2-已删除
+      endTime: _.lt(dateTime)
+    })
+    .lookup({
+      from: 'check',
+      localField: 'planID',
+      foreignField: 'planID',
+      as: 'totalCheckTimes'
+    })
+    .lookup({
+      from: 'planCheckStatus',
+      let: {
+        planID: '$planID',
+        userID: '$userID'
+      },
+      pipeline: $.pipeline()
+        .match(
+          _.expr(
+            $.and([
+              $.eq(['$planID', '$$planID']),
+              $.eq(['$userID', '$$userID']),
+              $.eq(['$status', 1])
+            ])
+          )
+        )
+        .done(),
+      as: 'totalFulfillTimes'
+    })
+    .addFields({
+      status: 3, // 这是给前端的status，不是计划本身的status，注意下
+      totalCheckTimes: $.size('$totalCheckTimes'), // 累计打卡次数
+      totalFulfillTimes: $.size('$totalFulfillTimes') // 累计完成次数
+    })
+    .end()
+  console.log('ended: ', ended)
 
   return {
     code: 200,
