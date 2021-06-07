@@ -87,7 +87,19 @@ type PlanType = {
   days: string // 接口返回的是string,没做split
   beginTime: number
   endTime: number
+}
+
+type CheckPlanType = PlanType & {
   totalAchieve: number
+  /**
+   * 计划累计完成的次数
+   * 如果是周计划统计一周的完成次数
+   * 如果是月计划统计一月的完成次数
+   */
+  totalFulfillTimes: number
+}
+
+type PlanListItemType = PlanType & {
   /**
    * 累计完成的次数
    * 指的是计划在当前计划周期内，完成了多少次

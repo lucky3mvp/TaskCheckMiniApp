@@ -11,7 +11,7 @@ import './index.less'
 
 interface IProps {
   isShow: boolean
-  plan: PlanType
+  plan: CheckPlanType
   submitBtnText: string
   onClose: () => void
   onSubmit: () => {}

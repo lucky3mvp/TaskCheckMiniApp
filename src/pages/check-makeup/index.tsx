@@ -20,8 +20,8 @@ type PageOwnProps = {}
 type IState = {
   loading: boolean
   isShowModal: boolean
-  plans: Array<PlanType>
-  checkItem: PlanType
+  plans: Array<CheckPlanType>
+  checkItem: CheckPlanType
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -33,7 +33,7 @@ class CheckMakeup extends Component<IProps, IState> {
     loading: true,
     isShowModal: false,
     plans: [],
-    checkItem: {} as PlanType
+    checkItem: {} as CheckPlanType
   }
   date = getCurrentInstance().router!.params.date
   async componentDidMount() {
@@ -68,8 +68,7 @@ class CheckMakeup extends Component<IProps, IState> {
     Taro.hideLoading()
   }
 
-  onCheck = (p: PlanType) => {
-    // if (p.status === 1 || p.totalAchieve > p.goal || p.totalTimes > p.times)
+  onCheck = (p: CheckPlanType) => {
     if (p.status === 1 || p.totalAchieve > p.goal) return // 已完成返回
 
     this.setState({
@@ -96,7 +95,7 @@ class CheckMakeup extends Component<IProps, IState> {
     return this.state.loading ? null : (
       <Block>
         <View className="check-makeup-page">
-          {this.state.plans.map((p: PlanType) => (
+          {this.state.plans.map((p: CheckPlanType) => (
             <CheckItem key={p.planID} onClick={this.onCheck} plan={p} />
           ))}
         </View>

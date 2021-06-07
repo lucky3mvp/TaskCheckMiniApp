@@ -50,10 +50,6 @@ exports.main = async (event, context) => {
   const db = cloud.database()
   const _ = db.command
   const $ = db.command.aggregate
-  const collection = db.collection('plan')
-  const statusCollection = db.collection('planCheckStatus')
-
-  const result = []
 
   const { list } = await db
     .collection('plan')
@@ -63,6 +59,7 @@ exports.main = async (event, context) => {
       status: 1, // 1-正常 2-已删除
       beginTime: _.lte(dateTime),
       endTime: _.eq(null).or(_.gte(dateTime))
+      // 需要排除指定周几的case,但不知道该怎么写啊。。。
       /**
        *
       p.type === 2 ||
@@ -72,7 +69,7 @@ exports.main = async (event, context) => {
         p.subType === 2 &&
         days.indexOf(`${dateObj.getDay()}`) >= 0)
        */
-      // type: _.eq(2).or(_.eq(4)).or()
+      // type: _.eq(2).or(_.eq(4))
     })
     .lookup({
       from: 'planCheckStatus',
@@ -122,7 +119,7 @@ exports.main = async (event, context) => {
           )
         )
         .done(),
-      as: 'monthFulfillTimes'
+      as: 'monthPlanFulfillTimes'
     })
     .lookup({
       from: 'planCheckStatus',
@@ -146,7 +143,14 @@ exports.main = async (event, context) => {
           )
         )
         .done(),
-      as: 'weekFulfillTimes'
+      as: 'weekPlanFulfillTimes'
+    })
+    .addFields({
+      // 不管是周计划，还是月计划，统一用totalFulfillTimes字段返回计划完成的次数
+      totalFulfillTimes: $.add([
+        $.size('$monthPlanFulfillTimes'),
+        $.size('$weekPlanFulfillTimes')
+      ])
     })
     .replaceRoot({
       newRoot: $.mergeObjects([
@@ -159,12 +163,21 @@ exports.main = async (event, context) => {
       ])
     })
     .project({
-      planCheckStatus: 0
+      planCheckStatus: 0,
+      monthPlanFulfillTimes: 0,
+      weekPlanFulfillTimes: 0
     })
     .end()
 
-  console.log(list)
-  return
+  return list.filter(
+    p =>
+      p.type === 2 ||
+      p.type === 4 ||
+      (p.type === 3 && p.subType === 1) ||
+      (p.type === 3 &&
+        p.subType === 2 &&
+        p.days.split(',').indexOf(`${dateObj.getDay()}`) >= 0)
+  )
 
   for (let p of data) {
     let totalFulfillTimes = 0

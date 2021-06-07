@@ -4,7 +4,7 @@ import { PlanStatusIconMap, UnitMap } from 'src/constants/config'
 import { formatDate } from 'src/utils'
 import './index.less'
 
-interface IProps extends PlanType {
+interface IProps extends PlanListItemType {
   onEdit?: () => {}
   onRecord?: () => {}
 }

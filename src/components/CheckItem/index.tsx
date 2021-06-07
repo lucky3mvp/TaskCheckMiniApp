@@ -6,8 +6,8 @@ import { UnitMap } from 'src/constants/config'
 import './index.less'
 
 interface IProps {
-  plan: PlanType
-  onClick: (p: PlanType) => void
+  plan: CheckPlanType
+  onClick: (p: CheckPlanType) => void
 }
 
 export default (props: IProps) => {
