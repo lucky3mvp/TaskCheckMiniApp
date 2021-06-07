@@ -19,9 +19,9 @@ type PageOwnProps = {}
 type IState = {
   loading: boolean
   index: number
-  unStarted: Array<PlanType>
-  started: Array<PlanType>
-  ended: Array<PlanType>
+  unStarted: Array<PlanListItemType>
+  started: Array<PlanListItemType>
+  ended: Array<PlanListItemType>
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -85,13 +85,13 @@ class PlanList extends Component<IProps, IState> {
       index: index
     })
   }
-  onGotoEdit = (plan: PlanType) => {
+  onGotoEdit = (plan: PlanListItemType) => {
     Taro.setStorageSync('plan', plan)
     Taro.navigateTo({
       url: '/pages/plan-edit/index'
     })
   }
-  onGotoRecord = (plan: PlanType) => {
+  onGotoRecord = (plan: PlanListItemType) => {
     Taro.showToast({
       title: 'todo'
     })

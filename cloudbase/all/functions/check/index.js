@@ -69,7 +69,7 @@ exports.main = async (event, context) => {
   const collection = db.collection('check')
 
   const t = Date.now()
-  const { errMsg, _id } = await collection.add({
+  const { _id } = await collection.add({
     data: {
       userID: wxContext.OPENID,
       planID: planID,
@@ -84,14 +84,11 @@ exports.main = async (event, context) => {
   // 先查出计划信息
   const planCollection = db.collection('plan')
   const statusCollection = db.collection('planCheckStatus')
-  const { errMsg: errMsg2, data: data2 } = await planCollection
-    .doc(planID)
-    .get()
-  const plan = data2
-  console.log('check 查 plan : ', data2)
+  const { data: plan } = await planCollection.doc(planID).get()
+  console.log('check 查 plan : ', plan)
   if (plan) {
     // 2.查这个计划当前的打卡状态
-    let { errMsg: errMsg3, data: data3 } = await statusCollection
+    let { data: data3 } = await statusCollection
       .where({
         userID: wxContext.OPENID,
         planID: planID,
@@ -116,7 +113,7 @@ exports.main = async (event, context) => {
         day: checkDay,
         weekStart: getWeekStart(checkDate)
       }
-      const { errMsg: errMsg4, _id: _id4 } = await statusCollection.add({
+      const { _id: _id4 } = await statusCollection.add({
         data: detail
       })
       console.log('check 新增 planCheckStatus', detail)

@@ -1,0 +1,47 @@
+.check-modal-component {
+  overflow: hidden;
+  width: 305px;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e7e7e7;
+  transition: all ease-in-out 0.3s;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -100%);
+  &.show {
+    opacity: 1;
+  }
+  &.hide {
+    opacity: 0;
+  }
+  .border-bottom {
+    margin: 5px;
+  }
+  .achieve-item {
+    display: flex;
+    .unit {
+      font-size: 14px;
+      font-family: 'PingFangSC-Regular';
+      color: #777777;
+      flex-shrink: 0;
+      line-height: 36px;
+    }
+  }
+  .check-btn {
+    height: 36px;
+    border-radius: 10px;
+    // background: #ee8787;
+    margin: 20px 0 10px;
+    color: #ffffff;
+    font-size: 16px;
+    font-family: 'PingFangSC-Medium';
+    text-align: center;
+    line-height: 36px;
+    &.disable {
+      opacity: 0.5;
+    }
+  }
+}

@@ -1,5 +1,8 @@
 .check-page {
   width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   .add-plan {
     display: flex;
     align-items: center;
@@ -12,130 +15,25 @@
       margin-left: 5px;
     }
   }
-  .check-plan-item {
-    margin: 15px 20px;
-    height: 70px;
-    position: relative;
-    box-sizing: border-box;
-    padding: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-    .bkg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      &-full {
-        z-index: 0;
-        width: 335px;
-        height: 100%;
-        opacity: 0.25;
-      }
-      &-progress {
-        z-index: 1;
-        height: 100%;
-        transition: width ease-in-out 0.5s;
-      }
-    }
-    .cnt {
-      box-sizing: border-box;
-      padding: 20px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #222222;
-      .left {
-        display: flex;
-        align-items: center;
-        font-size: 16px;
-        font-family: 'PingFangSC-Regular';
-        .iconfont {
-          font-size: 20px;
-          margin-right: 10px;
-        }
-        .price {
-          margin-left: 10px;
-          margin-top: 1px;
-          height: 20px;
-          width: 15px;
-        }
-      }
-      .right {
-        position: relative;
-        font-size: 14px;
-        .icon-gou {
-          color: #ee8787;
-        }
-        .dot-wrapper {
-          position: absolute;
-          right: 0;
-          bottom: -14px;
-          display: flex;
-          flex-direction: row;
-          .dot {
-            margin-left: 3px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: #cacaca;
-            &.active {
-              background-color: #ee8787;
-            }
-          }
-        }
-      }
-    }
+
+  .holder {
+    flex: 1;
+    min-height: 40px;
   }
-}
-.check-page-check-module {
-  overflow: hidden;
-  width: 305px;
-  box-sizing: border-box;
-  padding: 10px 20px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  border: 1px solid #e7e7e7;
-  transition: all ease-in-out 0.3s;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -100%);
-  &.show {
-    opacity: 1;
-  }
-  &.hide {
-    opacity: 0;
-  }
-  .border-bottom {
-    margin: 5px;
-  }
-  .achieve-item {
+  .go-check {
+    padding: 20px 0;
+    font-size: 14px;
+    color: #707070;
     display: flex;
-    .unit {
-      font-size: 14px;
-      font-family: 'PingFangSC-Regular';
-      color: #777777;
-      flex-shrink: 0;
-      line-height: 36px;
+    justify-content: center;
+    align-items: center;
+    .link {
+      color: #ee8787;
+      margin-left: 5px;
     }
-  }
-  .check-btn {
-    height: 36px;
-    border-radius: 10px;
-    // background: #ee8787;
-    margin: 20px 0 10px;
-    color: #ffffff;
-    font-size: 16px;
-    font-family: 'PingFangSC-Medium';
-    text-align: center;
-    line-height: 36px;
-    &.disable {
-      opacity: 0.5;
+    .icon-right-arrow {
+      color: #ee8787;
+      font-size: 12px;
     }
   }
 }

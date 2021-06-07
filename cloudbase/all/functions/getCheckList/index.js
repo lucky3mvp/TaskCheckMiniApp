@@ -5,16 +5,15 @@ exports.main = async (event, context) => {
   console.log('getCheckList params: ', event)
   const db = cloud.database()
   const _ = db.command
+  const $ = db.command.aggregate
   const wxContext = cloud.getWXContext()
 
   let { date, returnPlanTabs } = event
 
   let tabs = []
-  let list = []
-
   if (returnPlanTabs) {
-    const collection = db.collection('plan')
-    const { errMsg, data } = await collection
+    const { errMsg, data } = await db
+      .collection('plan')
       .where({
         status: 1, // 1-正常 2-已删除
         userID: wxContext.OPENID
@@ -48,42 +47,40 @@ exports.main = async (event, context) => {
     8 * 60 * 60 * 1000 -
     1
   console.log('get check list v2', dateBeginTimestamp, dateEndTimestamp)
-  const checkCollection = db.collection('check')
-  const { data: checkList } = await checkCollection
-    .where({
+
+  const { list, errMsg } = await db
+    .collection('check')
+    .aggregate()
+    .match({
       userID: wxContext.OPENID,
-      // 时间要在查询时间那天内
       checkTime: _.nor([_.lt(dateBeginTimestamp), _.gt(dateEndTimestamp)])
     })
-    .orderBy('checkTime', 'desc')
-    .get()
-  console.log('get check list result: ', checkList)
-
-  const cache = {}
-  const planCollection = db.collection('plan')
-  for (let check of checkList) {
-    // 以结束时间做过滤
-    if (check.checkTime < dateEndTimestamp) {
-      const { planID } = check
-      if (!cache[`${planID}`]) {
-        const { data } = await planCollection.doc(check.planID).get()
-        cache[`${planID}`] = data
-      }
-      const plan = cache[`${planID}`]
-      // 返回所有打卡记录，不管计划是不是被删了
-      list.push({
-        planID,
-        comment: check.comment,
-        checkTime: check.checkTime,
-        actualCheckTime: check.actualCheckTime,
-        achieve: check.achieve,
-        name: plan.name,
-        icon: plan.icon,
-        theme: plan.theme,
-        unit: plan.unit
-      })
-    }
-  }
+    .lookup({
+      from: 'plan',
+      localField: 'planID',
+      foreignField: 'planID',
+      as: 'plan'
+    })
+    .replaceRoot({
+      newRoot: $.mergeObjects([$.arrayElemAt(['$plan', 0]), '$$ROOT'])
+    })
+    .project({
+      plan: 0,
+      planID: 1,
+      comment: 1,
+      checkTime: 1,
+      actualCheckTime: 1,
+      achieve: 1,
+      name: 1,
+      icon: 1,
+      theme: 1,
+      unit: 1
+    })
+    .sort({
+      checkTime: -1
+    })
+    .end()
+  console.log('get check list result: ', list)
 
   return {
     code: 200,
