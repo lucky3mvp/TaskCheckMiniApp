@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import { connect } from 'react-redux'
 import { View, Block } from '@tarojs/components'
 import Empty from 'src/components/Empty'
+import RadioButton from 'src/components/RadioGroup'
 import Gap from 'src/components/Gap'
 import { UnitMap } from 'src/constants/config'
 import { getCheckList } from 'src/utils/request2.0'
@@ -24,6 +25,7 @@ type PageOwnProps = {}
 type IState = {
   inited: boolean
   curPlan: string
+  type: string
   selectedDate: string
   tabs: Array<PlanTabType>
   list: Array<CheckListItemType>
@@ -44,6 +46,7 @@ class CheckList extends Component<IProps, IState> {
   state = {
     inited: false,
     curPlan: 'all',
+    type: 'week',
     selectedDate: formatDate(new Date(), 'yyyy/MM/dd'),
     todayDate: formatDate(new Date(), 'yyyy/MM/dd'),
     tabs: [],
@@ -90,37 +93,102 @@ class CheckList extends Component<IProps, IState> {
     }
 
     console.log('未命中cache，或强制刷新，发起请求')
-    const { code, list = [], tabs = [] } = await getCheckList({
-      date: date,
-      returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
-    })
-    // const { code, list, tabs } = {
-    //   code: 200,
-    //   list: [
-    //     {
-    //       achieve: 1,
-    //       checkTime: 1617959027026,
-    //       comment: '超累',
-    //       icon: 'yoga',
-    //       name: '瑜伽',
-    //       planID: '79550af2601a7525026aa98d1a450897',
-    //       theme: 'theme11',
-    //       unit: '1'
-    //     }
-    //   ],
-    //   tabs: [
-    //     {
-    //       beginTime: 1609430400000,
-    //       category: 1,
-    //       description: '要优雅~~',
-    //       endTime: null,
-    //       icon: 'yoga',
-    //       name: '瑜伽',
-    //       planID: '79550af2601a7525026aa98d1a450897',
-    //       theme: 'theme11'
-    //     }
-    //   ]
-    // }
+    // const {
+    //   code,
+    //   list = [],
+    //   tabs = []
+    // } = await getCheckList({
+    //   date: date,
+    //   returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
+    // })
+    const code = 200
+    const tabs = [
+      {
+        beginTime: 1609430400000,
+        category: 4,
+        description: '如果能重来，希望做一个知识人',
+        endTime: null,
+        icon: 'reading',
+        name: '读书',
+        planID: '28ee4e3e601a43f402aa8a9a294acb51',
+        theme: 'theme12'
+      },
+      {
+        beginTime: 1609430400000,
+        category: 1,
+        description: '又A又飒',
+        endTime: null,
+        icon: 'badminton',
+        name: '打球',
+        planID: '79550af2601a7409026a6137022e9ca8',
+        theme: 'theme14'
+      },
+      {
+        beginTime: 1609430400000,
+        category: 1,
+        description: '要优雅~~',
+        endTime: null,
+        icon: 'yoga',
+        name: '瑜伽',
+        planID: '79550af2601a7525026aa98d1a450897',
+        theme: 'theme11'
+      },
+      {
+        beginTime: 1609430400000,
+        category: 1,
+        description: '想做一条鱼，在水里游来游去',
+        endTime: null,
+        icon: 'swimming',
+        name: '游泳',
+        planID: '1526e12a601a79f5020250253d35c871',
+        theme: 'theme4'
+      },
+      {
+        beginTime: 1614441600000,
+        category: 1,
+        description: '减脂减脂',
+        endTime: null,
+        icon: 'running',
+        name: '跳舞、跑步、撸铁',
+        planID: '79550af26041e90f0873e7c70e7b0a29',
+        theme: 'theme22'
+      }
+    ]
+    const list = [
+      {
+        achieve: 1,
+        actualCheckTime: 1623049227952,
+        checkTime: 1623049227952,
+        comment: '',
+        icon: 'yoga',
+        name: '瑜伽',
+        planID: '79550af2601a7525026aa98d1a450897',
+        theme: 'theme11',
+        unit: '1'
+      },
+      {
+        achieve: 500,
+        actualCheckTime: 1622981559333,
+        checkTime: 1622981559333,
+        comment: '读以色列',
+        icon: 'reading',
+        name: '读书',
+        planID: '28ee4e3e601a43f402aa8a9a294acb51',
+        theme: 'theme12',
+        unit: '6'
+      },
+      {
+        achieve: 1,
+        actualCheckTime: 1622981528029,
+        checkTime: 1622981528029,
+        comment: '6km',
+        icon: 'running',
+        name: '跳舞、跑步、撸铁',
+        planID: '79550af26041e90f0873e7c70e7b0a29',
+        theme: 'theme22',
+        unit: '1'
+      }
+    ]
     console.log(list, tabs)
     if (code === 200) {
       const lo = list.map(l => {
@@ -154,9 +222,9 @@ class CheckList extends Component<IProps, IState> {
       url: '/pages/check/index'
     })
   }
-  gotoSpecificCheckPage = () => {
+  gotoCheckMakeupPage = () => {
     Taro.navigateTo({
-      url: `/pages/check-makeup/index?date=${this.state.selectedDate}`
+      url: `/pages/check-makeup/index?from=check-list&date=${this.state.selectedDate}`
     })
   }
   onClickComment = (index: number) => {
@@ -209,11 +277,44 @@ class CheckList extends Component<IProps, IState> {
       }
     )
   }
+  onChangeMode = (o: CommonItemType) => {
+    const { selectedDate } = this.state
+    const [year, month, date] = selectedDate.split('/') // 2021.06.02 那么拿到的month是6不是5
+    /**
+     * 当前选中的这一天所在的周/月
+     */
+    this.setState({
+      type: o.value
+    })
+  }
 
   render() {
     return (
       <View className={'check-list-page'}>
+        <View className={'radio-group-wrapper'}>
+          <RadioButton
+            value={this.state.type}
+            fixedWidth={56}
+            mode="fixedWidth"
+            onChange={this.onChangeMode}
+            options={[
+              {
+                label: '日',
+                value: 'day'
+              },
+              {
+                label: '周',
+                value: 'week'
+              },
+              {
+                label: '月',
+                value: 'month'
+              }
+            ]}
+          />
+        </View>
         <Calendar
+          type={this.state.type}
           onDayClick={this.onDayClick}
           plans={this.state.tabs}
           curPlan={this.state.curPlan}
@@ -260,7 +361,7 @@ class CheckList extends Component<IProps, IState> {
               </Empty>
             ) : (
               <Empty tip="没有找到打卡记录，是忘记打卡了嘛？">
-                <View className="go-check" onClick={this.gotoSpecificCheckPage}>
+                <View className="go-check" onClick={this.gotoCheckMakeupPage}>
                   <View>去补打卡</View>
                   <View className="iconfont icon-right-arrow" />
                 </View>
@@ -270,7 +371,7 @@ class CheckList extends Component<IProps, IState> {
         ) : !this.state.list.length ? (
           <View className="no-more">
             暂无数据~是不是忘记打卡了？
-            <View className="go-check" onClick={this.gotoSpecificCheckPage}>
+            <View className="go-check" onClick={this.gotoCheckMakeupPage}>
               <View>去补打卡</View>
               <View className="iconfont icon-right-arrow" />
             </View>

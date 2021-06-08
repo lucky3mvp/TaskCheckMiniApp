@@ -65,7 +65,7 @@ exports.main = async (event, context) => {
       newRoot: $.mergeObjects([$.arrayElemAt(['$plan', 0]), '$$ROOT'])
     })
     .project({
-      plan: 0,
+      // plan: 0, // 不能在有下面代码的情况下再plan: 0，会报错o.o
       planID: 1,
       comment: 1,
       checkTime: 1,

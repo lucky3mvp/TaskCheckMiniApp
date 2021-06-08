@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import { View, Button, Text, Image, Block } from '@tarojs/components'
 import classnames from 'classnames'
 import { rightArrow } from 'src/assets/svg'
+import { formatDate } from 'src/utils/index'
 
 import './index.less'
 
@@ -10,6 +11,7 @@ type IProps = {
   onDayClick: (d: DateType) => void
   theme?: string
   curPlan: string
+  type: string
   plans: Array<PlanTabType>
 }
 
@@ -25,51 +27,40 @@ export default (props: IProps) => {
 
   const [curYear, setCurYear] = useState(todayYear)
   const [curMonth, setCurMonth] = useState(todayMonth)
-  const displayMonth = useMemo(() => {
-    return curMonth + 1 <= 9 ? `0${curMonth + 1}` : curMonth + 1
-  }, [curMonth])
+
   const [selectedDay, setSelectedDay] = useState([
     todayYear,
     todayMonth,
     todayDate
   ])
-  const displayDate = useMemo(() => {
-    return selectedDay[2] <= 9 ? `0${selectedDay[2]}` : selectedDay[2]
-  }, [selectedDay])
-  const displayHeader = useMemo(() => {
-    if (fold) {
-      Taro.setNavigationBarTitle({
-        title: `${curYear}-${displayMonth}-${displayDate}`
-      })
-      return `${curYear}-${displayMonth}-${displayDate}`
-    } else {
-      Taro.setNavigationBarTitle({
-        title: `${curYear}-${displayMonth}`
-      })
-      return `${curYear}-${displayMonth}`
-    }
-  }, [fold, curYear, displayMonth, displayDate])
+
+  // const displayMonth = useMemo(() => {
+  //   return curMonth + 1 <= 9 ? `0${curMonth + 1}` : curMonth + 1
+  // }, [curMonth])
+  // const displayDate = useMemo(() => {
+  //   return selectedDay[2] <= 9 ? `0${selectedDay[2]}` : selectedDay[2]
+  // }, [selectedDay])
 
   // 本月第一天
-  const curMonthFirstDate = useMemo(() => new Date(curYear, curMonth, 1), [
-    curYear,
-    curMonth
-  ])
+  const curMonthFirstDate = useMemo(
+    () => new Date(curYear, curMonth, 1),
+    [curYear, curMonth]
+  )
   // 本月最后一天
-  const curMonthLastDate = useMemo(() => new Date(curYear, curMonth + 1, 0), [
-    curYear,
-    curMonth
-  ])
+  const curMonthLastDate = useMemo(
+    () => new Date(curYear, curMonth + 1, 0),
+    [curYear, curMonth]
+  )
   // 上个月最后一天
-  const prevMonthLastDate = useMemo(() => new Date(curYear, curMonth, 0), [
-    curYear,
-    curMonth
-  ])
+  const prevMonthLastDate = useMemo(
+    () => new Date(curYear, curMonth, 0),
+    [curYear, curMonth]
+  )
   // 下个月第一天
-  const nextMonthFirstDate = useMemo(() => new Date(curYear, curMonth + 1, 1), [
-    curYear,
-    curMonth
-  ])
+  const nextMonthFirstDate = useMemo(
+    () => new Date(curYear, curMonth + 1, 1),
+    [curYear, curMonth]
+  )
 
   const [days, setDays] = useState<Array<DateType>>([])
 
@@ -152,72 +143,132 @@ export default (props: IProps) => {
     [todayYear, todayMonth, todayDate, curYear, curMonth]
   )
 
+  const getWeekRange = p => {
+    if (p instanceof Date) {
+      const day = p.getDay()
+      const y = p.getFullYear()
+      const m = p.getMonth()
+      const d = p.getDate()
+      const s = new Date(y, m, d - ((day - 1 + 7) % 7))
+      const e = new Date(y, m, d - ((day - 1 + 7) % 7) + 6)
+      return {
+        display: [formatDate(s, 'yyyy-MM-dd'), formatDate(e, 'yyyy-MM-dd')],
+        date: [s, e]
+      }
+    } else if (p instanceof Array) {
+      const [y, m, d] = p
+      const day = new Date(y, m, d).getDay()
+      const s = new Date(y, m, d - ((day - 1 + 7) % 7))
+      const e = new Date(y, m, d - ((day - 1 + 7) % 7) + 6)
+      return {
+        display: [formatDate(s, 'yyyy-MM-dd'), formatDate(e, 'yyyy-MM-dd')],
+        date: [s, e]
+      }
+    }
+    return {
+      display: [],
+      date: []
+    }
+  }
+
+  const todayWeek = useMemo(() => getWeekRange(now).display, [])
+  const [displayWeek, setDisplayWeek] = useState(
+    getWeekRange(selectedDay).display
+  )
+
+  const onWeekPrev = useCallback(() => {}, [])
+
+  const onWeekNext = useCallback(() => {
+    if (todayWeek[1] === displayWeek[1]) return
+  }, [])
+
   return (
     <View className="check-list-calendar">
-      <View className={`check-list-calendar-main ${fold ? 'fold' : ''}`}>
-        <View className="arrow left" onClick={onPrev}>
-          <Image src={rightArrow} className="img"></Image>
-        </View>
-        <View
-          className={`arrow right ${
-            curYear === todayYear && curMonth === todayMonth ? 'hide' : ''
-          }`}
-          onClick={onNext}
-        >
-          <Image src={rightArrow} className="img"></Image>
-        </View>
-        <View className={`inner `}>
-          <View className="labels">
-            <View className="label">日</View>
-            <View className="label">一</View>
-            <View className="label">二</View>
-            <View className="label">三</View>
-            <View className="label">四</View>
-            <View className="label">五</View>
-            <View className="label">六</View>
+      {props.type === 'day' ? (
+        <View className={`day-calendar-main ${fold ? 'fold' : ''}`}>
+          <View className="arrow left" onClick={onPrev}>
+            <Image src={rightArrow} className="img"></Image>
           </View>
-          <View className="days">
-            {days.map((d: DateType) => (
-              <View
-                className="day-wrapper"
-                key={`${d.year}-${d.month}-${d.date}`}
-              >
+          <View
+            className={`arrow right ${
+              curYear === todayYear && curMonth === todayMonth ? 'disable' : ''
+            }`}
+            onClick={onNext}
+          >
+            <Image src={rightArrow} className="img"></Image>
+          </View>
+          <View className={`inner `}>
+            <View className="labels">
+              <View className="label">日</View>
+              <View className="label">一</View>
+              <View className="label">二</View>
+              <View className="label">三</View>
+              <View className="label">四</View>
+              <View className="label">五</View>
+              <View className="label">六</View>
+            </View>
+            <View className="days">
+              {days.map((d: DateType) => (
                 <View
-                  onClick={e => {
-                    onDayClick(d)
-                  }}
-                  className={classnames('day', `${props.theme || ''}`, {
-                    light: d.month !== curMonth,
-                    'now-and-past':
-                      d.year < todayYear ||
-                      (d.year === todayYear && d.month < todayMonth) ||
-                      (d.year === todayYear &&
-                        d.month === todayMonth &&
-                        d.date <= todayDate),
-                    today:
-                      d.year === todayYear &&
-                      d.month === todayMonth &&
-                      d.date === todayDate,
-                    active:
-                      d.year === selectedDay[0] &&
-                      d.month === selectedDay[1] &&
-                      d.date === selectedDay[2]
-                  })}
+                  className="day-wrapper"
+                  key={`${d.year}-${d.month}-${d.date}`}
                 >
-                  {d.date}
-                  <View className="indicator" />
+                  <View
+                    onClick={e => {
+                      onDayClick(d)
+                    }}
+                    className={classnames('day', `${props.theme || ''}`, {
+                      light: d.month !== curMonth,
+                      'now-and-past':
+                        d.year < todayYear ||
+                        (d.year === todayYear && d.month < todayMonth) ||
+                        (d.year === todayYear &&
+                          d.month === todayMonth &&
+                          d.date <= todayDate),
+                      today:
+                        d.year === todayYear &&
+                        d.month === todayMonth &&
+                        d.date === todayDate,
+                      active:
+                        d.year === selectedDay[0] &&
+                        d.month === selectedDay[1] &&
+                        d.date === selectedDay[2]
+                    })}
+                  >
+                    {d.date}
+                    <View className="indicator" />
+                  </View>
                 </View>
-              </View>
-            ))}
+              ))}
+            </View>
+          </View>
+          <View className={`fold-icon`} onClick={onToggleFold}>
+            <Image
+              src={rightArrow}
+              className={`img  arrow-${fold ? 'down' : 'up'}`}
+            ></Image>
           </View>
         </View>
-        <View className={`fold-icon`} onClick={onToggleFold}>
-          <Image
-            src={rightArrow}
-            className={`img  arrow-${fold ? 'down' : 'up'}`}
-          ></Image>
+      ) : props.type === 'week' ? (
+        <View className="week-calendar-main">
+          <View className="week-range">
+            <View className="arrow-wrapper left" onClick={onWeekPrev}>
+              <View className="iconfont icon-right-arrow trans" />
+            </View>
+            {displayWeek[0]} ~ {displayWeek[1]}
+            <View
+              className={`arrow-wrapper right ${
+                todayWeek[1] === displayWeek[1] ? 'disable' : ''
+              }`}
+              onClick={onWeekNext}
+            >
+              <View className="iconfont icon-right-arrow" />
+            </View>
+          </View>
         </View>
-      </View>
+      ) : (
+        <View>month</View>
+      )}
     </View>
   )
 }

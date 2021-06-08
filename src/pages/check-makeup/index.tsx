@@ -48,6 +48,7 @@ class CheckMakeup extends Component<IProps, IState> {
   // }
 
   async getCheckList(showLoading = false) {
+    if (!this.date) return
     showLoading &&
       Taro.showLoading({
         title: '加载中...'
