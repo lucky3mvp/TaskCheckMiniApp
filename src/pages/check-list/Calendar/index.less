@@ -1,4 +1,7 @@
 .check-list-calendar {
+  .radio-group-wrapper {
+    padding: 15px 0 15px;
+  }
   .day-calendar-main {
     background-color: #ffffff;
     padding-top: 5px;
@@ -131,26 +134,24 @@
       }
     }
   }
-  .week-calendar-main {
+  .week-calendar-main,
+  .month-calendar-main {
     .icon-right-arrow {
-      font-size: 12px;
-      line-height: 12px;
+      font-size: 10px;
+      line-height: 10px;
       font-weight: bold;
       color: #ffffff;
-      margin-right: -2px;
       &::before {
-        font-size: 12px;
-        height: 12px;
-        line-height: 12px;
+        font-size: 10px;
+        height: 10px;
+        line-height: 10px;
       }
       &.trans {
-        margin-right: 0;
-        margin-left: -1px;
         transform: rotate(180deg);
         transform-origin: center;
       }
     }
-    .week-range {
+    .range {
       display: flex;
       justify-content: center;
       align-items: center;

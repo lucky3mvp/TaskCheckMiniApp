@@ -3,19 +3,24 @@ import Taro from '@tarojs/taro'
 import { View, Button, Text, Image, Block } from '@tarojs/components'
 import classnames from 'classnames'
 import { rightArrow } from 'src/assets/svg'
-import { formatDate } from 'src/utils/index'
+import { formatDate, getWeekRangeForCheckList } from 'src/utils/index'
+import RadioButton from 'src/components/RadioGroup'
 
 import './index.less'
 
 type IProps = {
-  onDayClick: (d: DateType) => void
+  onDateChange: (d: DateType) => void
+  onDateRangeChange: (dArr: Array<string>) => void
   theme?: string
   curPlan: string
-  type: string
   plans: Array<PlanTabType>
 }
 
 export default (props: IProps) => {
+  const [radioValue, setRadioValue] = useState('week')
+  const onRadioChange = (o: CommonItemType) => {
+    setRadioValue(o.value)
+  }
   const [fold, setFold] = useState(false)
   const onToggleFold = useCallback(() => {
     setFold(!fold)
@@ -42,25 +47,25 @@ export default (props: IProps) => {
   // }, [selectedDay])
 
   // 本月第一天
-  const curMonthFirstDate = useMemo(
-    () => new Date(curYear, curMonth, 1),
-    [curYear, curMonth]
-  )
+  const curMonthFirstDate = useMemo(() => new Date(curYear, curMonth, 1), [
+    curYear,
+    curMonth
+  ])
   // 本月最后一天
-  const curMonthLastDate = useMemo(
-    () => new Date(curYear, curMonth + 1, 0),
-    [curYear, curMonth]
-  )
+  const curMonthLastDate = useMemo(() => new Date(curYear, curMonth + 1, 0), [
+    curYear,
+    curMonth
+  ])
   // 上个月最后一天
-  const prevMonthLastDate = useMemo(
-    () => new Date(curYear, curMonth, 0),
-    [curYear, curMonth]
-  )
+  const prevMonthLastDate = useMemo(() => new Date(curYear, curMonth, 0), [
+    curYear,
+    curMonth
+  ])
   // 下个月第一天
-  const nextMonthFirstDate = useMemo(
-    () => new Date(curYear, curMonth + 1, 1),
-    [curYear, curMonth]
-  )
+  const nextMonthFirstDate = useMemo(() => new Date(curYear, curMonth + 1, 1), [
+    curYear,
+    curMonth
+  ])
 
   const [days, setDays] = useState<Array<DateType>>([])
 
@@ -122,7 +127,7 @@ export default (props: IProps) => {
     setCurMonth(nextMonthFirstDate.getMonth())
   }, [nextMonthFirstDate, fold, curYear, curMonth, todayYear, todayMonth])
 
-  const onDayClick = useCallback(
+  const onDateChange = useCallback(
     ({ year, month, date }) => {
       if (
         year > todayYear ||
@@ -138,53 +143,108 @@ export default (props: IProps) => {
         onNext()
       }
       setSelectedDay([year, month, date])
-      props.onDayClick && props.onDayClick({ year, month: month + 1, date })
+      props.onDateChange && props.onDateChange({ year, month: month + 1, date })
     },
     [todayYear, todayMonth, todayDate, curYear, curMonth]
   )
 
-  const getWeekRange = p => {
-    if (p instanceof Date) {
-      const day = p.getDay()
-      const y = p.getFullYear()
-      const m = p.getMonth()
-      const d = p.getDate()
-      const s = new Date(y, m, d - ((day - 1 + 7) % 7))
-      const e = new Date(y, m, d - ((day - 1 + 7) % 7) + 6)
-      return {
-        display: [formatDate(s, 'yyyy-MM-dd'), formatDate(e, 'yyyy-MM-dd')],
-        date: [s, e]
-      }
-    } else if (p instanceof Array) {
-      const [y, m, d] = p
-      const day = new Date(y, m, d).getDay()
-      const s = new Date(y, m, d - ((day - 1 + 7) % 7))
-      const e = new Date(y, m, d - ((day - 1 + 7) % 7) + 6)
-      return {
-        display: [formatDate(s, 'yyyy-MM-dd'), formatDate(e, 'yyyy-MM-dd')],
-        date: [s, e]
-      }
-    }
-    return {
-      display: [],
-      date: []
-    }
-  }
-
-  const todayWeek = useMemo(() => getWeekRange(now).display, [])
-  const [displayWeek, setDisplayWeek] = useState(
-    getWeekRange(selectedDay).display
+  // 周模式
+  const todayWeekRange = useMemo(() => getWeekRangeForCheckList(now), [])
+  const [curWeekRange, setCurWeekRange] = useState(
+    getWeekRangeForCheckList(selectedDay)
   )
 
-  const onWeekPrev = useCallback(() => {}, [])
+  /**
+   * 比如 2021.06.07
+   * 那么 week 是 2021.06.07 0:0:0 ~ 2021.06.13 0:0:0
+   */
+  const onWeekPrev = useCallback(() => {
+    const newWeek = getWeekRangeForCheckList(
+      new Date(curWeekRange.date[0].getTime() - 1000)
+    )
+    setCurWeekRange(newWeek)
+    props.onDateRangeChange &&
+      props.onDateRangeChange([
+        formatDate(newWeek.date[0], 'yyyy/MM/dd'),
+        formatDate(newWeek.date[1], 'yyyy/MM/dd')
+      ])
+  }, [curWeekRange])
 
   const onWeekNext = useCallback(() => {
-    if (todayWeek[1] === displayWeek[1]) return
-  }, [])
+    if (todayWeekRange.display[1] === curWeekRange.display[1]) return
+    // date[1]存的是这一天的凌晨零点
+    const newWeek = getWeekRangeForCheckList(
+      new Date(curWeekRange.date[1].getTime() + 24 * 60 * 60 * 1000)
+    )
+    setCurWeekRange(newWeek)
+    props.onDateRangeChange &&
+      props.onDateRangeChange([
+        formatDate(newWeek.date[0], 'yyyy/MM/dd'),
+        formatDate(newWeek.date[1], 'yyyy/MM/dd')
+      ])
+  }, [todayWeekRange, curWeekRange])
+
+  // 月模式：
+  const [month, setMonth] = useState([todayYear, todayMonth])
+  const displayMonth = useMemo(() => {
+    return month[1] + 1 <= 9 ? `0${month[1] + 1}` : month[1] + 1
+  }, [month])
+  const onMonthPrev = useCallback(() => {
+    // 上一月的最后一天
+    const end = new Date(month[0], month[1], 0)
+    const y = end.getFullYear()
+    const m = end.getMonth()
+    const start = new Date(y, m, 1)
+    setMonth([y, m])
+    console.log(start)
+    console.log(end)
+    console.log([y, m])
+    props.onDateRangeChange &&
+      props.onDateRangeChange([
+        formatDate(start, 'yyyy/MM/dd'),
+        formatDate(end, 'yyyy/MM/dd')
+      ])
+  }, [month])
+  const onMonthNext = useCallback(() => {
+    if (month[0] === todayYear && month[1] === todayMonth) return
+    // date[1]存的是这一天的凌晨零点
+    const start = new Date(month[0], month[1] + 1, 1)
+    const y = start.getFullYear()
+    const m = start.getMonth()
+    const end = new Date(y, month[1] + 2, 0)
+    setMonth([y, m])
+    props.onDateRangeChange &&
+      props.onDateRangeChange([
+        formatDate(start, 'yyyy/MM/dd'),
+        formatDate(end, 'yyyy/MM/dd')
+      ])
+  }, [month, todayYear, todayMonth])
 
   return (
     <View className="check-list-calendar">
-      {props.type === 'day' ? (
+      <View className={'radio-group-wrapper'}>
+        <RadioButton
+          value={radioValue}
+          fixedWidth={56}
+          mode="fixedWidth"
+          onChange={onRadioChange}
+          options={[
+            {
+              label: '日',
+              value: 'day'
+            },
+            {
+              label: '周',
+              value: 'week'
+            },
+            {
+              label: '月',
+              value: 'month'
+            }
+          ]}
+        />
+      </View>
+      {radioValue === 'day' ? (
         <View className={`day-calendar-main ${fold ? 'fold' : ''}`}>
           <View className="arrow left" onClick={onPrev}>
             <Image src={rightArrow} className="img"></Image>
@@ -215,7 +275,7 @@ export default (props: IProps) => {
                 >
                   <View
                     onClick={e => {
-                      onDayClick(d)
+                      onDateChange(d)
                     }}
                     className={classnames('day', `${props.theme || ''}`, {
                       light: d.month !== curMonth,
@@ -249,16 +309,18 @@ export default (props: IProps) => {
             ></Image>
           </View>
         </View>
-      ) : props.type === 'week' ? (
+      ) : radioValue === 'week' ? (
         <View className="week-calendar-main">
-          <View className="week-range">
+          <View className="range">
             <View className="arrow-wrapper left" onClick={onWeekPrev}>
               <View className="iconfont icon-right-arrow trans" />
             </View>
-            {displayWeek[0]} ~ {displayWeek[1]}
+            {curWeekRange.display[0]} ~ {curWeekRange.display[1]}
             <View
               className={`arrow-wrapper right ${
-                todayWeek[1] === displayWeek[1] ? 'disable' : ''
+                todayWeekRange.display[1] === curWeekRange.display[1]
+                  ? 'disable'
+                  : ''
               }`}
               onClick={onWeekNext}
             >
@@ -267,7 +329,24 @@ export default (props: IProps) => {
           </View>
         </View>
       ) : (
-        <View>month</View>
+        <View className="month-calendar-main">
+          <View className="range">
+            <View className="arrow-wrapper left" onClick={onMonthPrev}>
+              <View className="iconfont icon-right-arrow trans" />
+            </View>
+            {month[0]}.{displayMonth}
+            <View
+              className={`arrow-wrapper right ${
+                month[0] === todayYear && month[1] === todayMonth
+                  ? 'disable'
+                  : ''
+              }`}
+              onClick={onMonthNext}
+            >
+              <View className="iconfont icon-right-arrow" />
+            </View>
+          </View>
+        </View>
       )}
     </View>
   )

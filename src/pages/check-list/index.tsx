@@ -3,11 +3,10 @@ import Taro from '@tarojs/taro'
 import { connect } from 'react-redux'
 import { View, Block } from '@tarojs/components'
 import Empty from 'src/components/Empty'
-import RadioButton from 'src/components/RadioGroup'
 import Gap from 'src/components/Gap'
 import { UnitMap } from 'src/constants/config'
 import { getCheckList } from 'src/utils/request2.0'
-import { formatDate } from 'src/utils'
+import { formatDate, getWeekRangeForCheckList } from 'src/utils'
 
 import manualEvent from 'src/utils/manualEvent'
 
@@ -25,8 +24,6 @@ type PageOwnProps = {}
 type IState = {
   inited: boolean
   curPlan: string
-  type: string
-  selectedDate: string
   tabs: Array<PlanTabType>
   list: Array<CheckListItemType>
   listOrigin: Array<CheckListItemType>
@@ -46,15 +43,18 @@ class CheckList extends Component<IProps, IState> {
   state = {
     inited: false,
     curPlan: 'all',
-    type: 'week',
-    selectedDate: formatDate(new Date(), 'yyyy/MM/dd'),
-    todayDate: formatDate(new Date(), 'yyyy/MM/dd'),
     tabs: [],
     list: [],
     listOrigin: []
   }
+  lastQueryDate: string[] = []
   componentDidMount() {
-    this.fetchCheckList()
+    // 有点割裂，默认了calendar的是week模式
+    const week = getWeekRangeForCheckList(new Date())
+    this.fetchCheckList({
+      date: week.display[0],
+      dateEnd: week.display[1]
+    })
     manualEvent
       .register('check-list')
       .on('update current day check list', () => {
@@ -71,13 +71,20 @@ class CheckList extends Component<IProps, IState> {
   //   }
   // }
   async fetchCheckList(params: Record<string, any> = {}) {
-    const { date = this.state.selectedDate, isForce = false } = params
+    const { curPlan } = this.state
+    const {
+      date = this.lastQueryDate[0],
+      isForce = false,
+      dateEnd = this.lastQueryDate[1]
+    } = params
+
+    this.lastQueryDate = [date, dateEnd]
+
     !this.state.inited &&
       Taro.showLoading({
         title: '加载中...'
       })
-    const { curPlan, selectedDate } = this.state
-    if (this.cache[`${date}`] && !isForce) {
+    if (this.cache[`${date}-${dateEnd}`] && !isForce) {
       console.log('命中cache，不会请求')
       const listOrigin = this.cache[`${date}`]
       this.setState({
@@ -93,12 +100,9 @@ class CheckList extends Component<IProps, IState> {
     }
 
     console.log('未命中cache，或强制刷新，发起请求')
-    // const {
-    //   code,
-    //   list = [],
-    //   tabs = []
-    // } = await getCheckList({
+    // const { code, list = [], tabs = [] } = await getCheckList({
     //   date: date,
+    //   dateEnd: dateEnd,
     //   returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
     // })
     const code = 200
@@ -213,7 +217,7 @@ class CheckList extends Component<IProps, IState> {
               }),
         tabs: tabs.length ? tabs : this.state.tabs
       })
-      this.cache[`${date}`] = lo
+      this.cache[`${date}-${dateEnd}`] = lo
     }
     Taro.hideLoading()
   }
@@ -222,11 +226,11 @@ class CheckList extends Component<IProps, IState> {
       url: '/pages/check/index'
     })
   }
-  gotoCheckMakeupPage = () => {
-    Taro.navigateTo({
-      url: `/pages/check-makeup/index?from=check-list&date=${this.state.selectedDate}`
-    })
-  }
+  // gotoCheckMakeupPage = () => {
+  //   Taro.navigateTo({
+  //     url: `/pages/check-makeup/index?from=check-list`
+  //   })
+  // }
   onClickComment = (index: number) => {
     const { list } = this.state
     const item: CheckListItemType = list[index]
@@ -252,7 +256,7 @@ class CheckList extends Component<IProps, IState> {
       list: listOrigin
     })
   }
-  onDayClick = ({ year, month, date }) => {
+  onDateChange = ({ year, month, date }) => {
     const d = `${year}/${month < 10 ? '0' : ''}${month}/${
       date < 10 ? '0' : ''
     }${date}`
@@ -260,62 +264,25 @@ class CheckList extends Component<IProps, IState> {
     if (year < 2021) {
       this.setState({
         curPlan: 'all', // 切换的时候默认换到全部？
-        selectedDate: d,
         listOrigin: [],
         list: []
       })
       return
     }
 
-    this.setState(
-      {
-        curPlan: 'all', // 切换的时候默认换到全部？
-        selectedDate: d
-      },
-      () => {
-        this.fetchCheckList({ date: d })
-      }
-    )
+    this.fetchCheckList({ date: d, dateEnd: '' })
   }
-  onChangeMode = (o: CommonItemType) => {
-    const { selectedDate } = this.state
-    const [year, month, date] = selectedDate.split('/') // 2021.06.02 那么拿到的month是6不是5
-    /**
-     * 当前选中的这一天所在的周/月
-     */
-    this.setState({
-      type: o.value
-    })
+
+  onDateRangeChange = d => {
+    this.fetchCheckList({ date: d[0], dateEnd: d[1] })
   }
 
   render() {
     return (
       <View className={'check-list-page'}>
-        <View className={'radio-group-wrapper'}>
-          <RadioButton
-            value={this.state.type}
-            fixedWidth={56}
-            mode="fixedWidth"
-            onChange={this.onChangeMode}
-            options={[
-              {
-                label: '日',
-                value: 'day'
-              },
-              {
-                label: '周',
-                value: 'week'
-              },
-              {
-                label: '月',
-                value: 'month'
-              }
-            ]}
-          />
-        </View>
         <Calendar
-          type={this.state.type}
-          onDayClick={this.onDayClick}
+          onDateChange={this.onDateChange}
+          onDateRangeChange={this.onDateRangeChange}
           plans={this.state.tabs}
           curPlan={this.state.curPlan}
         />
@@ -350,29 +317,11 @@ class CheckList extends Component<IProps, IState> {
               </View>
             </Empty>
           </View>
-        ) : !this.state.listOrigin.length ? (
-          <View className="has-plan-but-no-check">
-            {this.state.selectedDate === this.state.todayDate ? (
-              <Empty tip="还没有打卡记录，要加油了鸭！">
-                <View className="go-check" onClick={this.gotoCheckPage}>
-                  <View>去打卡</View>
-                  <View className="iconfont icon-right-arrow" />
-                </View>
-              </Empty>
-            ) : (
-              <Empty tip="没有找到打卡记录，是忘记打卡了嘛？">
-                <View className="go-check" onClick={this.gotoCheckMakeupPage}>
-                  <View>去补打卡</View>
-                  <View className="iconfont icon-right-arrow" />
-                </View>
-              </Empty>
-            )}
-          </View>
-        ) : !this.state.list.length ? (
+        ) : !this.state.listOrigin.length || !this.state.list.length ? (
           <View className="no-more">
-            暂无数据~是不是忘记打卡了？
-            <View className="go-check" onClick={this.gotoCheckMakeupPage}>
-              <View>去补打卡</View>
+            暂无打卡记录~要加油了鸭！
+            <View className="go-check" onClick={this.gotoCheckPage}>
+              <View>去打卡</View>
               <View className="iconfont icon-right-arrow" />
             </View>
           </View>
