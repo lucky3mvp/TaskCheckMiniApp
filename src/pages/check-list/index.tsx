@@ -49,12 +49,6 @@ class CheckList extends Component<IProps, IState> {
   }
   lastQueryDate: string[] = []
   componentDidMount() {
-    // 有点割裂，默认了calendar的是week模式
-    const week = getWeekRangeForCheckList(new Date())
-    this.fetchCheckList({
-      date: week.display[0],
-      dateEnd: week.display[1]
-    })
     manualEvent
       .register('check-list')
       .on('update current day check list', () => {
@@ -70,12 +64,13 @@ class CheckList extends Component<IProps, IState> {
   //     path: '/pages/check/index'
   //   }
   // }
-  async fetchCheckList(params: Record<string, any> = {}) {
+  fetchCheckList = async (params: Record<string, any> = {}) => {
+    console.log('params: ', params)
     const { curPlan } = this.state
     const {
       date = this.lastQueryDate[0],
-      isForce = false,
-      dateEnd = this.lastQueryDate[1]
+      dateEnd = this.lastQueryDate[1],
+      isForce = false
     } = params
 
     this.lastQueryDate = [date, dateEnd]
@@ -86,7 +81,7 @@ class CheckList extends Component<IProps, IState> {
       })
     if (this.cache[`${date}-${dateEnd}`] && !isForce) {
       console.log('命中cache，不会请求')
-      const listOrigin = this.cache[`${date}`]
+      const listOrigin = this.cache[`${date}-${dateEnd}`]
       this.setState({
         listOrigin: listOrigin,
         list:
@@ -100,99 +95,15 @@ class CheckList extends Component<IProps, IState> {
     }
 
     console.log('未命中cache，或强制刷新，发起请求')
-    // const { code, list = [], tabs = [] } = await getCheckList({
-    //   date: date,
-    //   dateEnd: dateEnd,
-    //   returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
-    // })
-    const code = 200
-    const tabs = [
-      {
-        beginTime: 1609430400000,
-        category: 4,
-        description: '如果能重来，希望做一个知识人',
-        endTime: null,
-        icon: 'reading',
-        name: '读书',
-        planID: '28ee4e3e601a43f402aa8a9a294acb51',
-        theme: 'theme12'
-      },
-      {
-        beginTime: 1609430400000,
-        category: 1,
-        description: '又A又飒',
-        endTime: null,
-        icon: 'badminton',
-        name: '打球',
-        planID: '79550af2601a7409026a6137022e9ca8',
-        theme: 'theme14'
-      },
-      {
-        beginTime: 1609430400000,
-        category: 1,
-        description: '要优雅~~',
-        endTime: null,
-        icon: 'yoga',
-        name: '瑜伽',
-        planID: '79550af2601a7525026aa98d1a450897',
-        theme: 'theme11'
-      },
-      {
-        beginTime: 1609430400000,
-        category: 1,
-        description: '想做一条鱼，在水里游来游去',
-        endTime: null,
-        icon: 'swimming',
-        name: '游泳',
-        planID: '1526e12a601a79f5020250253d35c871',
-        theme: 'theme4'
-      },
-      {
-        beginTime: 1614441600000,
-        category: 1,
-        description: '减脂减脂',
-        endTime: null,
-        icon: 'running',
-        name: '跳舞、跑步、撸铁',
-        planID: '79550af26041e90f0873e7c70e7b0a29',
-        theme: 'theme22'
-      }
-    ]
-    const list = [
-      {
-        achieve: 1,
-        actualCheckTime: 1623049227952,
-        checkTime: 1623049227952,
-        comment: '',
-        icon: 'yoga',
-        name: '瑜伽',
-        planID: '79550af2601a7525026aa98d1a450897',
-        theme: 'theme11',
-        unit: '1'
-      },
-      {
-        achieve: 500,
-        actualCheckTime: 1622981559333,
-        checkTime: 1622981559333,
-        comment: '读以色列',
-        icon: 'reading',
-        name: '读书',
-        planID: '28ee4e3e601a43f402aa8a9a294acb51',
-        theme: 'theme12',
-        unit: '6'
-      },
-      {
-        achieve: 1,
-        actualCheckTime: 1622981528029,
-        checkTime: 1622981528029,
-        comment: '6km',
-        icon: 'running',
-        name: '跳舞、跑步、撸铁',
-        planID: '79550af26041e90f0873e7c70e7b0a29',
-        theme: 'theme22',
-        unit: '1'
-      }
-    ]
+    const {
+      code,
+      list = [],
+      tabs = []
+    } = await getCheckList({
+      date: date,
+      dateEnd: dateEnd,
+      returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
+    })
     console.log(list, tabs)
     if (code === 200) {
       const lo = list.map(l => {
@@ -226,11 +137,6 @@ class CheckList extends Component<IProps, IState> {
       url: '/pages/check/index'
     })
   }
-  // gotoCheckMakeupPage = () => {
-  //   Taro.navigateTo({
-  //     url: `/pages/check-makeup/index?from=check-list`
-  //   })
-  // }
   onClickComment = (index: number) => {
     const { list } = this.state
     const item: CheckListItemType = list[index]
@@ -256,36 +162,11 @@ class CheckList extends Component<IProps, IState> {
       list: listOrigin
     })
   }
-  onDateChange = ({ year, month, date }) => {
-    const d = `${year}/${month < 10 ? '0' : ''}${month}/${
-      date < 10 ? '0' : ''
-    }${date}`
-
-    if (year < 2021) {
-      this.setState({
-        curPlan: 'all', // 切换的时候默认换到全部？
-        listOrigin: [],
-        list: []
-      })
-      return
-    }
-
-    this.fetchCheckList({ date: d, dateEnd: '' })
-  }
-
-  onDateRangeChange = d => {
-    this.fetchCheckList({ date: d[0], dateEnd: d[1] })
-  }
 
   render() {
     return (
       <View className={'check-list-page'}>
-        <Calendar
-          onDateChange={this.onDateChange}
-          onDateRangeChange={this.onDateRangeChange}
-          plans={this.state.tabs}
-          curPlan={this.state.curPlan}
-        />
+        <Calendar initialType="week" fetch={this.fetchCheckList} />
         {this.state.tabs.length ? (
           <View className="tabs border-bottom">
             <View className="holder" />
