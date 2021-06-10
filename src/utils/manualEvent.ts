@@ -14,7 +14,6 @@ type EventNameType =
   | 'update reading list'
   | 'update days category'
   | 'update days list'
-  | 'update current day check list'
 
 class Events {
   constructor() {

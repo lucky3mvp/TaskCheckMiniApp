@@ -48,13 +48,7 @@ class CheckList extends Component<IProps, IState> {
     listOrigin: []
   }
   lastQueryDate: string[] = []
-  componentDidMount() {
-    manualEvent
-      .register('check-list')
-      .on('update current day check list', () => {
-        this.fetchCheckList({ isForce: true })
-      })
-  }
+  componentDidMount() {}
   componentDidShow() {
     manualEvent.run('check-list')
   }
