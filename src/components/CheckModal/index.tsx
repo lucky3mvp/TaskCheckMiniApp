@@ -11,6 +11,8 @@ import './index.less'
 
 interface IProps {
   isShow: boolean
+  isMakeUp?: boolean
+  date?: string
   plan: CheckPlanType
   submitBtnText: string
   onClose: () => void
@@ -56,10 +58,11 @@ export default (props: IProps) => {
       title: '请求中'
     })
     const { code, msg } = await check({
-      date: formatDate(new Date(), 'yyyy/MM/dd'),
+      date: props.isMakeUp ? props.date : formatDate(new Date(), 'yyyy/MM/dd'),
       achieve: +achieve,
       comment: comment,
-      planID: props.plan.planID
+      planID: props.plan.planID,
+      isReCheck: props.isMakeUp
     })
     if (code === 200) {
       Taro.showToast({

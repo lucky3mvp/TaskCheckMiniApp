@@ -169,7 +169,7 @@ exports.main = async (event, context) => {
     })
     .end()
 
-  return list.filter(
+  const res = list.filter(
     p =>
       p.type === 2 ||
       p.type === 4 ||
@@ -178,4 +178,11 @@ exports.main = async (event, context) => {
         p.subType === 2 &&
         p.days.split(',').indexOf(`${dateObj.getDay()}`) >= 0)
   )
+  console.log('getPlanByDate list: ', list)
+  console.log('getPlanByDate result: ', res)
+
+  return {
+    code: 200,
+    plans: res
+  }
 }

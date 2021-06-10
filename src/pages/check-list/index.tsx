@@ -6,7 +6,7 @@ import Empty from 'src/components/Empty'
 import Gap from 'src/components/Gap'
 import { UnitMap } from 'src/constants/config'
 import { getCheckList } from 'src/utils/request2.0'
-import { formatDate } from 'src/utils'
+import { formatDate, getWeekRangeForCheckList } from 'src/utils'
 
 import manualEvent from 'src/utils/manualEvent'
 
@@ -24,7 +24,6 @@ type PageOwnProps = {}
 type IState = {
   inited: boolean
   curPlan: string
-  selectedDate: string
   tabs: Array<PlanTabType>
   list: Array<CheckListItemType>
   listOrigin: Array<CheckListItemType>
@@ -44,20 +43,12 @@ class CheckList extends Component<IProps, IState> {
   state = {
     inited: false,
     curPlan: 'all',
-    selectedDate: formatDate(new Date(), 'yyyy/MM/dd'),
-    todayDate: formatDate(new Date(), 'yyyy/MM/dd'),
     tabs: [],
     list: [],
     listOrigin: []
   }
-  componentDidMount() {
-    this.fetchCheckList()
-    manualEvent
-      .register('check-list')
-      .on('update current day check list', () => {
-        this.fetchCheckList({ isForce: true })
-      })
-  }
+  lastQueryDate: string[] = []
+  componentDidMount() {}
   componentDidShow() {
     manualEvent.run('check-list')
   }
@@ -67,16 +58,24 @@ class CheckList extends Component<IProps, IState> {
   //     path: '/pages/check/index'
   //   }
   // }
-  async fetchCheckList(params: Record<string, any> = {}) {
-    const { date = this.state.selectedDate, isForce = false } = params
+  fetchCheckList = async (params: Record<string, any> = {}) => {
+    console.log('params: ', params)
+    const { curPlan } = this.state
+    const {
+      date = this.lastQueryDate[0],
+      dateEnd = this.lastQueryDate[1],
+      isForce = false
+    } = params
+
+    this.lastQueryDate = [date, dateEnd]
+
     !this.state.inited &&
       Taro.showLoading({
         title: '加载中...'
       })
-    const { curPlan, selectedDate } = this.state
-    if (this.cache[`${date}`] && !isForce) {
+    if (this.cache[`${date}-${dateEnd}`] && !isForce) {
       console.log('命中cache，不会请求')
-      const listOrigin = this.cache[`${date}`]
+      const listOrigin = this.cache[`${date}-${dateEnd}`]
       this.setState({
         listOrigin: listOrigin,
         list:
@@ -90,37 +89,15 @@ class CheckList extends Component<IProps, IState> {
     }
 
     console.log('未命中cache，或强制刷新，发起请求')
-    const { code, list = [], tabs = [] } = await getCheckList({
+    const {
+      code,
+      list = [],
+      tabs = []
+    } = await getCheckList({
       date: date,
+      dateEnd: dateEnd,
       returnPlanTabs: !this.state.inited // 后面的请求就不用再请求tabs了
     })
-    // const { code, list, tabs } = {
-    //   code: 200,
-    //   list: [
-    //     {
-    //       achieve: 1,
-    //       checkTime: 1617959027026,
-    //       comment: '超累',
-    //       icon: 'yoga',
-    //       name: '瑜伽',
-    //       planID: '79550af2601a7525026aa98d1a450897',
-    //       theme: 'theme11',
-    //       unit: '1'
-    //     }
-    //   ],
-    //   tabs: [
-    //     {
-    //       beginTime: 1609430400000,
-    //       category: 1,
-    //       description: '要优雅~~',
-    //       endTime: null,
-    //       icon: 'yoga',
-    //       name: '瑜伽',
-    //       planID: '79550af2601a7525026aa98d1a450897',
-    //       theme: 'theme11'
-    //     }
-    //   ]
-    // }
     console.log(list, tabs)
     if (code === 200) {
       const lo = list.map(l => {
@@ -145,18 +122,13 @@ class CheckList extends Component<IProps, IState> {
               }),
         tabs: tabs.length ? tabs : this.state.tabs
       })
-      this.cache[`${date}`] = lo
+      this.cache[`${date}-${dateEnd}`] = lo
     }
     Taro.hideLoading()
   }
   gotoCheckPage = () => {
     Taro.switchTab({
       url: '/pages/check/index'
-    })
-  }
-  gotoSpecificCheckPage = () => {
-    Taro.navigateTo({
-      url: `/pages/check-makeup/index?date=${this.state.selectedDate}`
     })
   }
   onClickComment = (index: number) => {
@@ -184,40 +156,11 @@ class CheckList extends Component<IProps, IState> {
       list: listOrigin
     })
   }
-  onDayClick = ({ year, month, date }) => {
-    const d = `${year}/${month < 10 ? '0' : ''}${month}/${
-      date < 10 ? '0' : ''
-    }${date}`
-
-    if (year < 2021) {
-      this.setState({
-        curPlan: 'all', // 切换的时候默认换到全部？
-        selectedDate: d,
-        listOrigin: [],
-        list: []
-      })
-      return
-    }
-
-    this.setState(
-      {
-        curPlan: 'all', // 切换的时候默认换到全部？
-        selectedDate: d
-      },
-      () => {
-        this.fetchCheckList({ date: d })
-      }
-    )
-  }
 
   render() {
     return (
       <View className={'check-list-page'}>
-        <Calendar
-          onDayClick={this.onDayClick}
-          plans={this.state.tabs}
-          curPlan={this.state.curPlan}
-        />
+        <Calendar initialType="week" fetch={this.fetchCheckList} />
         {this.state.tabs.length ? (
           <View className="tabs border-bottom">
             <View className="holder" />
@@ -249,29 +192,11 @@ class CheckList extends Component<IProps, IState> {
               </View>
             </Empty>
           </View>
-        ) : !this.state.listOrigin.length ? (
-          <View className="has-plan-but-no-check">
-            {this.state.selectedDate === this.state.todayDate ? (
-              <Empty tip="还没有打卡记录，要加油了鸭！">
-                <View className="go-check" onClick={this.gotoCheckPage}>
-                  <View>去打卡</View>
-                  <View className="iconfont icon-right-arrow" />
-                </View>
-              </Empty>
-            ) : (
-              <Empty tip="没有找到打卡记录，是忘记打卡了嘛？">
-                <View className="go-check" onClick={this.gotoSpecificCheckPage}>
-                  <View>去补打卡</View>
-                  <View className="iconfont icon-right-arrow" />
-                </View>
-              </Empty>
-            )}
-          </View>
-        ) : !this.state.list.length ? (
+        ) : !this.state.listOrigin.length || !this.state.list.length ? (
           <View className="no-more">
-            暂无数据~是不是忘记打卡了？
-            <View className="go-check" onClick={this.gotoSpecificCheckPage}>
-              <View>去补打卡</View>
+            暂无打卡记录~要加油了鸭！
+            <View className="go-check" onClick={this.gotoCheckPage}>
+              <View>去打卡</View>
               <View className="iconfont icon-right-arrow" />
             </View>
           </View>

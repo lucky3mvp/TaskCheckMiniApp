@@ -19,6 +19,7 @@ type PageOwnProps = {}
 
 type IState = {
   loading: boolean
+  date: string
   isShowModal: boolean
   plans: Array<CheckPlanType>
   checkItem: CheckPlanType
@@ -30,12 +31,12 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 class CheckMakeup extends Component<IProps, IState> {
   lock = false
   state = {
+    date: getCurrentInstance().router!.params.date || '',
     loading: true,
     isShowModal: false,
     plans: [],
     checkItem: {} as CheckPlanType
   }
-  date = getCurrentInstance().router!.params.date
   async componentDidMount() {
     this.getCheckList(true)
   }
@@ -48,12 +49,13 @@ class CheckMakeup extends Component<IProps, IState> {
   // }
 
   async getCheckList(showLoading = false) {
+    if (!this.state.date) return
     showLoading &&
       Taro.showLoading({
         title: '加载中...'
       })
     const { code, plans = [] } = await getPlanByDate({
-      date: this.date
+      date: this.state.date
     })
     console.log(plans)
     if (code === 200) {
@@ -86,10 +88,6 @@ class CheckMakeup extends Component<IProps, IState> {
   onSubmitCheck = async () => {
     this.getCheckList(false)
     this.onCloseModal()
-
-    if (getCurrentInstance().router!.params.from === 'check-list') {
-      manualEvent.change('check-list', 'update current day check list')
-    }
   }
   render() {
     return this.state.loading ? null : (
@@ -100,6 +98,8 @@ class CheckMakeup extends Component<IProps, IState> {
           ))}
         </View>
         <CheckModal
+          isMakeUp
+          date={this.state.date}
           submitBtnText="补打卡！Keep Going!"
           isShow={this.state.isShowModal}
           onClose={this.onCloseModal}

@@ -1,8 +1,11 @@
 .check-list-calendar {
-  &-main {
+  .radio-group-wrapper {
+    padding: 15px 0 15px;
+  }
+  .day-calendar-main {
     background-color: #ffffff;
     padding-top: 5px;
-    transition: all ease-in-out 0.2s;
+    // transition: all ease-in-out 0.2s;
     position: relative;
 
     &.fold {
@@ -34,8 +37,8 @@
         transform: rotate(0deg);
         right: 5px;
       }
-      &.hide {
-        display: none;
+      &.disable {
+        opacity: 0.3;
       }
       .img {
         width: 8px;
@@ -128,6 +131,53 @@
         &.arrow-down {
           transform: rotate(90deg);
         }
+      }
+    }
+  }
+  .week-calendar-main,
+  .month-calendar-main {
+    .icon-right-arrow {
+      font-size: 10px;
+      line-height: 10px;
+      font-weight: bold;
+      color: #ffffff;
+      &::before {
+        font-size: 10px;
+        height: 10px;
+        line-height: 10px;
+      }
+      &.trans {
+        transform: rotate(180deg);
+        transform-origin: center;
+      }
+    }
+    .range {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #222222;
+      font-size: 14px;
+      padding-top: 5px;
+      padding-bottom: 15px;
+      line-height: 1;
+      border-bottom: 10px solid #f8f8f8;
+      .arrow-wrapper {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background-color: #ee8787;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &.disable {
+          opacity: 0.5;
+        }
+      }
+      .left {
+        margin-right: 15px;
+      }
+      .right {
+        margin-left: 15px;
       }
     }
   }

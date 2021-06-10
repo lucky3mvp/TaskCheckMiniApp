@@ -137,3 +137,36 @@ export const pxTransform = (pxNumber: number) => {
   }
   return (pxNumber / 375) * screenWidth + 'px'
 }
+
+export function getWeekRangeForCheckList(
+  p
+): {
+  display: string[]
+  date: Date[]
+} {
+  if (p instanceof Date) {
+    const day = p.getDay()
+    const y = p.getFullYear()
+    const m = p.getMonth()
+    const d = p.getDate()
+    const s = new Date(y, m, d - ((day - 1 + 7) % 7))
+    const e = new Date(y, m, d - ((day - 1 + 7) % 7) + 6)
+    return {
+      display: [formatDate(s, 'yyyy.MM.dd'), formatDate(e, 'yyyy.MM.dd')],
+      date: [s, e]
+    }
+  } else if (p instanceof Array) {
+    const [y, m, d] = p
+    const day = new Date(y, m, d).getDay()
+    const s = new Date(y, m, d - ((day - 1 + 7) % 7))
+    const e = new Date(y, m, d - ((day - 1 + 7) % 7) + 6)
+    return {
+      display: [formatDate(s, 'yyyy.MM.dd'), formatDate(e, 'yyyy.MM.dd')],
+      date: [s, e]
+    }
+  }
+  return {
+    display: [],
+    date: []
+  }
+}

@@ -8,7 +8,7 @@ exports.main = async (event, context) => {
   const $ = db.command.aggregate
   const wxContext = cloud.getWXContext()
 
-  let { date, returnPlanTabs } = event
+  let { date, returnPlanTabs, dateEnd = '' } = event
 
   let tabs = []
   if (returnPlanTabs) {
@@ -38,14 +38,29 @@ exports.main = async (event, context) => {
    */
   const dateObj = new Date(date)
   const dateBeginTimestamp = dateObj.getTime() - 8 * 60 * 60 * 1000
-  const dateEndTimestamp =
-    new Date(
-      dateObj.getFullYear(),
-      dateObj.getMonth(),
-      dateObj.getDate() + 1
-    ).getTime() -
-    8 * 60 * 60 * 1000 -
-    1
+  let dateEndTimestamp = ''
+  if (!dateEnd) {
+    dateEndTimestamp =
+      new Date(
+        dateObj.getFullYear(),
+        dateObj.getMonth(),
+        dateObj.getDate() + 1
+      ).getTime() -
+      8 * 60 * 60 * 1000 -
+      1
+  } else {
+    const dateObj = new Date(dateEnd)
+    dateEndTimestamp =
+      new Date(
+        dateObj.getFullYear(),
+        dateObj.getMonth(),
+        dateObj.getDate() + 1
+      ).getTime() -
+      8 * 60 * 60 * 1000 -
+      1
+    console.log('有dateEnd', dateEnd, dateObj, dateEndTimestamp)
+  }
+
   console.log('get check list v2', dateBeginTimestamp, dateEndTimestamp)
 
   const { list, errMsg } = await db
@@ -65,7 +80,7 @@ exports.main = async (event, context) => {
       newRoot: $.mergeObjects([$.arrayElemAt(['$plan', 0]), '$$ROOT'])
     })
     .project({
-      plan: 0,
+      // plan: 0, // 不能在有下面代码的情况下再plan: 0，会报错o.o
       planID: 1,
       comment: 1,
       checkTime: 1,

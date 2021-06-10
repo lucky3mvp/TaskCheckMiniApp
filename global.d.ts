@@ -97,6 +97,7 @@ type CheckPlanType = PlanType & {
    * 如果是月计划统计一月的完成次数
    */
   totalFulfillTimes: number
+  days: string[]
 }
 
 type PlanListItemType = PlanType & {

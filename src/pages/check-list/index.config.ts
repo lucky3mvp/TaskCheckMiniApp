@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: '',
+  navigationBarTitleText: '打卡记录',
   navigationBarBackgroundColor: '#ffffff',
   navigationBarTextStyle: 'black',
   backgroundColor: '#ffffff',
