@@ -6,7 +6,7 @@ import Empty from 'src/components/Empty'
 import Gap from 'src/components/Gap'
 import { UnitMap } from 'src/constants/config'
 import { getCheckList } from 'src/utils/request2.0'
-import { formatDate, getWeekRangeForCheckList } from 'src/utils'
+import { formatDate } from 'src/utils'
 
 import manualEvent from 'src/utils/manualEvent'
 
@@ -160,7 +160,7 @@ class CheckList extends Component<IProps, IState> {
   render() {
     return (
       <View className={'check-list-page'}>
-        <Calendar initialType="week" fetch={this.fetchCheckList} />
+        <Calendar initialTab="week" fetch={this.fetchCheckList} />
         {this.state.tabs.length ? (
           <View className="tabs border-bottom">
             <View className="holder" />

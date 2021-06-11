@@ -6,16 +6,10 @@ import './index.less'
 interface IProps {
   value: any
   options: CommonItemType[]
-  mode: 'fixedPadding' | 'fixedWidth'
-  fixedPadding?: number
-  fixedWidth?: number
   onChange: (o: CommonItemType) => void
 }
 
 export default (props: IProps) => {
-  const windowWidth = useSelector(
-    (state: GlobalStateType) => state.helper.windowWidth
-  )
   const len = props.options.length
   return (
     <View className={`radio-button-component`}>
@@ -25,13 +19,6 @@ export default (props: IProps) => {
             className={`radio-item ${
               props.value === o.value ? 'checked' : ''
             } ${i === 0 ? 'first' : ''} ${i === len - 1 ? 'last' : ''}`}
-            style={
-              props.mode === 'fixedWidth' && props.fixedWidth
-                ? {
-                    width: `${(props.fixedWidth * windowWidth) / 375}px`
-                  }
-                : {}
-            }
             onClick={() => {
               props.onChange(o)
             }}

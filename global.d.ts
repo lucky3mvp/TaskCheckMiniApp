@@ -75,7 +75,7 @@ type PlanType = {
   goal: number
   type: number
   subType: number
-  times: number
+  times: number | string // 像yoga那种指定周几的plan, times返回的是空
   /*
     前端的status
     - 1-未开始
@@ -86,10 +86,15 @@ type PlanType = {
   status: number
   days: string // 接口返回的是string,没做split
   beginTime: number
-  endTime: number
+  endTime: number | null
 }
 
-type CheckPlanType = PlanType & {
+type CheckPlanMidType = PlanType & {
+  totalAchieve: number
+  totalFulfillTimes: number
+}
+
+type CheckPlanType = Omit<CheckPlanMidType, 'days'> & {
   totalAchieve: number
   /**
    * 计划累计完成的次数
