@@ -5,7 +5,6 @@ import { View, Block } from '@tarojs/components'
 import Empty from 'src/components/Empty'
 import Gap from 'src/components/Gap'
 import CheckListItem from 'src/components/CheckListItem'
-import { UnitMap } from 'src/constants/config'
 import { getCheckList } from 'src/utils/request2.0'
 import { formatDate } from 'src/utils'
 
