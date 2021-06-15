@@ -4,7 +4,7 @@ import { View, Button, Text, Image, Block } from '@tarojs/components'
 import classnames from 'classnames'
 import { rightArrow } from 'src/assets/svg'
 import { formatDate, getWeekRangeForCheckList } from 'src/utils/index'
-import RadioButton from 'src/components/RadioGroup'
+import RadioGroup from 'src/components/RadioGroup'
 
 import './index.less'
 
@@ -261,7 +261,7 @@ export default (props: IProps) => {
   return (
     <View className="check-list-calendar">
       <View className={'radio-group-wrapper'}>
-        <RadioButton
+        <RadioGroup
           value={tab}
           onChange={onTabChange}
           options={[

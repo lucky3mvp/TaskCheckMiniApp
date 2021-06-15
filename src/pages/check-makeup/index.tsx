@@ -5,7 +5,7 @@ import { View, Image, Block } from '@tarojs/components'
 import CheckModal from 'src/components/CheckModal'
 import CheckItem from 'src/components/CheckItem'
 import CheckListItem from 'src/components/CheckListItem'
-import RadioButton from 'src/components/RadioGroup'
+import RadioGroup from 'src/components/RadioGroup'
 import Calendar from './Calendar'
 import { formatDate } from 'src/utils'
 
@@ -200,7 +200,7 @@ class CheckMakeup extends Component<IProps, IState> {
         <View className="check-makeup-page">
           <Calendar onDateClick={this.onDateClick} />
           <View className={'radio-group-wrapper'}>
-            <RadioButton
+            <RadioGroup
               value={this.state.tab}
               onChange={this.onTabChange}
               options={[

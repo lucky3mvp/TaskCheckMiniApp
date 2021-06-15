@@ -37,17 +37,11 @@ export default {
         iconPath: 'assets/home.png',
         selectedIconPath: 'assets/home-active.png'
       },
-      // {
-      //   pagePath: 'pages/check/index',
-      //   text: '今日',
-      //   iconPath: 'assets/check.png',
-      //   selectedIconPath: 'assets/check-active.png'
-      // },
       {
-        pagePath: 'pages/days-list/index',
-        text: 'Days',
-        iconPath: 'assets/clock.png',
-        selectedIconPath: 'assets/clock-active.png'
+        pagePath: 'pages/charts/index',
+        text: 'Charts',
+        iconPath: 'assets/charts.png',
+        selectedIconPath: 'assets/charts-active.png'
       },
       {
         pagePath: 'pages/my/index',
