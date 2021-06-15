@@ -64,54 +64,54 @@ class Check extends Component<IProps, IState> {
       Taro.showLoading({
         title: '加载中...'
       })
-    // let { code, plans = [] } = await getPlanByDate({
-    //   date: formatDate(new Date(), 'yyyy/MM/dd')
-    // })
-    const code = 200
-    const plans = [
-      {
-        beginTime: 1609430400000,
-        category: 1,
-        days: '',
-        description: '又A又飒',
-        endTime: null,
-        goal: 1,
-        icon: 'badminton',
-        name: '打球',
-        planID: '79550af2601a7409026a6137022e9ca8',
-        status: 0,
-        subType: 1,
-        theme: 'theme14',
-        times: 1,
-        totalAchieve: 0,
-        totalFulfillTimes: 0,
-        type: 3,
-        unit: '1',
-        userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
-        _id: '79550af2601a7409026a6137022e9ca8'
-      },
-      {
-        beginTime: 1609430400000,
-        category: 1,
-        days: '1,5',
-        description: '要优雅~~',
-        endTime: null,
-        goal: 1,
-        icon: 'yoga',
-        name: '瑜伽',
-        planID: '79550af2601a7525026aa98d1a450897',
-        status: 1,
-        subType: 2,
-        theme: 'theme11',
-        times: '',
-        totalAchieve: 1,
-        totalFulfillTimes: 0,
-        type: 3,
-        unit: '1',
-        userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
-        _id: '79550af2601a7525026aa98d1a450897'
-      }
-    ]
+    let { code, plans = [] } = await getPlanByDate({
+      date: formatDate(new Date(), 'yyyy/MM/dd')
+    })
+    // const code = 200
+    // const plans = [
+    //   {
+    //     beginTime: 1609430400000,
+    //     category: 1,
+    //     days: '',
+    //     description: '又A又飒',
+    //     endTime: null,
+    //     goal: 1,
+    //     icon: 'badminton',
+    //     name: '打球',
+    //     planID: '79550af2601a7409026a6137022e9ca8',
+    //     status: 0,
+    //     subType: 1,
+    //     theme: 'theme14',
+    //     times: 1,
+    //     totalAchieve: 0,
+    //     totalFulfillTimes: 0,
+    //     type: 3,
+    //     unit: '1',
+    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    //     _id: '79550af2601a7409026a6137022e9ca8'
+    //   },
+    //   {
+    //     beginTime: 1609430400000,
+    //     category: 1,
+    //     days: '1,5',
+    //     description: '要优雅~~',
+    //     endTime: null,
+    //     goal: 1,
+    //     icon: 'yoga',
+    //     name: '瑜伽',
+    //     planID: '79550af2601a7525026aa98d1a450897',
+    //     status: 1,
+    //     subType: 2,
+    //     theme: 'theme11',
+    //     times: '',
+    //     totalAchieve: 1,
+    //     totalFulfillTimes: 0,
+    //     type: 3,
+    //     unit: '1',
+    //     userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
+    //     _id: '79550af2601a7525026aa98d1a450897'
+    //   }
+    // ]
     console.log(plans)
     if (code === 200) {
       this.setState({
