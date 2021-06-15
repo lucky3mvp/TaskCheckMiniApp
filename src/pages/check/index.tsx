@@ -41,9 +41,9 @@ class Check extends Component<IProps, IState> {
     checkItem: {} as CheckPlanType
   }
   async componentDidMount() {
-    this.getCheckList(true)
+    this.getPlanList(true)
     manualEvent.register('check-page').on('update check list', () => {
-      this.getCheckList()
+      this.getPlanList()
       manualEvent.clear('check-page')
     })
   }
@@ -59,7 +59,7 @@ class Check extends Component<IProps, IState> {
   //   }
   // }
 
-  async getCheckList(showLoading = false) {
+  async getPlanList(showLoading = false) {
     showLoading &&
       Taro.showLoading({
         title: '加载中...'
@@ -116,10 +116,12 @@ class Check extends Component<IProps, IState> {
     if (code === 200) {
       this.setState({
         loading: false,
-        plans: plans.map(p => ({
-          ...p,
-          days: (p.days || '').split(',')
-        }))
+        plans: plans.map(
+          (p: CheckPlanMidType): CheckPlanType => ({
+            ...p,
+            days: (p.days || '').split(',')
+          })
+        )
       })
     }
     Taro.hideLoading()
@@ -139,7 +141,7 @@ class Check extends Component<IProps, IState> {
   }
 
   onSubmitCheck = async () => {
-    this.getCheckList(false)
+    this.getPlanList(false)
     this.onCloseModal()
   }
   gotoAddPlan = () => {
@@ -149,7 +151,7 @@ class Check extends Component<IProps, IState> {
   }
   gotoCheckMakeupPage = () => {
     Taro.navigateTo({
-      url: `/pages/check-makeup/index?from=check`
+      url: `/pages/check-makeup/index`
     })
   }
   render() {

@@ -70,7 +70,7 @@ export default (props: IProps) => {
       })
       setTimeout(() => {
         props.onSubmit()
-      }, 1500)
+      }, 1000)
     } else {
       Taro.showToast({
         title: '出错了，一会再试吧',

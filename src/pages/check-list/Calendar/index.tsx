@@ -9,14 +9,14 @@ import RadioButton from 'src/components/RadioGroup'
 import './index.less'
 
 type IProps = {
-  initialType: string
+  initialTab: string
   fetch: (params: Record<string, any>) => void
 }
 
 export default (props: IProps) => {
-  const [type, setType] = useState(props.initialType)
-  const onRadioChange = (o: CommonItemType) => {
-    setType(o.value)
+  const [tab, setTab] = useState(props.initialTab)
+  const onTabChange = (o: CommonItemType) => {
+    setTab(o.value)
     if (o.value === 'day') {
       props.fetch({
         date: formatDate(
@@ -155,7 +155,7 @@ export default (props: IProps) => {
       }
       setSelectedDay([year, month, date])
 
-      const d = `${year}/${month < 10 ? '0' : ''}${month}/${
+      const d = `${year}/${month + 1 < 10 ? '0' : ''}${month + 1}/${
         date < 10 ? '0' : ''
       }${date}`
       props.fetch({
@@ -233,7 +233,7 @@ export default (props: IProps) => {
   }, [month, todayYear, todayMonth])
 
   useEffect(() => {
-    switch (props.initialType) {
+    switch (props.initialTab) {
       case 'day':
         props.fetch({
           date: formatDate(now, 'yyyy/MM/dd'),
@@ -262,10 +262,8 @@ export default (props: IProps) => {
     <View className="check-list-calendar">
       <View className={'radio-group-wrapper'}>
         <RadioButton
-          value={type}
-          fixedWidth={56}
-          mode="fixedWidth"
-          onChange={onRadioChange}
+          value={tab}
+          onChange={onTabChange}
           options={[
             {
               label: '日',
@@ -282,7 +280,7 @@ export default (props: IProps) => {
           ]}
         />
       </View>
-      {type === 'day' ? (
+      {tab === 'day' ? (
         <View className={`day-calendar-main ${fold ? 'fold' : ''}`}>
           <View className="arrow left" onClick={onPrev}>
             <Image src={rightArrow} className="img"></Image>
@@ -347,7 +345,7 @@ export default (props: IProps) => {
             ></Image>
           </View>
         </View>
-      ) : type === 'week' ? (
+      ) : tab === 'week' ? (
         <View className="week-calendar-main">
           <View className="range">
             <View className="arrow-wrapper left" onClick={onWeekPrev}>

@@ -176,7 +176,7 @@ class My extends Component<IProps, IState> {
 
         <Dialog
           visible={this.state.visible}
-          content="批量打卡，补签，个人积分，倒计时，统计报表等功能正在开发中，敬请期待！"
+          content="批量打卡，个人积分，统计报表等功能正在开发中，敬请期待！"
           confirmText="我知道了"
           onConfirm={this.onCloseDialog}
         />
