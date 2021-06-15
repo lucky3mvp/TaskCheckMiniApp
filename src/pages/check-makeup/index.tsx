@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import { View, Image, Block } from '@tarojs/components'
-
+import { UnitMap } from 'src/constants/config'
 import CheckModal from 'src/components/CheckModal'
 import CheckItem from 'src/components/CheckItem'
+import CheckListItem from 'src/components/CheckListItem'
 import RadioButton from 'src/components/RadioGroup'
 import Calendar from './Calendar'
 import { formatDate } from 'src/utils'
@@ -22,6 +23,7 @@ type PageOwnProps = {}
 type IState = {
   date: string
   tab: string
+  loading: boolean
   isShowModal: boolean
   planList: Array<CheckPlanType>
   checkList: Array<CheckListItemType>
@@ -37,12 +39,15 @@ class CheckMakeup extends Component<IProps, IState> {
   state = {
     date: getCurrentInstance().router!.params.date || '',
     tab: 'plan',
+    loading: false,
     isShowModal: false,
     planList: [],
     checkList: [],
     checkItem: {} as CheckPlanType
   }
-  async componentDidMount() {}
+  async componentDidMount() {
+    this.state.tab === 'plan' ? this.getPlanList() : this.getCheckList()
+  }
 
   // onShareAppMessage() {
   //   return {
@@ -63,55 +68,19 @@ class CheckMakeup extends Component<IProps, IState> {
       return
     }
     console.log('getPlanList 发起请求')
-    // const { code, plans = [] } = await getPlanByDate({
-    //   date: date
-    // })
-    const code = 200
-    const plans = [
-      // {
-      //   beginTime: 1609430400000,
-      //   category: 1,
-      //   days: '',
-      //   description: '又A又飒',
-      //   endTime: null,
-      //   goal: 1,
-      //   icon: 'badminton',
-      //   name: '打球',
-      //   planID: '79550af2601a7409026a6137022e9ca8',
-      //   status: 0,
-      //   subType: 1,
-      //   theme: 'theme14',
-      //   times: 1,
-      //   totalAchieve: 0,
-      //   totalFulfillTimes: 0,
-      //   type: 3,
-      //   unit: '1',
-      //   userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
-      //   _id: '79550af2601a7409026a6137022e9ca8'
-      // },
-      // {
-      //   beginTime: 1609430400000,
-      //   category: 1,
-      //   days: '1,5',
-      //   description: '要优雅~~',
-      //   endTime: null,
-      //   goal: 1,
-      //   icon: 'yoga',
-      //   name: '瑜伽',
-      //   planID: '79550af2601a7525026aa98d1a450897',
-      //   status: 1,
-      //   subType: 2,
-      //   theme: 'theme11',
-      //   times: '',
-      //   totalAchieve: 1,
-      //   totalFulfillTimes: 0,
-      //   type: 3,
-      //   unit: '1',
-      //   userID: 'oeNr50FDlBDDRaxr3G288oM27KD8',
-      //   _id: '79550af2601a7525026aa98d1a450897'
-      // }
-    ]
-    console.log(plans)
+    Taro.showLoading({
+      title: '加载中...'
+    })
+    this.setState({
+      loading: true
+    })
+    const { code, plans = [] } = await getPlanByDate({
+      date: date
+    })
+    this.setState({
+      loading: false
+    })
+    Taro.hideLoading()
     console.log('getPlanList result: ', plans)
     if (code === 200) {
       const planList = plans.map(
@@ -139,33 +108,30 @@ class CheckMakeup extends Component<IProps, IState> {
       return
     }
     console.log('getCheckList 发起请求')
-    // const { code, list = [] } = await getCheckList({
-    //   date: date,
-    //   dateEnd: '',
-    //   returnPlanTabs: false
-    // })
-    const list = [
-      {
-        achieve: 1,
-        actualCheckTime: 1623328722360,
-        checkTime: 1623328722360,
-        comment: '跑步机6.5公里',
-        icon: 'running',
-        name: '跳舞、跑步、撸铁',
-        planID: '79550af26041e90f0873e7c70e7b0a29',
-        theme: 'theme22',
-        unit: '1',
-        _id: 'cbddf0af60c207d20f702904456b256e'
-      }
-    ]
+    Taro.showLoading({
+      title: '加载中...'
+    })
+    this.setState({
+      loading: true
+    })
+    const { code, list = [] } = await getCheckList({
+      date: date,
+      dateEnd: '',
+      returnPlanTabs: false
+    })
+    this.setState({
+      loading: false
+    })
+    Taro.hideLoading()
+
     const cl = list.map(l => ({
       ...l,
-      checkTime: formatDate(new Date(l.checkTime), 'yyyy.MM.dd hh:mm'),
+      /* 老数据 actualCheckTime 可能没有 */
+      checkTime: formatDate(new Date(l.checkTime), 'hh:mm'),
       actualCheckTime:
         l.actualCheckTime && l.actualCheckTime !== l.checkTime
-          ? formatDate(new Date(l.actualCheckTime), 'yyyy.MM.dd hh:mm')
-          : '',
-      isShowComment: false
+          ? formatDate(new Date(l.actualCheckTime), 'MM.dd hh:mm')
+          : ''
     }))
     console.log('getCheckList result: ', cl)
     this.cache[`check-${date}`] = cl
@@ -190,7 +156,9 @@ class CheckMakeup extends Component<IProps, IState> {
   }
 
   onSubmitCheck = async () => {
-    // 能打卡的话应该是在plan tab，所以直接就getPlanList吧
+    // 打卡后需要清空之前的缓存
+    this.cache[`plan-${this.state.date}`] = ''
+    this.cache[`check-${this.state.date}`] = ''
     this.getPlanList()
     this.onCloseModal()
   }
@@ -251,7 +219,13 @@ class CheckMakeup extends Component<IProps, IState> {
           {this.state.tab === 'plan' ? (
             <View>
               {!this.state.planList.length ? (
-                <View className="no-more">暂无计划~</View>
+                <View className="no-more">
+                  {this.state.loading
+                    ? ''
+                    : this.state.date
+                    ? '暂无计划~'
+                    : '请选择日期'}
+                </View>
               ) : (
                 this.state.planList.map((p: CheckPlanType) => (
                   <CheckItem key={p.planID} onClick={this.onCheck} plan={p} />
@@ -261,11 +235,19 @@ class CheckMakeup extends Component<IProps, IState> {
           ) : (
             <View>
               {!this.state.checkList.length ? (
-                <View className="no-more">暂无打卡数据~</View>
+                <View className="no-more">
+                  {this.state.loading
+                    ? ''
+                    : this.state.date
+                    ? '暂无打卡数据~'
+                    : '请选择日期'}
+                </View>
               ) : (
-                this.state.checkList.map((p: CheckPlanType) => (
-                  <View className="no-more">打卡数据~</View>
-                ))
+                this.state.checkList.map(
+                  (c: CheckListItemType, index: number) => (
+                    <CheckListItem {...c} key={`${c.planID}${index}`} />
+                  )
+                )
               )}
             </View>
           )}

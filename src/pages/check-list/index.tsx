@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { View, Block } from '@tarojs/components'
 import Empty from 'src/components/Empty'
 import Gap from 'src/components/Gap'
+import CheckListItem from 'src/components/CheckListItem'
 import { UnitMap } from 'src/constants/config'
 import { getCheckList } from 'src/utils/request2.0'
 import { formatDate } from 'src/utils'
@@ -105,10 +106,10 @@ class CheckList extends Component<IProps, IState> {
           ...l,
           checkTime: formatDate(new Date(l.checkTime), 'yyyy.MM.dd hh:mm'),
           actualCheckTime:
+            /* 老数据 actualCheckTime 可能没有 */
             l.actualCheckTime && l.actualCheckTime !== l.checkTime
               ? formatDate(new Date(l.actualCheckTime), 'yyyy.MM.dd hh:mm')
-              : '',
-          isShowComment: false
+              : ''
         }
       })
       this.setState({
@@ -129,15 +130,6 @@ class CheckList extends Component<IProps, IState> {
   gotoCheckPage = () => {
     Taro.switchTab({
       url: '/pages/check/index'
-    })
-  }
-  onClickComment = (index: number) => {
-    const { list } = this.state
-    const item: CheckListItemType = list[index]
-    if (!item.comment) return
-    item.isShowComment = !item.isShowComment
-    this.setState({
-      list: [...list]
     })
   }
   onPlanChange = plan => {
@@ -203,44 +195,7 @@ class CheckList extends Component<IProps, IState> {
         ) : (
           <Block>
             {this.state.list.map((l: CheckListItemType, index) => (
-              <View className="check-item" key={`${l.planID}${index}`}>
-                <View className="inner border-bottom">
-                  <View
-                    className={`plan-icon iconfont icon-${l.icon} ${l.theme}-color`}
-                  />
-                  <View className="info">
-                    <View className="detail-item">
-                      <View className="name">{l.name}</View>
-                      <View className="achieve">
-                        {l.achieve} {UnitMap[l.unit]}
-                      </View>
-                    </View>
-                    <View className="detail-item">
-                      <View className="time">
-                        {l.actualCheckTime
-                          ? `${l.actualCheckTime} 补打卡`
-                          : l.checkTime}
-                      </View>
-                      {l.comment ? (
-                        <View
-                          className="check-comment"
-                          onClick={this.onClickComment.bind(null, index)}
-                        >
-                          查看打卡心情
-                        </View>
-                      ) : null}
-                    </View>
-                    <View
-                      className={`detail-item comment-wrapper ${
-                        l.isShowComment ? 'show' : ''
-                      }`}
-                    >
-                      <View className="indicator" />
-                      <View className="comment">{l.comment}</View>
-                    </View>
-                  </View>
-                </View>
-              </View>
+              <CheckListItem {...l} key={`${l.planID}${index}`} />
             ))}
             {this.state.list.length ? (
               <View className="no-more">没有更多了嗷~</View>

@@ -1,0 +1,77 @@
+.check-list-item-component {
+  background-color: #ffffff;
+  box-sizing: border-box;
+  padding: 0 20px;
+  .inner {
+    display: flex;
+  }
+  .info {
+    flex: 1;
+    padding: 10px 0 0;
+  }
+  .plan-icon {
+    font-size: 36px;
+    margin-right: 10px;
+    padding-top: 10px;
+    margin-left: -5px;
+  }
+  .detail-item {
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .name {
+    display: flex;
+    font-family: 'PingFangSC-Regular';
+    font-size: 14px;
+    line-height: 22px;
+    color: #222222;
+  }
+  .achieve {
+    font-family: 'PingFangSC-Regular';
+    font-size: 14px;
+    line-height: 22px;
+    color: #222222;
+  }
+  .time,
+  .check-comment {
+    color: #999999;
+    font-family: 'PingFangSC-Regular';
+    font-size: 12px;
+    line-height: 18px;
+    white-space: normal;
+  }
+  .comment-wrapper {
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    color: #999999;
+    height: 0;
+    overflow: hidden;
+    &.show {
+      height: auto;
+      margin-bottom: 15px;
+      margin-top: 10px;
+      overflow: visible;
+    }
+    position: relative;
+    .indicator {
+      border: 5px solid #f8f8f8;
+      border-top-color: transparent;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      position: absolute;
+      right: 15px;
+      top: -10px;
+    }
+    .comment {
+      flex: 1;
+      text-align: right;
+      padding: 8px 15px;
+      box-sizing: border-box;
+      font-family: 'PingFangSC-Regular';
+      font-size: 12px;
+      line-height: 18px;
+      white-space: normal;
+    }
+  }
+}
