@@ -138,12 +138,7 @@ export const pxTransform = (pxNumber: number) => {
   return (pxNumber / 375) * screenWidth + 'px'
 }
 
-export function getWeekRangeForCheckList(
-  p
-): {
-  display: string[]
-  date: Date[]
-} {
+export function getWeekRange(p: Date | number[]): WeekRangType {
   if (p instanceof Date) {
     const day = p.getDay()
     const y = p.getFullYear()

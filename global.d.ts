@@ -89,12 +89,12 @@ type PlanType = {
   endTime: number | null
 }
 
-type CheckPlanMidType = PlanType & {
+type CheckPlanResType = PlanType & {
   totalAchieve: number
   totalFulfillTimes: number
 }
 
-type CheckPlanType = Omit<CheckPlanMidType, 'days'> & {
+type CheckPlanType = Omit<CheckPlanResType, 'days'> & {
   totalAchieve: number
   /**
    * 计划累计完成的次数
@@ -198,4 +198,28 @@ type DaysCategoryType = {
    * 2-已删除
    */
   status: number
+}
+
+type WeekRangType = {
+  display: string[]
+  date: Date[]
+}
+
+type ChartsAllResType = PlanType & {
+  detail: Array<{
+    status: number
+    year: number
+    month: number
+    day: number
+  }>
+}
+
+type ChartsAllType = PlanType & {
+  /**
+   * 0 该天有打卡，但没完成任务
+   * 1 该天有打卡，且已完成任务
+   * 2 该天有任务，但没打卡，也就没完成任务
+   * 3 该天无任务
+   */
+  detail: number[]
 }

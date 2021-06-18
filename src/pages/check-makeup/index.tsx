@@ -83,7 +83,7 @@ class CheckMakeup extends Component<IProps, IState> {
     console.log('getPlanList result: ', plans)
     if (code === 200) {
       const planList = plans.map(
-        (p: CheckPlanMidType): CheckPlanType => ({
+        (p: CheckPlanResType): CheckPlanType => ({
           ...p,
           days: (p.days || '').split(',')
         })

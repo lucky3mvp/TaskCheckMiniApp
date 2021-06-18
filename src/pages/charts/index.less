@@ -1,2 +1,141 @@
 .charts-page {
+  padding-top: 15px;
+  color: #222222;
+  .range {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #222222;
+    font-size: 14px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    line-height: 1;
+    .icon-right-arrow {
+      font-size: 10px;
+      line-height: 10px;
+      font-weight: bold;
+      color: #ffffff;
+      &::before {
+        font-size: 10px;
+        height: 10px;
+        line-height: 10px;
+      }
+      &.trans {
+        transform: rotate(180deg);
+        transform-origin: center;
+      }
+    }
+    .arrow-wrapper {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: #ee8787;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &.disable {
+        opacity: 0.5;
+      }
+    }
+    .left {
+      margin-right: 15px;
+    }
+    .mid {
+      min-width: 100px;
+      text-align: center;
+    }
+    .right {
+      margin-left: 15px;
+    }
+  }
+  .week {
+    .square {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      box-sizing: border-box;
+      &.main {
+        background-color: #ee8787;
+      }
+      &.gray {
+        background-color: #cacaca;
+      }
+      &.no-need {
+        background-color: #ffffff;
+        border: 1px solid #cacaca;
+      }
+      &.opacity {
+        opacity: 0.6;
+      }
+    }
+    .week-charts {
+      border: 1px solid #efefef;
+      // box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 6px;
+      margin: 20px;
+      font-size: 14px;
+      .row {
+        display: flex;
+        text-align: center;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        &.th {
+          .col-1,
+          .col {
+            border-top: none;
+          }
+        }
+        .col-1 {
+          height: 100%;
+          box-sizing: border-box;
+          border-top: 1px solid #e6e6e6;
+          padding-left: 10px;
+          width: 115px;
+          text-align: left;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          .name {
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+            margin-left: 5px;
+            padding-right: 5px;
+          }
+        }
+        .col {
+          height: 100%;
+          box-sizing: border-box;
+          border-left: 1px solid #e6e6e6;
+          border-top: 1px solid #e6e6e6;
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+    .week-legend {
+      padding: 0 20px 0 40px;
+      display: flex;
+      flex-wrap: wrap;
+      .legend-item {
+        width: 50%;
+        flex-shrink: 0;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: 32px;
+        color: #222222;
+        font-size: 12px;
+        .square {
+          width: 10px;
+          height: 10px;
+          border-radius: 2px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
 }

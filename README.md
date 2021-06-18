@@ -20,6 +20,7 @@
 | unit | string | 任务目标单位，eg: 每日跑5000米，那unit就是mi
 | goal | number | 任务目标，eg: 每日跑5000米，那goal就是5000
 
+> 败笔，为什么要设计subType这个字段，直接用type枚举不是更好？
 
 ```
 Plan.status 跟前端的status有区别，注意下
