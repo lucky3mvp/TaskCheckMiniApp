@@ -179,9 +179,9 @@ class DaysAdd extends Component<IProps, IState> {
     })
   }
   onUploadCover = () => {
-    wx.chooseImage({
+    Taro.chooseImage({
       count: 1,
-      sourceType: 'album',
+      sourceType: ['album', 'camera'],
       sizeType: ['compressed'],
       success: res => {
         this.setState({
@@ -190,7 +190,7 @@ class DaysAdd extends Component<IProps, IState> {
       },
       fail: res => {
         Taro.showToast({
-          title: JSON.stringify(res.errMsg.replace('chooseImage:fail', '')),
+          title: JSON.stringify(res.errMsg.replace(' chooseImage:fail', '')),
           icon: 'none'
         })
       }

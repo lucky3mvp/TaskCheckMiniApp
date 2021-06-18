@@ -219,9 +219,9 @@ class DaysEdit extends Component<IProps, IState> {
     })
   }
   onUploadCover = () => {
-    wx.chooseImage({
+    Taro.chooseImage({
       count: 1,
-      sourceType: 'album',
+      sourceType: ['album', 'camera'],
       sizeType: ['compressed'],
       success: res => {
         this.setState({

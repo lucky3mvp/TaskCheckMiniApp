@@ -64,9 +64,9 @@ class ReadingAdd extends Component<IProps, IState> {
   // }
 
   onUploadCover = () => {
-    wx.chooseImage({
+    Taro.chooseImage({
       count: 1,
-      sourceType: 'album',
+      sourceType: ['album'],
       sizeType: ['compressed'],
       success: res => {
         this.setState({
@@ -75,7 +75,7 @@ class ReadingAdd extends Component<IProps, IState> {
       },
       fail: res => {
         Taro.showToast({
-          title: JSON.stringify(res.errMsg.replace('chooseImage:fail', '')),
+          title: JSON.stringify(res.errMsg.replace(' chooseImage:fail', '')),
           icon: 'none'
         })
       }
@@ -188,7 +188,7 @@ class ReadingAdd extends Component<IProps, IState> {
           <View className="info">
             <FormItem label="书名" labelWidth={36}>
               <SelfInput
-                type="number"
+                type="text"
                 placeholder="输入书名"
                 maxlength={50}
                 value={this.state.name}
