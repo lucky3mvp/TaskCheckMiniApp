@@ -14,7 +14,7 @@ export default {
     'pages/menstruation/index',
     'pages/reading-list/index',
     'pages/reading-add/index',
-    'pages/charts/index'
+    'pages/charts-all/index'
   ],
   window: {
     backgroundTextStyle: 'light',
@@ -38,7 +38,7 @@ export default {
         selectedIconPath: 'assets/home-active.png'
       },
       {
-        pagePath: 'pages/charts/index',
+        pagePath: 'pages/charts-all/index',
         text: 'Charts',
         iconPath: 'assets/charts.png',
         selectedIconPath: 'assets/charts-active.png'

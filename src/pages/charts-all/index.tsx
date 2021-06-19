@@ -44,7 +44,14 @@ class Charts extends Component<IProps, IState> {
     yearData: []
   }
   async componentDidMount() {
-    this.getWeekData()
+    switch (this.state.tab) {
+      case 'week':
+        this.getWeekData()
+        break
+      case 'month':
+        this.getMonthData()
+        break
+    }
   }
 
   componentDidShow() {}
@@ -57,80 +64,148 @@ class Charts extends Component<IProps, IState> {
   // }
 
   async getWeekData() {
-    const { curWeek, curMonth, curYear, tab } = this.state
-    const condition: any = {
-      _scope: 'charts',
-      _type: 'chartsAll',
-      type: tab
-    }
+    const { curWeek } = this.state
+    const [year, month, _day] = curWeek.display[0].split('.') // month是+1的
+    const day = parseInt(_day) // 这一周开始的那一天
+    const lastDay = new Date(+year, +month, 0).getDate() // 这周开始的那天所在的月份的最后一天
+    const dayCount = 7
 
-    let day = -1
-    let lastDay = -1
-    let dayCount = -1
-    if (tab === 'week') {
-      condition.date = curWeek.display[0].replace(/[.]/g, '/')
+    // const { code, list = [] } = await common({
+    //   _scope: 'charts',
+    //   _type: 'chartsAll',
+    //   type: 'week',
+    //   date: curWeek.display[0].replace(/[.]/g, '/')
+    // })
+    const list = charts
 
-      const [year, month, _day] = curWeek.display[0].split('.') // month是+1的
-      day = parseInt(_day) // 这一周开始的那一天
-      lastDay = new Date(+year, +month, 0).getDate() // 这周开始的那天所在的月份的最后一天
+    this.setState({
+      weekData: list.map((p: ChartsAllResType) => {
+        const days = p.days.split(',')
+        const detail: number[] = []
+        let j = 0
+        for (let i = 0; i < dayCount; i++) {
+          if (
+            p.detail[j] &&
+            ((day + i) % lastDay === p.detail[j].day ||
+              day + i === p.detail[j].day)
+          ) {
+            detail.push(p.detail[j].status)
+            j++
+          } else {
+            /**
+             * 0 该天有打卡，但没完成任务
+             * 1 该天有打卡，且已完成任务
+             * 2 该天有任务，但没打卡，也就没完成任务
+             * 3 该天无任务，不需要打卡
+             */
+            /**
+             * 只针对每日计划 & 每周几的计划做这个处理
+             * 每周几次&每月几次的不做这个限制
+             */
+            if (p.type === 2) {
+              detail.push(2)
+            } else if (p.type === 3 && p.subType === 2) {
+              if (days.indexOf(`${(i + 1) % 7}`) >= 0) {
+                detail.push(2)
+              } else {
+                detail.push(3)
+              }
+            } else {
+              detail.push(3)
+            }
+          }
+        }
+        return {
+          ...p,
+          detail: detail
+        }
+      })
+    })
+  }
 
-      dayCount = 7
-    } else if (tab === 'month') {
-      condition.year = curMonth[0]
-      condition.month = curMonth[1]
-
-      dayCount = new Date(curMonth[0], curMonth[1], 0).getDate() // month是+1的， 本月的最后一天
-    } else if (tab === 'year') {
-      condition.year = curYear
-
-      /**
-       * 闰年判断：
-       * 年份能被4整除，但不能被100整除
-       * 年份能被400整除
-       */
-      dayCount =
-        (curYear % 4 === 0 && curYear % 100 !== 0) || curYear % 400 === 0
-          ? 366
-          : 365
-    }
-
-    // const { code, list = [] } = await common(condition)
+  async getMonthData() {
+    const { curMonth } = this.state
+    const firstDay = new Date(curMonth[0], curMonth[1] - 1, 1).getDay() // 本月第一天是周几
+    const dayCount = new Date(curMonth[0], curMonth[1], 0).getDate() // month是+1的， 本月的最后一天
+    // const { code, list = [] } = await common({
+    //   _scope: 'charts',
+    //   _type: 'chartsAll',
+    //   type: tab,
+    //   year: curMonth[0],
+    //   month: curMonth[1]
+    // })
     const list = charts
 
     this.setState(
       {
-        weekData: list.map((p: ChartsAllResType) => {
+        monthData: list.map((p: ChartsAllResType) => {
+          const days = p.days.split(',')
           const detail: number[] = []
           let j = 0
           for (let i = 0; i < dayCount; i++) {
-            if (
-              (tab === 'week' &&
-                p.detail[j] &&
-                ((day + i) % lastDay === p.detail[j].day ||
-                  day + i === p.detail[j].day)) ||
-              (tab === 'month' && p.detail[j].day === i + 1) ||
-              tab === 'year'
-            ) {
+            if (p.detail[j] && p.detail[j].day === i + 1) {
               detail.push(p.detail[j].status)
               j++
             } else {
-              /**
-               * 0 该天有打卡，但没完成任务
-               * 1 该天有打卡，且已完成任务
-               * 2 该天有任务，但没打卡，也就没完成任务
-               * 3 该天无任务，不需要打卡
-               */
-              /**
-               * 只针对每日计划 & 每周几的计划做这个处理
-               * 每周几次&每月几次的不做这个限制
-               */
               if (p.type === 2) {
                 detail.push(2)
               } else if (p.type === 3 && p.subType === 2) {
-                const days = p.days.split(',')
-                /**
-                 * i + 1 // 表示的是周i
-                 */
+                if (days.indexOf(`${(i + firstDay) % 7}`) >= 0) {
+                  detail.push(2)
+                } else {
+                  detail.push(3)
+                }
+              } else {
+                detail.push(3)
+              }
+            }
+          }
+          return {
+            ...p,
+            detail: detail
+          }
+        })
+      },
+      () => {
+        console.log(this.state.monthData)
+      }
+    )
+  }
+
+  async getYearData() {
+    const { curYear, tab } = this.state
+    /**
+     * 闰年判断：
+     * 年份能被4整除，但不能被100整除
+     * 年份能被400整除
+     */
+    const dayCount =
+      (curYear % 4 === 0 && curYear % 100 !== 0) || curYear % 400 === 0
+        ? 366
+        : 365
+
+    // const { code, list = [] } = await common({
+    //   _scope: 'charts',
+    //   _type: 'chartsAll',
+    //   type: 'year',
+    //   year: curYear
+    // })
+    const list = charts
+
+    this.setState(
+      {
+        yearData: list.map((p: ChartsAllResType) => {
+          const days = p.days.split(',')
+          const detail: number[] = []
+          let j = 0
+          for (let i = 0; i < dayCount; i++) {
+            if (p.detail[j] && tab === 'year') {
+              detail.push(p.detail[j].status)
+              j++
+            } else {
+              if (p.type === 2) {
+                detail.push(2)
+              } else if (p.type === 3 && p.subType === 2) {
                 if (days.indexOf(`${(i + 1) % 7}`) >= 0) {
                   detail.push(2)
                 } else {
@@ -148,7 +223,7 @@ class Charts extends Component<IProps, IState> {
         })
       },
       () => {
-        console.log(this.state.weekData)
+        console.log(this.state.yearData)
       }
     )
   }
@@ -267,7 +342,10 @@ class Charts extends Component<IProps, IState> {
               <View className="iconfont icon-right-arrow trans" />
             </View>
             <View className="mid">
-              {this.state.curMonth[0]}.{this.state.curMonth[1]}
+              {this.state.curMonth[0]}.
+              {this.state.curMonth[1] < 10
+                ? `0${this.state.curMonth[1]}`
+                : this.state.curMonth[1]}
             </View>
             <View
               className={`arrow-wrapper right ${

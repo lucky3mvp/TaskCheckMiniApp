@@ -97,8 +97,8 @@
           "scene": null
         },
         {
-          "name": "pages/charts/index",
-          "pathName": "pages/charts/index",
+          "name": "pages/charts-all/index",
+          "pathName": "pages/charts-all/index",
           "query": "",
           "scene": null
         }
