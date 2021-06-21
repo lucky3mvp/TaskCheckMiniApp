@@ -6,7 +6,7 @@ import classnames from 'classnames'
 import RadioGroup from 'src/components/RadioGroup'
 import { getWeekRange } from 'src/utils/index'
 import { charts } from 'src/data'
-import { common } from 'src/utils/request2.0'
+import { commonApi } from 'src/utils/request2.0'
 
 import './index.less'
 
@@ -35,9 +35,13 @@ class Charts extends Component<IProps, IState> {
   todayMonth = this.now.getMonth() + 1
   todayWeek: WeekRangType = getWeekRange(this.now)
   state = {
-    tab: 'month',
+    tab: 'year',
     curWeek: getWeekRange(this.now),
-    curMonth: [this.todayYear, this.todayMonth],
+    curMonth: [
+      this.todayYear,
+      this.todayMonth // 是 date.getMonth()+1 的值
+      // new Date(this.todayYear, this.todayMonth, 0).getDate() // 当前这个月有多少天
+    ],
     curYear: this.todayYear,
     weekData: [],
     monthData: [],
@@ -50,6 +54,9 @@ class Charts extends Component<IProps, IState> {
         break
       case 'month':
         this.getMonthData()
+        break
+      case 'year':
+        this.getYearData()
         break
     }
   }
@@ -70,13 +77,13 @@ class Charts extends Component<IProps, IState> {
     const lastDay = new Date(+year, +month, 0).getDate() // 这周开始的那天所在的月份的最后一天
     const dayCount = 7
 
-    // const { code, list = [] } = await common({
-    //   _scope: 'charts',
-    //   _type: 'chartsAll',
-    //   type: 'week',
-    //   date: curWeek.display[0].replace(/[.]/g, '/')
-    // })
-    const list = charts
+    const { code, list = [] } = await commonApi({
+      _scope: 'charts',
+      _type: 'chartsAll',
+      type: 'week',
+      date: curWeek.display[0].replace(/[.]/g, '/')
+    })
+    // const list = charts
 
     this.setState({
       weekData: list.map((p: ChartsAllResType) => {
@@ -127,49 +134,68 @@ class Charts extends Component<IProps, IState> {
     const { curMonth } = this.state
     const firstDay = new Date(curMonth[0], curMonth[1] - 1, 1).getDay() // 本月第一天是周几
     const dayCount = new Date(curMonth[0], curMonth[1], 0).getDate() // month是+1的， 本月的最后一天
-    // const { code, list = [] } = await common({
-    //   _scope: 'charts',
-    //   _type: 'chartsAll',
-    //   type: tab,
-    //   year: curMonth[0],
-    //   month: curMonth[1]
-    // })
-    const list = charts
 
-    this.setState(
-      {
-        monthData: list.map((p: ChartsAllResType) => {
-          const days = p.days.split(',')
-          const detail: number[] = []
-          let j = 0
-          for (let i = 0; i < dayCount; i++) {
-            if (p.detail[j] && p.detail[j].day === i + 1) {
-              detail.push(p.detail[j].status)
-              j++
+    const { code, list = [] } = await commonApi({
+      _scope: 'charts',
+      _type: 'chartsAll',
+      type: 'month',
+      year: curMonth[0],
+      month: curMonth[1]
+    })
+    // const list = charts
+    const allDetail: number[] = []
+    const l = list.map((p: ChartsAllResType) => {
+      const days = p.days.split(',')
+      const detail: number[] = []
+      let j = 0
+      for (let i = 0; i < dayCount; i++) {
+        if (p.detail[j] && p.detail[j].day === i + 1) {
+          detail.push(p.detail[j].status)
+          j++
+        } else {
+          if (p.type === 2) {
+            detail.push(2)
+          } else if (p.type === 3 && p.subType === 2) {
+            if (days.indexOf(`${(i + firstDay) % 7}`) >= 0) {
+              detail.push(2)
             } else {
-              if (p.type === 2) {
-                detail.push(2)
-              } else if (p.type === 3 && p.subType === 2) {
-                if (days.indexOf(`${(i + firstDay) % 7}`) >= 0) {
-                  detail.push(2)
-                } else {
-                  detail.push(3)
-                }
-              } else {
-                detail.push(3)
-              }
+              detail.push(3)
             }
+          } else {
+            detail.push(3)
           }
-          return {
-            ...p,
-            detail: detail
+        }
+
+        // ALL只管有没有打卡记录吧，不管完成没有了
+        if (allDetail[i] === undefined) {
+          allDetail[i] = detail[i] <= 1 ? 1 : detail[i]
+        } else if (allDetail[i] === 2) {
+          if (detail[i] === 0 || detail[i] === 1) {
+            allDetail[i] = 1
           }
-        })
-      },
-      () => {
-        console.log(this.state.monthData)
+        } else if (allDetail[i] === 3) {
+          if (detail[i] === 0 || detail[i] === 1) {
+            allDetail[i] = 1
+          } else if (detail[i] === 2) {
+            allDetail[i] = 2
+          }
+        }
       }
-    )
+      return {
+        ...p,
+        detail: detail
+      }
+    })
+    // @ts-ignore
+    const all = {
+      name: '全部',
+      icon: 'all',
+      theme: 'main',
+      detail: allDetail
+    } as ChartsAllType
+    this.setState({
+      monthData: [all, ...l]
+    })
   }
 
   async getYearData() {
@@ -184,43 +210,65 @@ class Charts extends Component<IProps, IState> {
         ? 366
         : 365
 
-    // const { code, list = [] } = await common({
+    // const { code, list = [] } = await commonApi({
     //   _scope: 'charts',
     //   _type: 'chartsAll',
     //   type: 'year',
     //   year: curYear
     // })
     const list = charts
-
+    const allDetail: number[] = []
+    const l = list.map((p: ChartsAllResType) => {
+      const days = p.days.split(',')
+      const detail: number[] = []
+      let j = 0
+      for (let i = 0; i < dayCount; i++) {
+        if (p.detail[j] && p.detail[j].day === i + 1) {
+          detail.push(p.detail[j].status)
+          j++
+        } else {
+          if (p.type === 2) {
+            detail.push(2)
+          } else if (p.type === 3 && p.subType === 2) {
+            if (days.indexOf(`${(i + 1) % 7}`) >= 0) {
+              detail.push(2)
+            } else {
+              detail.push(3)
+            }
+          } else {
+            detail.push(3)
+          }
+        }
+        // ALL只管有没有打卡记录吧，不管完成没有了
+        if (allDetail[i] === undefined) {
+          allDetail[i] = detail[i] <= 1 ? 1 : detail[i]
+        } else if (allDetail[i] === 2) {
+          if (detail[i] === 0 || detail[i] === 1) {
+            allDetail[i] = 1
+          }
+        } else if (allDetail[i] === 3) {
+          if (detail[i] === 0 || detail[i] === 1) {
+            allDetail[i] = 1
+          } else if (detail[i] === 2) {
+            allDetail[i] = 2
+          }
+        }
+      }
+      return {
+        ...p,
+        detail: detail
+      }
+    })
+    // @ts-ignore
+    const all = {
+      name: '全部',
+      icon: 'all',
+      theme: 'main',
+      detail: allDetail
+    } as ChartsAllType
     this.setState(
       {
-        yearData: list.map((p: ChartsAllResType) => {
-          const days = p.days.split(',')
-          const detail: number[] = []
-          let j = 0
-          for (let i = 0; i < dayCount; i++) {
-            if (p.detail[j] && tab === 'year') {
-              detail.push(p.detail[j].status)
-              j++
-            } else {
-              if (p.type === 2) {
-                detail.push(2)
-              } else if (p.type === 3 && p.subType === 2) {
-                if (days.indexOf(`${(i + 1) % 7}`) >= 0) {
-                  detail.push(2)
-                } else {
-                  detail.push(3)
-                }
-              } else {
-                detail.push(3)
-              }
-            }
-          }
-          return {
-            ...p,
-            detail: detail
-          }
-        })
+        yearData: [all, ...l]
       },
       () => {
         console.log(this.state.yearData)
@@ -271,8 +319,8 @@ class Charts extends Component<IProps, IState> {
     const { curMonth } = this.state
     if (curMonth[0] === this.todayYear && curMonth[1] === this.todayMonth)
       return
-    // date[1]存的是这一天的凌晨零点
-    const start = new Date(curMonth[0], curMonth[1] - 1, 1)
+    // 下一月的第一天
+    const start = new Date(curMonth[0], curMonth[1], 1)
     const y = start.getFullYear()
     const m = start.getMonth() + 1
     const end = new Date(y, curMonth[1] + 1, 0)
@@ -408,30 +456,104 @@ class Charts extends Component<IProps, IState> {
                 </View>
               ))}
             </View>
-            <View className="week-legend">
-              <View className="legend-item">
-                <View className="square main" />
-                <View>打卡并完成当日计划</View>
-              </View>
-              <View className="legend-item">
-                <View className="square main opacity" />
-                <View>打卡未完成当日计划</View>
-              </View>
-              <View className="legend-item">
-                <View className="square main gray" />
-                <View>当日有计划未打卡</View>
-              </View>
-              <View className="legend-item">
-                <View className="square no-need" />
-                <View>当日无固定计划</View>
-              </View>
-            </View>
           </View>
         ) : this.state.tab === 'month' ? (
-          <View>月报表</View>
+          <View className="month">
+            {this.state.monthData.map((p: ChartsAllType) => {
+              return (
+                <View className={`month-charts ${p.theme}-border-color`}>
+                  <View className={`header ${p.theme}-color`}>
+                    <View className={`iconfont icon-${p.icon}`} />
+                    <View className="name">{p.name}</View>
+                  </View>
+                  <View className="days">
+                    {p.detail.map((s, i) => {
+                      return (
+                        <View
+                          className={classnames('square color-white', {
+                            opacity: s === 0,
+                            [`${p.theme}-background`]: s === 1 || s === 0,
+                            gray: s === 2,
+                            'no-need': s === 3
+                          })}
+                        >
+                          {i + 1}
+                        </View>
+                      )
+                    })}
+                  </View>
+                </View>
+              )
+            })}
+          </View>
         ) : (
-          <View>年报表</View>
+          <View className="year">
+            {this.state.yearData.map((p: ChartsAllType) => {
+              return (
+                <View className={`year-charts ${p.theme}-border-color`}>
+                  <View className={`header ${p.theme}-color`}>
+                    <View className={`iconfont icon-${p.icon}`} />
+                    <View className="name">{p.name}</View>
+                  </View>
+                  <View className="days">
+                    {p.detail.map((s, i) => {
+                      return (
+                        <View
+                          className={classnames('square color-white', {
+                            opacity: s === 0,
+                            [`${p.theme}-background`]: s === 1 || s === 0,
+                            gray: s === 2,
+                            'no-need': s === 3
+                          })}
+                        ></View>
+                      )
+                    })}
+                  </View>
+                </View>
+              )
+            })}
+          </View>
         )}
+
+        <View className="legend">
+          <View className="legend-item">
+            <View className="square main" />
+            <View>打卡并完成当日计划</View>
+          </View>
+          <View className="legend-item">
+            <View className="square main opacity" />
+            <View>打卡未完成当日计划</View>
+          </View>
+          <View className="legend-item">
+            <View className="square main gray" />
+            <View>未打卡当日计划</View>
+          </View>
+          <View className="legend-item">
+            <View className="square no-need" />
+            <View>当日无固定计划</View>
+          </View>
+        </View>
+
+        {this.state.tab === 'month' ||
+          (this.state.tab === 'year' && (
+            <View className="legend-all">
+              <View className="tip border-top">“全部”图表示例说明 </View>
+              <View className="legend">
+                <View className="legend-item">
+                  <View className="square main" />
+                  <View>当日有打卡某一计划</View>
+                </View>
+                <View className="legend-item">
+                  <View className="square main gray" />
+                  <View>当日未打卡任一计划</View>
+                </View>
+                <View className="legend-item">
+                  <View className="square no-need" />
+                  <View>当日无固定计划</View>
+                </View>
+              </View>
+            </View>
+          ))}
       </View>
     )
   }

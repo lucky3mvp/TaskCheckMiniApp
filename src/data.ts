@@ -139,8 +139,8 @@ export const charts = [
     days: '',
     description: '想做一条鱼，在水里游来游去',
     detail: [
-      { status: 1, year: 2021, month: 6, day: 14 },
-      { status: 0, year: 2021, month: 6, day: 15 }
+      { status: 1, year: 2021, month: 6, day: 21 },
+      { status: 0, year: 2021, month: 6, day: 22 }
     ],
     endTime: null,
     goal: 1000,
@@ -170,8 +170,8 @@ export const charts = [
       // { status: 1, year: 2021, month: 6, day: 10 },
       // { status: 1, year: 2021, month: 6, day: 12 },
       // { status: 1, year: 2021, month: 6, day: 13 },
-      { status: 1, year: 2021, month: 6, day: 14 },
-      { status: 1, year: 2021, month: 6, day: 16 }
+      { status: 1, year: 2021, month: 6, day: 21 },
+      { status: 1, year: 2021, month: 6, day: 23 }
     ],
     endTime: null,
     goal: 1,
@@ -191,8 +191,8 @@ export const charts = [
     days: '',
     description: '测试',
     detail: [
-      { status: 1, year: 2021, month: 6, day: 16 },
-      { status: 1, year: 2021, month: 6, day: 17 }
+      { status: 1, year: 2021, month: 6, day: 23 },
+      { status: 1, year: 2021, month: 6, day: 24 }
     ],
     endTime: 1625097600000,
     goal: 1,

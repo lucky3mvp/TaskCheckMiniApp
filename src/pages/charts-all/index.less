@@ -48,26 +48,58 @@
       margin-left: 15px;
     }
   }
-  .week {
-    .square {
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
-      box-sizing: border-box;
-      &.main {
-        background-color: #ee8787;
-      }
-      &.gray {
-        background-color: #cacaca;
-      }
-      &.no-need {
-        background-color: #ffffff;
-        border: 1px solid #cacaca;
-      }
-      &.opacity {
-        opacity: 0.6;
+  .square {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    &.main {
+      background-color: #ee8787;
+    }
+    &.gray {
+      background-color: #cacaca;
+    }
+    &.no-need {
+      background-color: #ffffff;
+      border: 1px solid #cacaca;
+    }
+    &.opacity {
+      opacity: 0.6;
+    }
+  }
+  .legend {
+    padding: 0 20px 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    .legend-item {
+      width: 50%;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      height: 32px;
+      line-height: 32px;
+      color: #222222;
+      font-size: 12px;
+      .square {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        margin-right: 10px;
       }
     }
+    &-all {
+      .tip {
+        margin: 20px;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #707070;
+        padding-top: 20px;
+        // border-top: 1px solid #cacaca;
+      }
+    }
+  }
+  .week {
     .week-charts {
       border: 1px solid #efefef;
       // box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
@@ -116,24 +148,102 @@
         }
       }
     }
-    .week-legend {
-      padding: 0 20px 0 40px;
-      display: flex;
-      flex-wrap: wrap;
-      .legend-item {
-        width: 50%;
-        flex-shrink: 0;
+  }
+  .month {
+    padding-left: 19px;
+    display: flex;
+    flex-wrap: wrap;
+    .month-charts {
+      flex-shrink: 0;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      width: 158px;
+      box-sizing: border-box;
+      border-style: solid;
+      border-width: 1px;
+      border-radius: 10px;
+      .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+        font-size: 16px;
+        line-height: 16px;
+        .iconfont {
+          margin-right: 10px;
+        }
+        .name {
+          max-width: 133px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+      .days {
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 9px;
+        padding-right: 5px;
+        padding-bottom: 15px;
+        .square {
+          width: 18px;
+          height: 18px;
+          flex-shrink: 0;
+          margin-right: 2px;
+          margin-bottom: 2px;
+          border-radius: 3px;
+          font-size: 12px;
+          line-height: 18px;
+          text-align: center;
+          &.color-white {
+            color: #ffffff;
+          }
+          &.no-need {
+            color: #cacaca;
+          }
+        }
+      }
+    }
+  }
+  .year {
+    padding-left: 20px;
+    padding-right: 19px;
+    display: flex;
+    flex-wrap: wrap;
+    .year-charts {
+      .header {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        height: 32px;
-        color: #222222;
-        font-size: 12px;
-        .square {
-          width: 10px;
-          height: 10px;
-          border-radius: 2px;
+        padding: 15px;
+        font-size: 16px;
+        line-height: 16px;
+        .iconfont {
           margin-right: 10px;
+        }
+        .name {
+          max-width: 133px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+      .days {
+        display: flex;
+        flex-wrap: wrap;
+        .square {
+          width: 6px;
+          height: 6px;
+          border-radius: 0;
+          flex-shrink: 0;
+          border-right: 1px solid #ffffff;
+          border-bottom: 1px solid #ffffff;
+          &.color-white {
+            color: #ffffff;
+          }
+          &.no-need {
+            color: #cacaca;
+          }
         }
       }
     }
