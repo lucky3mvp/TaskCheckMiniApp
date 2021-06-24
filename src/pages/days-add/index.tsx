@@ -66,6 +66,7 @@ class DaysAdd extends Component<IProps, IState> {
   //   }
   // }
   async componentDidMount() {
+    wx.cloud.init()
     await this.getCategoryList()
 
     const today = new Date()
@@ -208,7 +209,6 @@ class DaysAdd extends Component<IProps, IState> {
     const { cover } = this.state
     let cloudFileID = ''
     if (cover) {
-      wx.cloud.init()
       cloudFileID = await new Promise(resolve => {
         const tmp = cover.split('/')
         const name = tmp[tmp.length - 1]

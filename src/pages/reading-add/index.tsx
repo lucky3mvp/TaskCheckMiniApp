@@ -45,6 +45,8 @@ class ReadingAdd extends Component<IProps, IState> {
     comment: ''
   }
   componentDidMount() {
+    wx.cloud.init()
+
     const today = new Date()
     const y = today.getFullYear()
     const m = today.getMonth()
@@ -117,7 +119,6 @@ class ReadingAdd extends Component<IProps, IState> {
     const { fileID } = this.state
     let cloudFileID = ''
     if (fileID) {
-      wx.cloud.init()
       cloudFileID = await new Promise(resolve => {
         const tmp = fileID.split('/')
         const name = tmp[tmp.length - 1]

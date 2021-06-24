@@ -68,6 +68,8 @@ class DaysEdit extends Component<IProps, IState> {
   //   }
   // }
   async componentDidMount() {
+    wx.cloud.init()
+
     const options = await this.getCategoryList()
     console.log('options', options)
     this.day = Taro.getStorageSync('day')
@@ -248,7 +250,6 @@ class DaysEdit extends Component<IProps, IState> {
     const { cover } = this.state
     let cloudFileID = ''
     if (cover) {
-      wx.cloud.init()
       cloudFileID = await new Promise(resolve => {
         const tmp = cover.split('/')
         const name = tmp[tmp.length - 1]
