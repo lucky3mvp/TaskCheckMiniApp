@@ -25,9 +25,6 @@ exports.main = async (event, context) => {
     }
   } catch (err) {
     console.log('err: ', err)
-    // return {
-    //   code: 333
-    // }
   }
 
   if (_scope === 'charts') {
