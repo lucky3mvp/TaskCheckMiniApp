@@ -7,7 +7,7 @@
     align-items: center;
     color: #222222;
     font-size: 14px;
-    margin-top: 30px;
+    margin-top: 20px;
     margin-bottom: 20px;
     line-height: 1;
     .icon-right-arrow {
@@ -53,6 +53,7 @@
     height: 14px;
     border-radius: 4px;
     box-sizing: border-box;
+    color: #ffffff;
     &.main {
       background-color: #ee8787;
     }
@@ -60,6 +61,7 @@
       background-color: #cacaca;
     }
     &.no-need {
+      color: #cacaca;
       background-color: #ffffff;
       border: 1px solid #cacaca;
     }
@@ -68,20 +70,17 @@
     }
   }
   .legend {
-    padding: 0 20px 0 20px;
-    display: flex;
-    flex-wrap: wrap;
+    margin: 0 20px;
+    padding-bottom: 20px;
     .legend-item {
-      width: 50%;
-      flex-shrink: 0;
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      height: 32px;
-      line-height: 32px;
-      color: #222222;
+      line-height: 24px;
+      color: #707070;
       font-size: 12px;
       .square {
+        flex-shrink: 0;
         width: 10px;
         height: 10px;
         border-radius: 2px;
@@ -89,10 +88,11 @@
       }
     }
     &-all {
+      padding-bottom: 20px;
       .tip {
         margin: 20px;
         margin-bottom: 5px;
-        font-size: 14px;
+        font-size: 12px;
         color: #707070;
         padding-top: 20px;
         // border-top: 1px solid #cacaca;
@@ -195,12 +195,6 @@
           font-size: 12px;
           line-height: 18px;
           text-align: center;
-          &.color-white {
-            color: #ffffff;
-          }
-          &.no-need {
-            color: #cacaca;
-          }
         }
       }
     }
@@ -211,17 +205,20 @@
     display: flex;
     flex-wrap: wrap;
     .year-charts {
+      margin-bottom: 25px;
+      width: 100%;
       .header {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        padding: 15px;
+        padding-bottom: 10px;
         font-size: 16px;
         line-height: 16px;
         .iconfont {
           margin-right: 10px;
         }
         .name {
+          font-size: 16px;
           max-width: 133px;
           overflow: hidden;
           white-space: nowrap;
@@ -231,19 +228,18 @@
       .days {
         display: flex;
         flex-wrap: wrap;
+        flex-direction: column;
+        align-items: flex-start;
+        height: 42px;
+        width: 100%;
         .square {
           width: 6px;
           height: 6px;
+          box-sizing: border-box;
           border-radius: 0;
           flex-shrink: 0;
           border-right: 1px solid #ffffff;
           border-bottom: 1px solid #ffffff;
-          &.color-white {
-            color: #ffffff;
-          }
-          &.no-need {
-            color: #cacaca;
-          }
         }
       }
     }

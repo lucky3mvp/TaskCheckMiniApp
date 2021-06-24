@@ -34,13 +34,13 @@ class Charts extends Component<IProps, IState> {
   todayYear = this.now.getFullYear()
   todayMonth = this.now.getMonth() + 1
   todayWeek: WeekRangType = getWeekRange(this.now)
+  cache: Record<string, any> = {}
   state = {
     tab: 'year',
     curWeek: getWeekRange(this.now),
     curMonth: [
       this.todayYear,
       this.todayMonth // 是 date.getMonth()+1 的值
-      // new Date(this.todayYear, this.todayMonth, 0).getDate() // 当前这个月有多少天
     ],
     curYear: this.todayYear,
     weekData: [],
@@ -63,12 +63,12 @@ class Charts extends Component<IProps, IState> {
 
   componentDidShow() {}
 
-  // onShareAppMessage() {
-  //   return {
-  //     title: '排骨打卡',
-  //     path: '/pages/check/index'
-  //   }
-  // }
+  onShareAppMessage() {
+    return {
+      title: '排骨打卡',
+      path: '/pages/check/index'
+    }
+  }
 
   async getWeekData() {
     const { curWeek } = this.state
@@ -77,13 +77,29 @@ class Charts extends Component<IProps, IState> {
     const lastDay = new Date(+year, +month, 0).getDate() // 这周开始的那天所在的月份的最后一天
     const dayCount = 7
 
-    const { code, list = [] } = await commonApi({
-      _scope: 'charts',
-      _type: 'chartsAll',
-      type: 'week',
-      date: curWeek.display[0].replace(/[.]/g, '/')
-    })
-    // const list = charts
+    let list: ChartsAllResType[] = []
+    if (this.cache[`week-${curWeek.display[0]}`]) {
+      console.log(`week-${curWeek.display[0]} 命中缓存`)
+      list = this.cache[`week-${curWeek.display[0]}`]
+    } else {
+      console.log(`week-${curWeek.display[0]} 未命中缓存，发起请求`)
+      Taro.showLoading({
+        title: '请求中'
+      })
+      // const {code，list: _list} = await commonApi({
+      //   _scope: 'charts',
+      //   _type: 'chartsAll',
+      //   type: 'week',
+      //   date: curWeek.display[0].replace(/[.]/g, '/')
+      // })
+      const { code, list: _list } = {
+        code: 200,
+        list: charts
+      }
+      list = _list || []
+      this.cache[`week-${curWeek.display[0]}`] = _list
+      Taro.hideLoading()
+    }
 
     this.setState({
       weekData: list.map((p: ChartsAllResType) => {
@@ -135,14 +151,31 @@ class Charts extends Component<IProps, IState> {
     const firstDay = new Date(curMonth[0], curMonth[1] - 1, 1).getDay() // 本月第一天是周几
     const dayCount = new Date(curMonth[0], curMonth[1], 0).getDate() // month是+1的， 本月的最后一天
 
-    const { code, list = [] } = await commonApi({
-      _scope: 'charts',
-      _type: 'chartsAll',
-      type: 'month',
-      year: curMonth[0],
-      month: curMonth[1]
-    })
-    // const list = charts
+    let list: ChartsAllResType[] = []
+    if (this.cache[`month-${curMonth[0]}.${curMonth[1]}`]) {
+      console.log(`month-${curMonth[0]}.${curMonth[1]} 命中缓存`)
+      list = this.cache[`month-${curMonth[0]}.${curMonth[1]}`]
+    } else {
+      console.log(`month-${curMonth[0]}.${curMonth[1]} 未命中缓存，发起请求`)
+      Taro.showLoading({
+        title: '请求中'
+      })
+      // const { list = [] } = await commonApi({
+      //   _scope: 'charts',
+      //   _type: 'chartsAll',
+      //   type: 'month',
+      //   year: curMonth[0],
+      //   month: curMonth[1]
+      // })
+      const { code, list: _list } = {
+        code: 200,
+        list: charts
+      }
+      list = _list || []
+      this.cache[`month-${curMonth[0]}.${curMonth[1]}`] = _list
+      Taro.hideLoading()
+    }
+
     const allDetail: number[] = []
     const l = list.map((p: ChartsAllResType) => {
       const days = p.days.split(',')
@@ -199,7 +232,7 @@ class Charts extends Component<IProps, IState> {
   }
 
   async getYearData() {
-    const { curYear, tab } = this.state
+    const { curYear } = this.state
     /**
      * 闰年判断：
      * 年份能被4整除，但不能被100整除
@@ -210,13 +243,30 @@ class Charts extends Component<IProps, IState> {
         ? 366
         : 365
 
-    // const { code, list = [] } = await commonApi({
-    //   _scope: 'charts',
-    //   _type: 'chartsAll',
-    //   type: 'year',
-    //   year: curYear
-    // })
-    const list = charts
+    let list: ChartsAllResType[] = []
+    if (this.cache[`year-${curYear}`]) {
+      console.log(`year-${curYear} 命中缓存`)
+      list = this.cache[`year-${curYear}`]
+    } else {
+      console.log(`year-${curYear} 未命中缓存，发起请求`)
+      Taro.showLoading({
+        title: '请求中'
+      })
+      // const { code, list = [] } = await commonApi({
+      //   _scope: 'charts',
+      //   _type: 'chartsAll',
+      //   type: 'year',
+      //   year: curYear
+      // })
+      const { code, list: _list } = {
+        code: 200,
+        list: charts
+      }
+      list = _list || []
+      this.cache[`year-${curYear}`] = _list
+      Taro.hideLoading()
+    }
+
     const allDetail: number[] = []
     const l = list.map((p: ChartsAllResType) => {
       const days = p.days.split(',')
@@ -227,17 +277,18 @@ class Charts extends Component<IProps, IState> {
           detail.push(p.detail[j].status)
           j++
         } else {
-          if (p.type === 2) {
-            detail.push(2)
-          } else if (p.type === 3 && p.subType === 2) {
-            if (days.indexOf(`${(i + 1) % 7}`) >= 0) {
-              detail.push(2)
-            } else {
-              detail.push(3)
-            }
-          } else {
-            detail.push(3)
-          }
+          // if (p.type === 2) {
+          //   detail.push(2)
+          // } else if (p.type === 3 && p.subType === 2) {
+          //   if (days.indexOf(`${(i + 1) % 7}`) >= 0) {
+          //     detail.push(2)
+          //   } else {
+          //     detail.push(3)
+          //   }
+          // } else {
+          //   detail.push(3)
+          // }
+          detail.push(2)
         }
         // ALL只管有没有打卡记录吧，不管完成没有了
         if (allDetail[i] === undefined) {
@@ -280,16 +331,30 @@ class Charts extends Component<IProps, IState> {
     this.setState({
       tab: o.value
     })
-    // update data
+    switch (o.value) {
+      case 'week':
+        this.getWeekData()
+        break
+      case 'month':
+        this.getMonthData()
+        break
+      case 'year':
+        this.getYearData()
+        break
+    }
   }
   onWeekPrev = () => {
     const newWeek = getWeekRange(
       new Date(this.state.curWeek.date[0].getTime() - 1000)
     )
-    this.setState({
-      curWeek: newWeek
-    })
-    // update data
+    this.setState(
+      {
+        curWeek: newWeek
+      },
+      () => {
+        this.getWeekData()
+      }
+    )
   }
   onWeekNext = () => {
     const { curWeek } = this.state
@@ -298,10 +363,14 @@ class Charts extends Component<IProps, IState> {
     const newWeek = getWeekRange(
       new Date(curWeek.date[1].getTime() + 24 * 60 * 60 * 1000)
     )
-    this.setState({
-      curWeek: newWeek
-    })
-    // update data
+    this.setState(
+      {
+        curWeek: newWeek
+      },
+      () => {
+        this.getWeekData()
+      }
+    )
   }
   onMonthPrev = () => {
     const { curMonth } = this.state
@@ -310,10 +379,14 @@ class Charts extends Component<IProps, IState> {
     const y = end.getFullYear()
     const m = end.getMonth() + 1
     const start = new Date(y, m, 1)
-    this.setState({
-      curMonth: [y, m]
-    })
-    // update data
+    this.setState(
+      {
+        curMonth: [y, m]
+      },
+      () => {
+        this.getMonthData()
+      }
+    )
   }
   onMonthNext = () => {
     const { curMonth } = this.state
@@ -324,24 +397,36 @@ class Charts extends Component<IProps, IState> {
     const y = start.getFullYear()
     const m = start.getMonth() + 1
     const end = new Date(y, curMonth[1] + 1, 0)
-    this.setState({
-      curMonth: [y, m]
-    })
-    // update data
+    this.setState(
+      {
+        curMonth: [y, m]
+      },
+      () => {
+        this.getMonthData()
+      }
+    )
   }
   onYearPrev = () => {
-    this.setState({
-      curYear: this.state.curYear - 1
-    })
-    // update data
+    this.setState(
+      {
+        curYear: this.state.curYear - 1
+      },
+      () => {
+        this.getYearData()
+      }
+    )
   }
   onYearNext = () => {
     const { curYear } = this.state
     if (curYear === this.todayYear) return
-    this.setState({
-      curYear: curYear + 1
-    })
-    // update data
+    this.setState(
+      {
+        curYear: curYear + 1
+      },
+      () => {
+        this.getYearData()
+      }
+    )
   }
 
   render() {
@@ -432,7 +517,6 @@ class Charts extends Component<IProps, IState> {
                 {['一', '二', '三', '四', '五', '六', '日'].map(o => (
                   <View className={`col`}>{o}</View>
                 ))}
-                {/* <View className="col"></View> */}
               </View>
               {this.state.weekData.map((p: ChartsAllType) => (
                 <View className="row">
@@ -452,7 +536,6 @@ class Charts extends Component<IProps, IState> {
                       />
                     </View>
                   ))}
-                  {/* <View className="col"></View> */}
                 </View>
               ))}
             </View>
@@ -470,7 +553,7 @@ class Charts extends Component<IProps, IState> {
                     {p.detail.map((s, i) => {
                       return (
                         <View
-                          className={classnames('square color-white', {
+                          className={classnames('square', {
                             opacity: s === 0,
                             [`${p.theme}-background`]: s === 1 || s === 0,
                             gray: s === 2,
@@ -496,10 +579,11 @@ class Charts extends Component<IProps, IState> {
                     <View className="name">{p.name}</View>
                   </View>
                   <View className="days">
+                    {/* 垂直排列 */}
                     {p.detail.map((s, i) => {
                       return (
                         <View
-                          className={classnames('square color-white', {
+                          className={classnames('square', {
                             opacity: s === 0,
                             [`${p.theme}-background`]: s === 1 || s === 0,
                             gray: s === 2,
@@ -515,45 +599,39 @@ class Charts extends Component<IProps, IState> {
           </View>
         )}
 
-        <View className="legend">
-          <View className="legend-item">
-            <View className="square main" />
-            <View>打卡并完成当日计划</View>
-          </View>
-          <View className="legend-item">
-            <View className="square main opacity" />
-            <View>打卡未完成当日计划</View>
-          </View>
-          <View className="legend-item">
-            <View className="square main gray" />
-            <View>未打卡当日计划</View>
-          </View>
-          <View className="legend-item">
-            <View className="square no-need" />
-            <View>当日无固定计划</View>
-          </View>
-        </View>
-
-        {this.state.tab === 'month' ||
-          (this.state.tab === 'year' && (
-            <View className="legend-all">
-              <View className="tip border-top">“全部”图表示例说明 </View>
-              <View className="legend">
-                <View className="legend-item">
-                  <View className="square main" />
-                  <View>当日有打卡某一计划</View>
-                </View>
-                <View className="legend-item">
-                  <View className="square main gray" />
-                  <View>当日未打卡任一计划</View>
-                </View>
-                <View className="legend-item">
-                  <View className="square no-need" />
-                  <View>当日无固定计划</View>
-                </View>
-              </View>
+        {(this.state.tab === 'week' || this.state.tab === 'month') && (
+          <View className="legend">
+            <View className="legend-item">
+              <View className="square main" />
+              <View>打卡并完成当日计划/当日有打卡某一计划(“全部”图表)</View>
             </View>
-          ))}
+            <View className="legend-item">
+              <View className="square main opacity" />
+              <View>打卡未完成当日计划</View>
+            </View>
+            <View className="legend-item">
+              <View className="square main gray" />
+              <View>未打卡当日计划/当日未打卡任一计划(“全部”图表)</View>
+            </View>
+            <View className="legend-item">
+              <View className="square no-need" />
+              <View>当日无固定计划</View>
+            </View>
+          </View>
+        )}
+
+        {this.state.tab === 'year' && (
+          <View className="legend">
+            <View className="legend-item">
+              <View className="square main" />
+              <View>当日有打卡某一计划</View>
+            </View>
+            <View className="legend-item">
+              <View className="square main gray" />
+              <View>当日未打卡任一计划</View>
+            </View>
+          </View>
+        )}
       </View>
     )
   }
