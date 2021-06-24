@@ -76,6 +76,7 @@ exports.main = async (event, context) => {
           _id: 0,
           userID: 0
         })
+        .limit(1000) // 云开发默认20，最大1000
         .end()
       console.log('charts all week result: ', list)
       return {

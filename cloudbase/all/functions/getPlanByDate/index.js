@@ -167,6 +167,7 @@ exports.main = async (event, context) => {
       monthPlanFulfillTimes: 0,
       weekPlanFulfillTimes: 0
     })
+    .limit(1000) // 云开发默认20，最大1000
     .end()
 
   const res = list.filter(

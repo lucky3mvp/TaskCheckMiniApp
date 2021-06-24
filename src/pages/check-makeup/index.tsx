@@ -8,6 +8,7 @@ import CheckListItem from 'src/components/CheckListItem'
 import RadioGroup from 'src/components/RadioGroup'
 import Calendar from './Calendar'
 import { formatDate } from 'src/utils'
+import manualEvent from 'src/utils/manualEvent'
 
 import { getPlanByDate, getCheckList } from 'src/utils/request2.0'
 
@@ -158,6 +159,7 @@ class CheckMakeup extends Component<IProps, IState> {
     // 打卡后需要清空之前的缓存
     this.cache[`plan-${this.state.date}`] = ''
     this.cache[`check-${this.state.date}`] = ''
+    manualEvent.change('check-page', 'update check list')
     this.getPlanList()
     this.onCloseModal()
   }

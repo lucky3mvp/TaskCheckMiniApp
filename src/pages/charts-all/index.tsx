@@ -36,7 +36,7 @@ class Charts extends Component<IProps, IState> {
   todayWeek: WeekRangType = getWeekRange(this.now)
   cache: Record<string, any> = {}
   state = {
-    tab: 'year',
+    tab: 'month',
     curWeek: getWeekRange(this.now),
     curMonth: [
       this.todayYear,
@@ -86,21 +86,21 @@ class Charts extends Component<IProps, IState> {
       Taro.showLoading({
         title: '请求中'
       })
-      // const {code，list: _list} = await commonApi({
-      //   _scope: 'charts',
-      //   _type: 'chartsAll',
-      //   type: 'week',
-      //   date: curWeek.display[0].replace(/[.]/g, '/')
-      // })
-      const { code, list: _list } = {
-        code: 200,
-        list: charts
-      }
+      const { code, list: _list } = await commonApi({
+        _scope: 'charts',
+        _type: 'chartsAll',
+        type: 'week',
+        date: curWeek.display[0].replace(/[.]/g, '/')
+      })
+      // const { code, list: _list } = {
+      //   code: 200,
+      //   list: charts
+      // }
       list = _list || []
       this.cache[`week-${curWeek.display[0]}`] = _list
       Taro.hideLoading()
     }
-
+    console.log('week list', list)
     this.setState({
       weekData: list.map((p: ChartsAllResType) => {
         const days = p.days.split(',')
@@ -160,22 +160,22 @@ class Charts extends Component<IProps, IState> {
       Taro.showLoading({
         title: '请求中'
       })
-      // const { list = [] } = await commonApi({
-      //   _scope: 'charts',
-      //   _type: 'chartsAll',
-      //   type: 'month',
-      //   year: curMonth[0],
-      //   month: curMonth[1]
-      // })
-      const { code, list: _list } = {
-        code: 200,
-        list: charts
-      }
+      const { list: _list } = await commonApi({
+        _scope: 'charts',
+        _type: 'chartsAll',
+        type: 'month',
+        year: curMonth[0],
+        month: curMonth[1]
+      })
+      // const { code, list: _list } = {
+      //   code: 200,
+      //   list: charts
+      // }
       list = _list || []
       this.cache[`month-${curMonth[0]}.${curMonth[1]}`] = _list
       Taro.hideLoading()
     }
-
+    console.log('month list', list)
     const allDetail: number[] = []
     const l = list.map((p: ChartsAllResType) => {
       const days = p.days.split(',')
@@ -252,24 +252,24 @@ class Charts extends Component<IProps, IState> {
       Taro.showLoading({
         title: '请求中'
       })
-      // const { code, list = [] } = await commonApi({
-      //   _scope: 'charts',
-      //   _type: 'chartsAll',
-      //   type: 'year',
-      //   year: curYear
-      // })
-      const { code, list: _list } = {
-        code: 200,
-        list: charts
-      }
+      const { code, list: _list } = await commonApi({
+        _scope: 'charts',
+        _type: 'chartsAll',
+        type: 'year',
+        year: curYear
+      })
+      // const { code, list: _list } = {
+      //   code: 200,
+      //   list: charts
+      // }
       list = _list || []
       this.cache[`year-${curYear}`] = _list
       Taro.hideLoading()
     }
-
+    console.log('year list', list)
     const allDetail: number[] = []
     const l = list.map((p: ChartsAllResType) => {
-      const days = p.days.split(',')
+      // const days = p.days.split(',')
       const detail: number[] = []
       let j = 0
       for (let i = 0; i < dayCount; i++) {
