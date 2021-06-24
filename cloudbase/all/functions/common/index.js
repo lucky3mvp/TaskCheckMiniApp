@@ -9,6 +9,7 @@ exports.main = async (event, context) => {
   const { _scope, _type } = event
   const db = cloud.database()
   const _ = db.command
+  const $ = db.command.aggregate
 
   console.log('common api params: ', event)
 
@@ -24,12 +25,66 @@ exports.main = async (event, context) => {
     }
   } catch (err) {
     console.log('err: ', err)
-    // return {
-    //   code: 333
-    // }
   }
 
-  if (_scope === 'login') {
+  if (_scope === 'charts') {
+    const { date, type, year, month } = event
+    if (_type === 'chartsAll') {
+      const condition = [
+        $.eq(['$planID', '$$planID']),
+        $.eq(['$userID', '$$userID'])
+      ]
+      if (type === 'week') {
+        condition.push($.eq(['$weekStart', date.replace(/\//g, '-')]))
+      } else if (type === 'month') {
+        condition.push($.eq(['$year', year]))
+        condition.push($.eq(['$month', month]))
+      } else if (type === 'year') {
+        condition.push($.eq(['$year', year]))
+      }
+      const { list } = await db
+        .collection('plan')
+        .aggregate()
+        .match({
+          userID: wxContext.OPENID,
+          status: 1 // 1-正常 2-已删除
+        })
+        .lookup({
+          from: 'planCheckStatus',
+          let: {
+            planID: '$planID',
+            userID: '$userID'
+          },
+          pipeline: $.pipeline()
+            .match(_.expr($.and(condition)))
+            .project({
+              _id: 0,
+              totalAchieve: 0,
+              planID: 0,
+              userID: 0,
+              weekStart: 0
+            })
+            .sort({
+              year: 1,
+              month: 1,
+              day: 1
+            })
+            .done(),
+          as: 'detail'
+        })
+        .project({
+          _id: 0,
+          userID: 0
+        })
+        .limit(1000) // 云开发默认20，最大1000
+        .end()
+      console.log('charts all week result: ', list)
+      return {
+        code: 200,
+        list
+      }
+    }
+  } else if (_scope === 'login') {
     /**
      * openID
      * avatarUrl

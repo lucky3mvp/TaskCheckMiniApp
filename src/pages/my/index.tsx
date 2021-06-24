@@ -103,6 +103,11 @@ class My extends Component<IProps, IState> {
       url: '/pages/menstruation/index'
     })
   }
+  gotoDaysList = async () => {
+    Taro.navigateTo({
+      url: '/pages/days-list/index'
+    })
+  }
   gotoReading = async () => {
     Taro.navigateTo({
       url: '/pages/reading-list/index'
@@ -168,6 +173,11 @@ class My extends Component<IProps, IState> {
             <View className="iconfont icon-right-arrow" />
           </View>
         ) : null}
+        <View className="list-item border-bottom" onClick={this.gotoDaysList}>
+          <Image src={require('../../assets/days.png')} className="icon" />
+          <View className="item-title">倒数日</View>
+          <View className="iconfont icon-right-arrow" />
+        </View>
         <View className="list-item border-bottom" onClick={this.toBeExpected}>
           <Image src={require('../../assets/todo.png')} className="icon" />
           <View className="item-title">敬请期待</View>

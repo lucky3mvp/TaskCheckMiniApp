@@ -95,6 +95,12 @@
           "pathName": "pages/check-makeup/index",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "pages/charts-all/index",
+          "pathName": "pages/charts-all/index",
+          "query": "",
+          "scene": null
         }
       ]
     }

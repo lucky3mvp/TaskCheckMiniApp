@@ -3,8 +3,8 @@ import Taro from '@tarojs/taro'
 import { View, Button, Text, Image, Block } from '@tarojs/components'
 import classnames from 'classnames'
 import { rightArrow } from 'src/assets/svg'
-import { formatDate, getWeekRangeForCheckList } from 'src/utils/index'
-import RadioButton from 'src/components/RadioGroup'
+import { formatDate, getWeekRange } from 'src/utils/index'
+import RadioGroup from 'src/components/RadioGroup'
 
 import './index.less'
 
@@ -167,17 +167,15 @@ export default (props: IProps) => {
   )
 
   // 周模式
-  const todayWeekRange = useMemo(() => getWeekRangeForCheckList(now), [])
-  const [curWeekRange, setCurWeekRange] = useState(
-    getWeekRangeForCheckList(now)
-  )
+  const todayWeekRange = useMemo(() => getWeekRange(now), [])
+  const [curWeekRange, setCurWeekRange] = useState(getWeekRange(now))
 
   /**
    * 比如 2021.06.07
    * 那么 week 是 2021.06.07 0:0:0 ~ 2021.06.13 0:0:0
    */
   const onWeekPrev = useCallback(() => {
-    const newWeek = getWeekRangeForCheckList(
+    const newWeek = getWeekRange(
       new Date(curWeekRange.date[0].getTime() - 1000)
     )
     setCurWeekRange(newWeek)
@@ -190,7 +188,7 @@ export default (props: IProps) => {
   const onWeekNext = useCallback(() => {
     if (todayWeekRange.display[1] === curWeekRange.display[1]) return
     // date[1]存的是这一天的凌晨零点
-    const newWeek = getWeekRangeForCheckList(
+    const newWeek = getWeekRange(
       new Date(curWeekRange.date[1].getTime() + 24 * 60 * 60 * 1000)
     )
     setCurWeekRange(newWeek)
@@ -261,7 +259,7 @@ export default (props: IProps) => {
   return (
     <View className="check-list-calendar">
       <View className={'radio-group-wrapper'}>
-        <RadioButton
+        <RadioGroup
           value={tab}
           onChange={onTabChange}
           options={[

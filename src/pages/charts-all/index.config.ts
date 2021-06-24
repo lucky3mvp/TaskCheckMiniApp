@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: '报表',
+  navigationBarTitleText: 'Charts',
   navigationBarBackgroundColor: '#ffffff',
   navigationBarTextStyle: 'black',
   backgroundColor: '#ffffff',

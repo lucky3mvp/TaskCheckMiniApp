@@ -117,7 +117,7 @@ class Check extends Component<IProps, IState> {
       this.setState({
         loading: false,
         plans: plans.map(
-          (p: CheckPlanMidType): CheckPlanType => ({
+          (p: CheckPlanResType): CheckPlanType => ({
             ...p,
             days: (p.days || '').split(',')
           })

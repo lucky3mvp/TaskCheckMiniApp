@@ -94,6 +94,7 @@ exports.main = async (event, context) => {
     .sort({
       checkTime: -1
     })
+    .limit(1000) // 云开发默认20，最大1000
     .end()
   console.log('get check list result: ', list)
 

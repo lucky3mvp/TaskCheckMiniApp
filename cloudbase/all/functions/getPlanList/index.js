@@ -65,6 +65,7 @@ exports.main = async (event, context) => {
     .addFields({
       status: 1 // 这是给前端的status，不是计划本身的status，注意下
     })
+    .limit(1000) // 云开发默认20，最大1000
     .end()
   console.log('unStarted: ', unStarted)
 
@@ -131,6 +132,7 @@ exports.main = async (event, context) => {
       monthCheckTimes: $.size('$monthCheckTimes'), // 累计打卡次数
       totalCheckTimes: $.size('$totalCheckTimes') // 累计打卡次数
     })
+    .limit(1000) // 云开发默认20，最大1000
     .end()
   console.log('started: ', started)
 
@@ -173,6 +175,7 @@ exports.main = async (event, context) => {
       totalCheckTimes: $.size('$totalCheckTimes'), // 累计打卡次数
       totalFulfillTimes: $.size('$totalFulfillTimes') // 累计完成次数
     })
+    .limit(1000) // 云开发默认20，最大1000
     .end()
   console.log('ended: ', ended)
 

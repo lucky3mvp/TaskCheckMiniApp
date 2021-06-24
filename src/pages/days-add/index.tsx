@@ -66,6 +66,7 @@ class DaysAdd extends Component<IProps, IState> {
   //   }
   // }
   async componentDidMount() {
+    wx.cloud.init()
     await this.getCategoryList()
 
     const today = new Date()
@@ -179,9 +180,9 @@ class DaysAdd extends Component<IProps, IState> {
     })
   }
   onUploadCover = () => {
-    wx.chooseImage({
+    Taro.chooseImage({
       count: 1,
-      sourceType: 'album',
+      sourceType: ['album', 'camera'],
       sizeType: ['compressed'],
       success: res => {
         this.setState({
@@ -190,7 +191,7 @@ class DaysAdd extends Component<IProps, IState> {
       },
       fail: res => {
         Taro.showToast({
-          title: JSON.stringify(res.errMsg.replace('chooseImage:fail', '')),
+          title: JSON.stringify(res.errMsg.replace(' chooseImage:fail', '')),
           icon: 'none'
         })
       }
@@ -208,7 +209,6 @@ class DaysAdd extends Component<IProps, IState> {
     const { cover } = this.state
     let cloudFileID = ''
     if (cover) {
-      wx.cloud.init()
       cloudFileID = await new Promise(resolve => {
         const tmp = cover.split('/')
         const name = tmp[tmp.length - 1]
